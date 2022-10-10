@@ -30,6 +30,8 @@ def oauth_api():
     headers.update({'Authorization':"Bearer " + str(access_token)})
     response=requests.request("GET",url, headers= headers)
     id = json.loads(((response.text).encode('utf-8')))['id']
+    id ='k'+ str(id)#아이디에 k 붙여서 string타입으로 변경
+    #이과정에서 id 타입 확인하고 
     find_id= id #디비에서 id 가져오기
     # db에 아이디가 존재하면
     if (find_id) :

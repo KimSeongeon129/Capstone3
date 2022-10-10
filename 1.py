@@ -32,8 +32,10 @@ def oauth_api():
 
     headers.update({'Authorization':"Bearer " + str(access_token)})
     response=requests.request("GET",url, headers= headers)
-    
-    return render_template("logout.html")
+    id = json.loads(((response.text).encode('utf-8')))['id']
+    id ='k'+ str(id)
+    print(id)
+    return render_template('logout.html')
 #로그아웃
 @app.route("/logout")
 def logout():
