@@ -1,11 +1,12 @@
 from flask import Flask
 from db1011 import get_db,close_db,init_db
-import login
+import login,admin_login
 
 
 app=Flask(__name__)
 def main():
     app.register_blueprint(login.bp)
+    app.register_blueprint(admin_login.bp)
 
 
 

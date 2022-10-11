@@ -46,19 +46,3 @@ def oauth_api():
 
 #네이버 로그인
 
-
-#관리자 로그인
-@bp.route('/admin_login',methods=['POST'])
-def admin_login():
-    admin_id=request.form['admin_id']
-    admin_password=request.form['admin_password']
-    if not (admin_id and admin_password) : #둘중 하나라도 입력 안되면
-        return "<script type='text/javascript'>alert('모두 입력해주세요.');document.location.href='/admin_login';</script>" 
-
-    #db에서 아이디와 비밀번호로 정보 가져오기
-    find_id_pw=admin_id
-    
-    if (find_id_pw) : #정보가 존재하면
-        return render_template('admin_main.html')
-    else : #정보가 존재하지 않으면 
-        return "<script type='text/javascript'>alert('아이디나 비밀번호가 틀립니다.');document.location.href='/admin_login';</script>"
