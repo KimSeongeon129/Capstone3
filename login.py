@@ -1,9 +1,13 @@
 from flask import Flask, render_template
-from flask import jsonify,url_for,redirect,request,Blueprint
+from flask import jsonify,url_for,redirect,request,Blueprint,g
+from db1011 import find_id_user,find_id_admin
 import requests
 import json
 
-bp= Blueprint('lgoin',__name__)
+bp= Blueprint('login',__name__)
+@bp.route("/")
+def login():
+    return render_template("login.html")
 
 #카카오 로그인
 @bp.route("/oauth")

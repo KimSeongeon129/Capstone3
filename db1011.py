@@ -1,9 +1,25 @@
+from flask import g
 from contextlib import nullcontext
-from pymysql import cursors
+from pymysql import cursors, connect
 import pymysql
 import bcrypt
-db = pymysql.connect(host='127.0.0.1', user='root', password='alstjd1598!', db='capstoneDB', charset='utf8')
-cur = db.cursor()   #커서
+
+def init_db():
+
+    db = connect(host='127.0.0.1', user='root', password='alstjd1598!', db='capstoneDB', charset='utf8',cursorclass=pymysql.cursors.DictCursor)
+    cur = db.cursor()   #커서
+    db.commit
+
+def get_db(): #이거 개중요
+    if 'db' not in g:     # 플라스크의 전역변수 g 속에 db 가 없으면
+        g.db = connect(host='127.0.0.1', user='root', password='alstjd1598!', db='capstoneDB', charset="utf8mb4", cursorclass=pymysql.cursors.DictCursor)
+        # 내꺼 db에 접속.
+
+def close_db(): #db 연결 종료
+    db=g.pop('db',None) #db라는 거를 팝.
+    if db is not None: #팝 한게 비어있지 않으면
+        if db.open: #db가 열려있으면
+            db.close() #종료해라
 
 
 #계정 변경(user)
@@ -80,9 +96,6 @@ def add_admin(db, admin_id, admin_pw,number,name):
         db.commit()
 
 
-add_admin(db, 'id15', 'qw12', '01012345678', '홍길동' )  #샘
-add_admin(db, 'id22', 'ee44', '01045645645', '이몽룡' )  #플
-add_admin(db, 'id66', 'tt66', '01077778888', '성춘향' )  #입니당
 
 #내역 조회
 def check_result(db):
