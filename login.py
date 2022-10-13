@@ -45,4 +45,34 @@ def oauth_api():
         return render_template("user_main.html")
 
 #네이버 로그인
+@bp.route("/naver")
+def naver():
+    url="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=CZ4CAklls0R3pDVGPNhs&state=32raedfa38usf&redirect_uri=http://localhost:5000/naver_login"
+    return redirect(url)
+@bp.route("/naver_login")
+def naver_login():
+    code=str(request.args.get('code'))
+    url = "https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=CZ4CAklls0R3pDVGPNhs&client_secret=gLpXtGJwVL&code="+str(code)+"&state=32raedfa38usf"
+    headers= {
+        'Content-Type': "application/x-www-form-urlencoded",
+        'Cache-control':"no-cache",
+    }
+    #토큰 가져오기
+    response=requests.request("Post",url,headers=headers)
+    print(response.text)
+    #토큰의 정보 가져오기
+    access_token = json.loads(((response.text).encode('utf-8')))['access_token']
+    response = requests.get("https://openapi.naver.com/v1/nid/me", headers={"Authorization" : f"Bearer {access_token}"},)
 
+
+    res = json.loads(((response.text).encode('utf-8')))['response']
+    id=res['id']
+    id ='n'+ str(id)#아이디에 n 붙여서 string타입으로 변경
+    #이과정에서 id 타입 확인하고 
+    find_id= id #디비에서 id 가져오기
+    # db에 아이디가 존재하면
+    if (find_id) :
+        return render_template("user_main.html")
+    else : #db에 아이디가 존재 하지 않는 경우
+        #db에 저장
+        return render_template("user_main.html")

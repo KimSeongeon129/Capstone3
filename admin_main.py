@@ -5,9 +5,6 @@ import json
 
 bp= Blueprint('admin_main',__name__)
 
-@bp.route('/admin_main')# 관리자 페이지
-def account():
-    return 
 
 @bp.route('/account')#계정 관리 페이지
 def account():
