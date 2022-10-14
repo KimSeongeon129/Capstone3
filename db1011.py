@@ -7,8 +7,19 @@ import bcrypt
 def init_db():
 
     db = connect(host='127.0.0.1', user='root', password='alstjd1598!', db='capstoneDB', charset='utf8',cursorclass=pymysql.cursors.DictCursor)
-    cur = db.cursor()   #커서
+    cursor = db.cursor()   #커서
     db.commit
+    sql1= "CREATE TABLE IF NOT EXISTS `user` (`user_id` VARCHAR(100) NOT NULL, `nickname` VARCHAR(100) NOT NULL,`user_admin` VARCHAR(100) , `user_line` VARCHAR(100) ,PRIMARY KEY (`user_id`))"
+    sql2= "CREATE TABLE IF NOT EXISTS `admin` (`admin_id` VARCHAR(100) NOT NULL, `admin_pw` VARCHAR(100) NOT NULL, `number` VARCHAR(100) NOT NULL, `name` VARCHAR(100) NOT NULL,PRIMARY KEY (`admin_id`))"
+    sql3= "CREATE TABLE IF NOT EXISTS `image` (`inspection_number` VARCHAR(50) NOT NULL,`img_id` VARCHAR(45) NOT NULL,`bbox_x1` DOUBLE NOT NULL,`bbox_x2` DOUBLE NOT NULL,`bbox_y1` DOUBLE NOT NULL,`bbox_y2` DOUBLE NOT NULL,`image` MEDIUMBLOB NOT NULL,PRIMARY KEY (`inspection_number`)) "
+    sql4= "CREATE TABLE IF NOT EXISTS `result` (`part_id` VARCHAR(45) NOT NULL,`date` DATETIME(6) NOT NULL,`part_name` VARCHAR(45) NOT NULL,`part_category` VARCHAR(45) NOT NULL,`part_judge` VARCHAR(45) NOT NULL,`user_id` VARCHAR(100) NOT NULL,`inspection_number` VARCHAR(50) NOT NULL,PRIMARY KEY (`inspection_number`),INDEX `fk_result_user1_idx` (`user_id` ASC) VISIBLE,INDEX `fk_result_image1_idx` (`inspection_number` ASC) VISIBLE,CONSTRAINT `fk_result_user1`FOREIGN KEY (`user_id`)REFERENCES `user` (`user_id`)ON DELETE cascadeON UPDATE cascade,CONSTRAINT `fk_result_image1`FOREIGN KEY (`inspection_number`)REFERENCES `image` (`inspection_number`)ON DELETE cascadeON UPDATE cascade)"
+    cursor.execute(sql1)   
+    cursor.execute(sql2)   
+    cursor.execute(sql3)   
+    cursor.execute(sql4)   
+    db.commit
+
+
 
 def get_db(): #이거 개중요
     if 'db' not in g:     # 플라스크의 전역변수 g 속에 db 가 없으면
@@ -144,6 +155,7 @@ def add_result(db, part_id, date, part_name, part_category, part_judge, user_id,
         db.commit()
         
 
+
  #검사 이미지 추가
 def add_image(db, inspection_number, img_id, bbox_x1, bbox_x2, bbox_y1, bbox_y2, image):
     with db.cursor() as cursor:
@@ -152,6 +164,8 @@ def add_image(db, inspection_number, img_id, bbox_x1, bbox_x2, bbox_y1, bbox_y2,
         cursor.execute(sql, data)
         db.commit()
         
+
+
 #부품 내역 삭제
 def delete_result(db, inspection_number):
     with db.cursor() as cursor:
@@ -162,6 +176,7 @@ def delete_result(db, inspection_number):
         
 
 
+
 #부품 내역 변경
 def update_result(db, part_category, part_judge,  inspection_number):
     with db.cursor() as cursor:
@@ -170,5 +185,7 @@ def update_result(db, part_category, part_judge,  inspection_number):
         cursor.execute(sql, data)
         db.commit()
         
+        
+
 
 #db.close()
