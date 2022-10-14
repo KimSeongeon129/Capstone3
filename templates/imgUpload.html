@@ -1,9 +1,4 @@
 <!DOCTYPE HTML>
-<!--
-	Photon by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
 <html>
 	<head>
 		<title>capstone3</title>
@@ -17,29 +12,31 @@
 		<!-- Header -->
 			<section id="header">
 				<div class="imgUpload">
-          이미지 업로드
-        </div>
+          			이미지 업로드
+        			</div>
 			</section>
 
 		<!-- One -->
 			<section id="one" class="main style1">
 				<div class="container">
-          <form id="form" method="post" action="/upload" enctype="multipart/form-data">
-            <div class="input-group mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-            </div>
-            <div class="custom-file">
-              <input type="file" name="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-              <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-            </div>
-            <button type="button" class="btn btn-primary" onclick="imageUpload()">파일 전송 </button>
-            </div>
-          </form>
-        </div>
+					<form id="form" method="post" action="/upload" enctype="multipart/form-data">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+							</div>
+
+							<div class="custom-file">
+								<input type="file" name="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+								<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+							</div>
+							<button type="button" class="btn btn-primary" style="margin-left: 5px; background-color: lightblue;" >파일 전송 </button>
+            					</div>
+          				</form>
+       			 	</div>
 			</section>
 
 		<!-- Scripts -->
+			<script src="/static/assets/js/uploadImage.js"></script>
 			<script src="/static/assets/js/pho_jquery.min.js"></script>
 			<script src="/static/assets/js/pho_jquery.scrolly.min.js"></script>
 			<script src="/static/assets/js/pho_browser.min.js"></script>
