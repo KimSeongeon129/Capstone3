@@ -5,6 +5,6 @@ import json
 
 bp= Blueprint('imgUpload',__name__)
 
-@bp.route('/imgUpload_result')#이미지 결과페이지
-def imgUpload_result():
-    return 
+@bp.route('/imgUpload')#이미지 결과페이지
+def imgUpload():
+    return render_template("imgUpload.html")
