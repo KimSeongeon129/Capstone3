@@ -6,24 +6,33 @@ import bcrypt
 
 def init_db():
 
-    db = connect(host='127.0.0.1', user='root', password='alstjd1598!', db='capstoneDB', charset='utf8',cursorclass=pymysql.cursors.DictCursor)
+    db = connect(host='127.0.0.1', user='root', password='root', db='mydb', charset='utf8',cursorclass=pymysql.cursors.DictCursor)
     cursor = db.cursor()   #커서
-    db.commit
-    sql1= "CREATE TABLE IF NOT EXISTS `user` (`user_id` VARCHAR(100) NOT NULL, `nickname` VARCHAR(100) NOT NULL,`user_admin` VARCHAR(100) , `user_line` VARCHAR(100) ,PRIMARY KEY (`user_id`))"
-    sql2= "CREATE TABLE IF NOT EXISTS `admin` (`admin_id` VARCHAR(100) NOT NULL, `admin_pw` VARCHAR(100) NOT NULL, `number` VARCHAR(100) NOT NULL, `name` VARCHAR(100) NOT NULL,PRIMARY KEY (`admin_id`))"
-    sql3= "CREATE TABLE IF NOT EXISTS `image` (`inspection_number` VARCHAR(50) NOT NULL,`img_id` VARCHAR(45) NOT NULL,`bbox_x1` DOUBLE NOT NULL,`bbox_x2` DOUBLE NOT NULL,`bbox_y1` DOUBLE NOT NULL,`bbox_y2` DOUBLE NOT NULL,`image` MEDIUMBLOB NOT NULL,PRIMARY KEY (`inspection_number`)) "
-    sql4= "CREATE TABLE IF NOT EXISTS `result` (`part_id` VARCHAR(45) NOT NULL,`date` DATETIME(6) NOT NULL,`part_name` VARCHAR(45) NOT NULL,`part_category` VARCHAR(45) NOT NULL,`part_judge` VARCHAR(45) NOT NULL,`user_id` VARCHAR(100) NOT NULL,`inspection_number` VARCHAR(50) NOT NULL,PRIMARY KEY (`inspection_number`),INDEX `fk_result_user1_idx` (`user_id` ASC) VISIBLE,INDEX `fk_result_image1_idx` (`inspection_number` ASC) VISIBLE,CONSTRAINT `fk_result_user1`FOREIGN KEY (`user_id`)REFERENCES `user` (`user_id`)ON DELETE cascadeON UPDATE cascade,CONSTRAINT `fk_result_image1`FOREIGN KEY (`inspection_number`)REFERENCES `image` (`inspection_number`)ON DELETE cascadeON UPDATE cascade)"
-    cursor.execute(sql1)   
-    cursor.execute(sql2)   
-    cursor.execute(sql3)   
-    cursor.execute(sql4)   
-    db.commit
+   
+    with db.cursor() as cursor: #DB가 없으면 만들어라.
+        sql = "CREATE DATABASE IF NOT EXISTS mydb "
+        cursor.execute(sql)
+    db.commit()
 
+    db.select_db('mydb')
+    
+    with db.cursor() as cursor: #DB가 없으면 만들어라.
+    
+        sql1= "CREATE TABLE IF NOT EXISTS `user` (`user_id` VARCHAR(100) NOT NULL, `nickname` VARCHAR(100) NOT NULL,`user_admin` VARCHAR(100) , `user_line` VARCHAR(100) ,PRIMARY KEY (`user_id`))"
+        sql2= "CREATE TABLE IF NOT EXISTS `admin` (`admin_id` VARCHAR(100) NOT NULL, `admin_pw` VARCHAR(100) NOT NULL, `number` VARCHAR(100) NOT NULL, `name` VARCHAR(100) NOT NULL,PRIMARY KEY (`admin_id`))"
+        sql3= "CREATE TABLE IF NOT EXISTS `image` (`inspection_number` VARCHAR(50) NOT NULL,`img_id` VARCHAR(45) NOT NULL,`bbox_x1` DOUBLE NOT NULL,`bbox_x2` DOUBLE NOT NULL,`bbox_y1` DOUBLE NOT NULL,`bbox_y2` DOUBLE NOT NULL,`image` MEDIUMBLOB NOT NULL,PRIMARY KEY (`inspection_number`)) "
+        sql4= "CREATE TABLE IF NOT EXISTS `result` (`part_id` VARCHAR(45) NOT NULL, `date` DATETIME(6) NOT NULL, `part_name` VARCHAR(45) NOT NULL, `part_category` VARCHAR(45) NOT NULL, `part_judge` VARCHAR(45) NOT NULL, `user_id` VARCHAR(100) NOT NULL, `inspection_number` VARCHAR(50) NOT NULL, PRIMARY KEY (`inspection_number`), FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE cascade ON UPDATE cascade, FOREIGN KEY (`inspection_number`) REFERENCES `image` (`inspection_number`) ON DELETE cascade ON UPDATE cascade)"
+        cursor.execute(sql1)   
+        cursor.execute(sql2)   
+        cursor.execute(sql3)   
+        cursor.execute(sql4)   
+    db.commit
+    db.close
 
 
 def get_db(): #이거 개중요
     if 'db' not in g:     # 플라스크의 전역변수 g 속에 db 가 없으면
-        g.db = connect(host='127.0.0.1', user='root', password='alstjd1598!', db='capstoneDB', charset="utf8mb4", cursorclass=pymysql.cursors.DictCursor)
+        g.db = connect(host='127.0.0.1', user='root', password='root', db='mydb', charset="utf8mb4", cursorclass=pymysql.cursors.DictCursor)
         # 내꺼 db에 접속.
 
 def close_db(): #db 연결 종료
@@ -52,18 +61,16 @@ def delete_user(db, user_id):
 #user_id 찾기
 def find_id_user(db, user_id):
     with db.cursor() as cursor:
-        sql= "select user_id from user where user_id=%s"
+        sql= "select user_id from mydb.user where user_id=%s"
         cursor.execute(sql, user_id)
         result = cursor.fetchall()
-    if result==user_id:     #db에 id가 존재함
-        return True
-    else:                   #db에 id가 존재하지 않음 
-        return False
-     
+         #db에 id가 존재함
+        return result       #
+         
 #user 계정 추가
 def add_user(db, user_id, nickname):
     with db.cursor() as cursor:
-        sql = "insert into user values(%s, %s, NULL, NULL)"
+        sql = "insert into mydb.user values(%s, %s, NULL, NULL)"
         data = (user_id, nickname) 
         cursor.execute(sql, data)
     db.commit()

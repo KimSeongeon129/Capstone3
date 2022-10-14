@@ -5,8 +5,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 
-DROP DATABASE IF EXISTS myDB;
-CREATE DATABASE myDB;
+CREATE DATABASE IF not exists myDB;
 
 
 CREATE TABLE IF NOT EXISTS `user` (
@@ -47,25 +46,17 @@ CREATE TABLE IF NOT EXISTS `result` (
   `part_name` VARCHAR(45) NOT NULL,
   `part_category` VARCHAR(45) NOT NULL,
   `part_judge` VARCHAR(45) NOT NULL,
-  `user_id` VARCHAR(20) NOT NULL,
+  `user_id` VARCHAR(100) NOT NULL,
   `inspection_number` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`inspection_number`),
-  INDEX `fk_result_user1_idx` (`user_id` ASC) VISIBLE,
-  INDEX `fk_result_image1_idx` (`inspection_number` ASC) VISIBLE,
-  CONSTRAINT `fk_result_user1`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `user` (`user_id`)
-    ON DELETE cascade
-    ON UPDATE cascade,
-  CONSTRAINT `fk_result_image1`
-    FOREIGN KEY (`inspection_number`)
-    REFERENCES `image` (`inspection_number`)
-    ON DELETE cascade
-    ON UPDATE cascade)
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE cascade ON UPDATE cascade,
+  FOREIGN KEY (`inspection_number`) REFERENCES `image` (`inspection_number`) ON DELETE cascade ON UPDATE cascade)
 ENGINE = InnoDB;
 
 select * from admin;
 
+
+select * from user;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
