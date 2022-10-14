@@ -6,6 +6,6 @@ import json
 bp= Blueprint('list',__name__)
 
 
-@bp.route('/detail')#상세조회페이지
+@bp.route('/list')#상세조회페이지
 def detail():
-    return 
+    return render_template("list.html")

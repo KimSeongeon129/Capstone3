@@ -5,4 +5,6 @@ import json
 
 bp= Blueprint('statistics',__name__)
 
-
+@bp.route('/statistics')#이미지 결과페이지
+def imgUpload_result():
+    return render_template("statistics.html")

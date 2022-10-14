@@ -23,6 +23,7 @@ def oauth_api():
     }
     #토큰 가져오기
     response=requests.request("Post",url,data=payload,headers=headers)
+    print(response.text)
     access_token = json.loads(((response.text).encode('utf-8')))['access_token']
     #토큰의 정보 가져오기
     url="https://kapi.kakao.com/v1/user/access_token_info"
@@ -46,11 +47,15 @@ def oauth_api():
     # db에 아이디가 존재하면
     
     if (find_id) :
-        return render_template("user_main.html")
+        return redirect("/user_main")
     else : #db에 아이디가 존재 하지 않는 경우
         #db에 저장
+<<<<<<< HEAD
         add_user(g.db, id, name)
         return render_template("user_main.html")
+=======
+        return redirect("/user_main")
+>>>>>>> fac1570c281384e96f3739d37f0b5d5488371d77
 
 #네이버 로그인
 @bp.route("/naver")
@@ -80,7 +85,7 @@ def naver_login():
     find_id= id #디비에서 id 가져오기
     # db에 아이디가 존재하면
     if (find_id) :
-        return render_template("user_main.html")
+        return redirect("/user_main")
     else : #db에 아이디가 존재 하지 않는 경우
         #db에 저장
-        return render_template("user_main.html")
+        return redirect("/user_main")
