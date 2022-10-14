@@ -14,7 +14,6 @@ def main():
     app.register_blueprint(statistics.bp)
 
 
-
 if __name__ =="__main__" :
     main()
     app.run(debug=True)
