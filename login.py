@@ -51,7 +51,10 @@ def oauth_api():
     else : #db에 아이디가 존재 하지 않는 경우
         #db에 저장
         add_user(g.db, id, name)
+<<<<<<< HEAD
         
+=======
+>>>>>>> a1838936a5be258a679e086c8febdc392ae02378
         return redirect("/user_main")
 
 #네이버 로그인
@@ -74,15 +77,16 @@ def naver_login():
     access_token = json.loads(((response.text).encode('utf-8')))['access_token']
     response = requests.get("https://openapi.naver.com/v1/nid/me", headers={"Authorization" : f"Bearer {access_token}"},)
 
-
     res = json.loads(((response.text).encode('utf-8')))['response']
     id=res['id']
+    name=res['name']
     id ='n'+ str(id)#아이디에 n 붙여서 string타입으로 변경
     #이과정에서 id 타입 확인하고 
-    find_id= id #디비에서 id 가져오기
+    find_id= find_id_user(g.db,id) #디비에서 id 가져오기
     # db에 아이디가 존재하면
     if (find_id) :
         return redirect("/user_main")
     else : #db에 아이디가 존재 하지 않는 경우
         #db에 저장
+        add_user(g.db, id, name)
         return redirect("/user_main")
