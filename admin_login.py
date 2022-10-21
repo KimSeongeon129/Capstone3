@@ -17,11 +17,15 @@ def admin_login():
         if not (admin_id and admin_password) : #둘중 하나라도 입력 안되면
             return "<script type='text/javascript'>alert('모두 입력해주세요.');document.location.href='/admin_login';</script>" 
     
+        redirect("/admin_main")
+        
 
-        #db에서 아이디와 비밀번호로 정보 가져오기
-        find_id_pw=admin_id
+        find_adminid=find_id_admin(g.db,admin_id)    #db에서 관리자 아이디 가져오기
     
-        if (find_id_pw) : #정보가 존재하면
-            return render_template('admin_main.html')
+        if (find_adminid) : #정보가 존재하면
+            if(admin_login(g.db, admin_id, admin_password)) : #맞으면 true 반환
+                return render_template('admin_main.html')   #관리자 메인 페이지 이동
+
+
         else : #정보가 존재하지 않으면 
             return "<script type='text/javascript'>alert('아이디나 비밀번호가 틀립니다.');document.location.href='/admin_login';</script>"

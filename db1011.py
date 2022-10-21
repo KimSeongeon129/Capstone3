@@ -6,7 +6,7 @@ import bcrypt
 
 def init_db():
 
-    db = connect(host='127.0.0.1', user='root', password='root', db='mydb', charset='utf8',cursorclass=pymysql.cursors.DictCursor)
+    db = connect(host='127.0.0.1', user='root', password='alstjd1598!', db='mydb', charset='utf8',cursorclass=pymysql.cursors.DictCursor)
     cursor = db.cursor()   #커서
    
     with db.cursor() as cursor: #DB가 없으면 만들어라.

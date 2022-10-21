@@ -50,12 +50,9 @@ def oauth_api():
         return redirect("/user_main")
     else : #db에 아이디가 존재 하지 않는 경우
         #db에 저장
-<<<<<<< HEAD
         add_user(g.db, id, name)
-        return render_template("user_main.html")
-=======
+        
         return redirect("/user_main")
->>>>>>> fac1570c281384e96f3739d37f0b5d5488371d77
 
 #네이버 로그인
 @bp.route("/naver")
