@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask import jsonify,url_for,redirect,request,Blueprint,g
-from db1011 import find_id_user,find_id_admin
+from db1011 import find_id_user,admin_login
 import requests
 import json
 
@@ -19,7 +19,9 @@ def admin_login():
     
 
         #db에서 아이디와 비밀번호로 정보 가져오기
-        find_id_pw=admin_id
+        print(admin_id,admin_password)
+        find_id_pw=admin_login(g.db, admin_id,admin_password)
+        print(find_id_pw)
     
         if (find_id_pw) : #정보가 존재하면
             return render_template('admin_main.html')
