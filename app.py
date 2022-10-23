@@ -11,13 +11,20 @@ def main():
     app.register_blueprint(cameraUpload.bp)
     app.register_blueprint(list.bp)
     app.register_blueprint(statistics.bp)
+<<<<<<< HEAD
    
+=======
+    app.register_blueprint(db1011.bp)
+
+>>>>>>> f972a29e4cc85ec5d94b0b91ffa49b5363f100e7
 @app.before_request # 요청이 오기 직전에 db 연결
 def before_request():
     get_db()
+
 @app.teardown_request # 요청이 끝난 직후에 db 연결 해제
 def teardown_request(exception):
     close_db()
+    
 if __name__ =="__main__" :
     main()
     app.run(host='0.0.0.0',port=5000,debug=True)
