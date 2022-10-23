@@ -41,8 +41,16 @@ def upload():
     print("이미지 불러오기 전")
     img=request.files['image']#파일 가져오기
     img.save('static/assets/img/' + secure_filename(img.filename))
-    ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(img.filename),img.filename)
+
+    my_img = 'static/assets/img/' + secure_filename(img.filename)
+    terminal_command = f"python model/detect.py --weights model/yolov7.pt --conf 0.25 --img-size 640 --source {my_img}"
+    os.system(terminal_command)
+    
+    ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(img.filename),img.filename)#파일 올리기
     print(ret)
+    url=s3_get_image_url(s3, img.filename)#url 저장
+    #db에 url 저장하는 코드
+
     if ret: 
         return "<script type='text/javascript'>alert('업로드 성공.');document.location.href='/user_main';</script>"
     else:
@@ -67,3 +75,10 @@ def s3_put_object(s3, bucket, filepath, access_key):
         return False
     return True
 
+def s3_get_image_url(s3, filename):
+    """
+    s3 : 연결된 s3 객체(boto3 client)
+    filename : s3에 저장된 파일 명
+    """
+    location = s3.get_bucket_location(Bucket="sejong-capstone-s3-bucket")["LocationConstraint"]
+    return "https://sejong-capstone-s3-bucket.s3.{location}.amazonaws.com/{filename}.jpg"
