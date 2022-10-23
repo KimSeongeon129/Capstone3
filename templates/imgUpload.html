@@ -4,9 +4,9 @@
 		<title>capstone3</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-		<link rel="stylesheet" href="/static/assets/css/str_main.css" />
+		<link rel="stylesheet" href="/static/assets/css/str_main_upload.css" />
 	</head>
+	
 	<body class="homepage is-preload">
 		<div id="page-wrapper">
 
@@ -15,15 +15,15 @@
 					<div class="container">
 
 						<!-- Logo -->
-							<h1 id="logo"><a href="/user_main">프로그램 이름</a></h1>
+							<h1 id="logo"><a href="user_main.html">프로그램 이름</a></h1>
 						<!-- Nav -->
 							<nav id="nav">
 								<ul>
-									<li><a class="icon solid fa-home" href="/user_main"><span>Home</span></a></li>
-									<li><a class="icon fa-chart-bar" href="/imgUpload"><span>이미지 업로드</span></a></li>
-									<li><a class="icon solid fa-cog" href="cameraUpload"><span>실시간 검사</span></a></li>
-									<li><a class="icon solid fa-retweet" href="/list"><span>내역조회</span></a></li>
-									<li><a class="icon solid fa-retweet" href="/statistics"><span>통계</span></a></li>
+									<li><a class="icon solid fa-home" href="user_main.html"><span>Home</span></a></li>
+									<li><a class="icon fa-chart-bar" href="/templates/imgUpload.html"><span>이미지 업로드</span></a></li>
+									<li><a class="icon solid fa-cog" href="/templates/cameraUpload.html"><span>실시간 검사</span></a></li>
+									<li><a class="icon solid fa-retweet" href="/templates/list.html"><span>내역조회</span></a></li>
+									<li><a class="icon solid fa-retweet" href="/templates/statistics.html"><span>통계</span></a></li>
 									<li><a class="icon solid fa-sitemap" href=" "><span>로그아웃</span></a></li>
 								</ul>
 							</nav>
@@ -35,25 +35,66 @@
 				<section id="main">
 					<!-- https://velog.io/@minkyeong-ko/HTMLCSSJS-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%97%85%EB%A1%9C%EB%93%9C-%ED%8C%8C%EC%9D%BC%EC%9D%B4%EB%A6%84-%EB%82%98%ED%83%80%EB%82%B4%EA%B8%B0-%ED%99%94%EB%A9%B4%EC%97%90-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EB%B3%B4%EC%97%AC%EC%A3%BC%EA%B8%B0 -->
 					<div class="container">
-						<form id="form" method="post" action="/upload" enctype="multipart/form-data">
-							<div class="input-group mb-3">
-								<div class="input-group-prepend">
-									<span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+						<div class="image-upload" id="image-upload">
+							<form method="post" enctype="multipart/form-data">
+								<div class="button">
+									<label for="chooseFile" >
+										👉 CLICK HERE! 👈
+									</label>
 								</div>
-						
-								<div class="custom-file">
-									<input type="file" name="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-									<label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+								<input type="file" id="chooseFile" name="chooseFile" accept="image/*" onchange="loadFile(this)">
+							</form>
+				
+							<div class="fileContainer">
+								<div class="fileInput">
+									<p>FILE NAME: </p>
+									<p id="fileName"></p>
 								</div>
-								<button type="button" class="btn btn-primary" style="margin-left: 5px; background-color: lightblue;" >파일 전송 </button>
+								<div class="buttonContainer">
+									<div class="submitButton" id="submitButton">SUBMIT</div>
+								</div>
 							</div>
-						</form>
+						</div>
+						
+						<div class="image-show" id="image-show"></div>
 					</div>
 				</section>
 
 			<!-- Footer -->
 
 		<!-- Scripts -->
+			<script>//임시
+				var submit = document.getElementById('submitButton');
+				submit.onclick = showImage;     //Submit 버튼 클릭시 이미지 보여주기
+
+				function showImage() {
+					var newImage = document.getElementById('image-show').lastElementChild;
+					newImage.style.visibility = "visible";
+					
+					document.getElementById('image-upload').style.visibility = 'hidden';
+
+				}
+
+				function loadFile(input) {
+					var file = input.files[0];
+
+					var name = document.getElementById('fileName');
+					name.textContent = file.name;
+
+					var newImage = document.createElement("img");
+					newImage.setAttribute("class", 'img');
+
+					newImage.src = URL.createObjectURL(file);   
+
+					newImage.style.width = "70%";
+					newImage.style.height = "70%";
+					newImage.style.visibility = "hidden";
+					newImage.style.objectFit = "contain";
+
+					var imgContainer = document.getElementById('image-show');
+					imgContainer.appendChild(newImage);
+				};
+			</script>
 			<script src="/static/assets/js/str_jquery.min.js"></script>
 			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
 			<script src="/static/assets/js/str_browser.min.js"></script>
