@@ -43,7 +43,7 @@
 										👉 CLICK HERE! 👈
 									</label>
 								</div>
-								<input type="file" id="chooseFile" name="chooseFile" accept="image/*" onchange="upload()">
+								<input type="file" id="chooseFile" name="chooseFile" accept="image/*">
 							</form>
 				
 							<div class="fileContainer">
@@ -65,8 +65,15 @@
 
 		<!-- Scripts -->
 			<script>
+				var submit = document.getElementById('submitButton');
+				submit.onclick = upload; 
+				
 				function upload() {
 				const imageInput = $("#chooseFile")[0];
+
+				const file = imageInput.files[0];
+				var name = document.getElementById('fileName');
+				name.textContent = file.name;
 				console.log("chooseFile: ", imageInput.files)
 
 				if(imageInput.files.length === 0){
@@ -83,6 +90,7 @@
 					console.log(value);
 				}
 
+
 				$.ajax({
 					type:"POST",
 					url: "/imgUpload.py",
@@ -93,12 +101,11 @@
 						console.log("rnt: ", rnt)
 					},
 					err: function(err){
-						console.log("err:", err)
+						console.log("err: ", err)
 					}
 				})
 				}
-			</script>
-			
+			</script>		
 			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
 			<script src="/static/assets/js/str_browser.min.js"></script>
 			<script src="/static/assets/js/str_breakpoints.min.js"></script>
