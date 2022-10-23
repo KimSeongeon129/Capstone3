@@ -1,6 +1,6 @@
 from flask import Flask
 from db1011 import get_db,close_db,init_db
-import login,admin_login,user_main,imgUpload,cameraUpload,list,statistics,db1011
+import login,admin_login,user_main,imgUpload,cameraUpload,list,statistics
 app=Flask(__name__)
 def main():
     init_db()
@@ -11,8 +11,12 @@ def main():
     app.register_blueprint(cameraUpload.bp)
     app.register_blueprint(list.bp)
     app.register_blueprint(statistics.bp)
+<<<<<<< HEAD
+   
+=======
     app.register_blueprint(db1011.bp)
 
+>>>>>>> f972a29e4cc85ec5d94b0b91ffa49b5363f100e7
 @app.before_request # 요청이 오기 직전에 db 연결
 def before_request():
     get_db()
