@@ -3,8 +3,7 @@ from contextlib import nullcontext
 from pymysql import cursors, connect
 import pymysql
 import bcrypt
-bp= Blueprint('db1011',__name__)
-@bp.route("/")
+
 def init_db():
 
     db = connect(host='127.0.0.1', user='root', password='root', db='mydb', charset='utf8',cursorclass=pymysql.cursors.DictCursor)
@@ -68,7 +67,7 @@ def find_id_user(db, user_id):
         cursor.execute(sql, user_id)
         result = cursor.fetchall()
          #db에 id가 존재함
-        return result       #
+        return result       
          
 #user 계정 추가
 def add_user(db, user_id, nickname):
@@ -84,21 +83,23 @@ def find_id_admin(db, admin_id):
     with db.cursor() as cursor:
         sql= "select admin_id from admin where admin_id=%s"
         cursor.execute(sql, admin_id)
-        result = cursor.fetchall()
-
+        result = cursor.fetchone()
+       
         return result
      
 
-
-#admin id로 pw 찾아서 db와 비교후 반환
+#admin id로 pw 찾아서 db와 비교후 반환 반환 값 true 또는 false
 def get_admin_login(db, admin_id, admin_pw):
     with db.cursor() as cursor:
-        sql = "select admin_pw from admin where admin_id=%s"
+        sql = "select admin_pw from mydb.admin where admin_id=%s"
         data = (admin_id) 
         cursor.execute(sql, data)
-        result = cursor.fetchall()
-              
-    return bcrypt.checkpw(result.encode('utf-8'), admin_pw.encode('utf-8'))   #일치하면 true 반환
+        db_password = cursor.fetchone() #db에 저장되어있는 비밀번호    
+        bytes_db_password=db_password['admin_pw'].encode('utf-8')
+        bytes_admin_password=admin_pw.encode('utf-8')
+        
+        result = bcrypt.checkpw(bytes_admin_password ,bytes_db_password ) #아니 이게 위치가 정해진...하              
+    return result    #일치하면 true 반환
         
 
 
@@ -107,14 +108,14 @@ def add_admin(db, admin_id, admin_pw,number,name):
     with db.cursor() as cursor:
 
         if (find_id_admin(db,admin_id)):        #db에 이미 계정이 존재하면
-            return
+            return 
         else:
             encode_pw=admin_pw.encode('utf-8') #bytes 타입 변환
-            hashed_pw=bcrypt.hashpw(encode_pw, bcrypt.gensalt()) #해쉬키로 암호화
-            save_pw = hashed_pw.decode('utf-8')   #db에 저장하기 전 unicode로 타입 변환 
-
+            salt = bcrypt.gensalt()
+            hashed_pw=bcrypt.hashpw(encode_pw, salt) #해쉬키로 암호화
+            decode_pw = hashed_pw.decode()   #db에 저장하기 전 unicode로 타입 변환
             sql = "insert into mydb.admin values(%s, %s, %s, %s)"
-            data = (admin_id, save_pw, number, name) 
+            data = (admin_id, decode_pw, number, name) 
             cursor.execute(sql, data)
             db.commit()
 

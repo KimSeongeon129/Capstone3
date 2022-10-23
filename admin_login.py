@@ -23,14 +23,11 @@ def admin_login():
 
         find_adminid=find_id_admin(g.db,admin_id)    #db에서 관리자 아이디 가져오기
         #db에서 아이디와 비밀번호로 정보 가져오기
-        print(admin_id,admin_password)
-        find_id_pw=get_admin_login(g.db, admin_id,admin_password)
-        print(find_id_pw)
-    
+        
         if (find_adminid) : #정보가 존재하면
-            if(admin_login(g.db, admin_id, admin_password)) : #맞으면 true 반환
+            if(get_admin_login(g.db, admin_id, admin_password)):  #true 혹은 false
                 return render_template('admin_main.html')   #관리자 메인 페이지 이동
-
-
+            else : 
+                return "<script type='text/javascript'>alert('아이디나 비밀번호가 틀립니다.');document.location.href='/admin_login';</script>"
         else : #정보가 존재하지 않으면 
             return "<script type='text/javascript'>alert('아이디나 비밀번호가 틀립니다.');document.location.href='/admin_login';</script>"
