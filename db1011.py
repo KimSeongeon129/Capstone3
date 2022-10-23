@@ -1,12 +1,13 @@
-from flask import g
+from flask import g,Blueprint
 from contextlib import nullcontext
 from pymysql import cursors, connect
 import pymysql
 import bcrypt
-
+bp= Blueprint('db1011',__name__)
+@bp.route("/")
 def init_db():
 
-    db = connect(host='127.0.0.1', user='root', password='alstjd1598!', db='mydb', charset='utf8',cursorclass=pymysql.cursors.DictCursor)
+    db = connect(host='127.0.0.1', user='root', password='root', db='mydb', charset='utf8',cursorclass=pymysql.cursors.DictCursor)
     cursor = db.cursor()   #커서
    
     with db.cursor() as cursor: #DB가 없으면 만들어라.
@@ -22,10 +23,12 @@ def init_db():
         sql2= "CREATE TABLE IF NOT EXISTS `admin` (`admin_id` VARCHAR(100) NOT NULL, `admin_pw` VARCHAR(100) NOT NULL, `number` VARCHAR(100) NOT NULL, `name` VARCHAR(100) NOT NULL,PRIMARY KEY (`admin_id`))"
         sql3= "CREATE TABLE IF NOT EXISTS `image` (`inspection_number` VARCHAR(50) NOT NULL,`img_id` VARCHAR(45) NOT NULL,`bbox_x1` DOUBLE NOT NULL,`bbox_x2` DOUBLE NOT NULL,`bbox_y1` DOUBLE NOT NULL,`bbox_y2` DOUBLE NOT NULL,`image` MEDIUMBLOB NOT NULL,PRIMARY KEY (`inspection_number`)) "
         sql4= "CREATE TABLE IF NOT EXISTS `result` (`part_id` VARCHAR(45) NOT NULL, `date` DATETIME(6) NOT NULL, `part_name` VARCHAR(45) NOT NULL, `part_category` VARCHAR(45) NOT NULL, `part_judge` VARCHAR(45) NOT NULL, `user_id` VARCHAR(100) NOT NULL, `inspection_number` VARCHAR(50) NOT NULL, PRIMARY KEY (`inspection_number`), FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE cascade ON UPDATE cascade, FOREIGN KEY (`inspection_number`) REFERENCES `image` (`inspection_number`) ON DELETE cascade ON UPDATE cascade)"
+        
         cursor.execute(sql1)   
         cursor.execute(sql2)   
         cursor.execute(sql3)   
-        cursor.execute(sql4)   
+        cursor.execute(sql4)
+        add_admin(db,'id','1234','010','pms')
     db.commit
     db.close
 
@@ -83,15 +86,12 @@ def find_id_admin(db, admin_id):
         cursor.execute(sql, admin_id)
         result = cursor.fetchall()
 
-        if result == admin_id:      #db에 id가 존재함 -> 기존 회원
-            return True
-        else:                   #db에 id가 존재하지 않음 -> 신규회원 
-            return False
+        return result
      
 
 
 #admin id로 pw 찾아서 db와 비교후 반환
-def admin_login(db, admin_id, admin_pw):
+def get_admin_login(db, admin_id, admin_pw):
     with db.cursor() as cursor:
         sql = "select admin_pw from admin where admin_id=%s"
         data = (admin_id) 
@@ -105,13 +105,18 @@ def admin_login(db, admin_id, admin_pw):
 #admin 계정 추가
 def add_admin(db, admin_id, admin_pw,number,name):
     with db.cursor() as cursor:
-        hashed_pw=bcrypt.hashpw(admin_pw.encode('utf-8'), bcrypt.gensalt()) #bytes 타입 변환후 해쉬키로 암호화
-        save_pw = hashed_pw.decode('utf-8')   #db에 저장하기 전 unicode로 타입 변환 
 
-        sql = "insert into admin values(%s, %s, %s, %s)"
-        data = (admin_id, save_pw, number, name) 
-        cursor.execute(sql, data)
-        db.commit()
+        if (find_id_admin(db,admin_id)):        #db에 이미 계정이 존재하면
+            return
+        else:
+            encode_pw=admin_pw.encode('utf-8') #bytes 타입 변환
+            hashed_pw=bcrypt.hashpw(encode_pw, bcrypt.gensalt()) #해쉬키로 암호화
+            save_pw = hashed_pw.decode('utf-8')   #db에 저장하기 전 unicode로 타입 변환 
+
+            sql = "insert into mydb.admin values(%s, %s, %s, %s)"
+            data = (admin_id, save_pw, number, name) 
+            cursor.execute(sql, data)
+            db.commit()
 
 
 

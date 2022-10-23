@@ -51,10 +51,7 @@ def oauth_api():
     else : #db에 아이디가 존재 하지 않는 경우
         #db에 저장
         add_user(g.db, id, name)
-<<<<<<< HEAD
         
-=======
->>>>>>> a1838936a5be258a679e086c8febdc392ae02378
         return redirect("/user_main")
 
 #네이버 로그인
