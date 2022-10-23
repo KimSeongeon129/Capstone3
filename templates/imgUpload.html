@@ -1,3 +1,4 @@
+
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -5,6 +6,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="/static/assets/css/str_main_upload.css" />
+		<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 	</head>
 	
 	<body class="homepage is-preload">
@@ -36,13 +38,13 @@
 					<!-- https://velog.io/@minkyeong-ko/HTMLCSSJS-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%97%85%EB%A1%9C%EB%93%9C-%ED%8C%8C%EC%9D%BC%EC%9D%B4%EB%A6%84-%EB%82%98%ED%83%80%EB%82%B4%EA%B8%B0-%ED%99%94%EB%A9%B4%EC%97%90-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EB%B3%B4%EC%97%AC%EC%A3%BC%EA%B8%B0 -->
 					<div class="container">
 						<div class="image-upload" id="image-upload">
-							<form method="post" enctype="multipart/form-data">
+							<form method="POST" enctype="multipart/form-data">
 								<div class="button">
 									<label for="chooseFile" >
 										👉 CLICK HERE! 👈
 									</label>
 								</div>
-								<input type="file" id="chooseFile" name="chooseFile" accept="image/*" onchange="loadFile(this)">
+								<input type="file" id="chooseFile" name="chooseFile" accept="image/*">
 							</form>
 				
 							<div class="fileContainer">
@@ -63,39 +65,48 @@
 			<!-- Footer -->
 
 		<!-- Scripts -->
-			<script>//임시
+			<script>
 				var submit = document.getElementById('submitButton');
-				submit.onclick = showImage;     //Submit 버튼 클릭시 이미지 보여주기
+				submit.onclick = upload; 
+				
+				function upload() {
+				const imageInput = $("#chooseFile")[0];
 
-				function showImage() {
-					var newImage = document.getElementById('image-show').lastElementChild;
-					newImage.style.visibility = "visible";
-					
-					document.getElementById('image-upload').style.visibility = 'hidden';
+				const file = imageInput.files[0];
+				var name = document.getElementById('fileName');
+				name.textContent = file.name;
+				console.log("chooseFile: ", imageInput.files)
 
+				if(imageInput.files.length === 0){
+					alert("파일은 선택해주세요");
+					return;
 				}
 
-				function loadFile(input) {
-					var file = input.files[0];
+				const formData = new FormData();
+				formData.append("image", imageInput.files[0]);
+				for (var key of formData.keys()) {
+					console.log(key);
+				}
+				for (var value of formData.values()) {
+					console.log(value);
+				}
 
-					var name = document.getElementById('fileName');
-					name.textContent = file.name;
 
-					var newImage = document.createElement("img");
-					newImage.setAttribute("class", 'img');
-
-					newImage.src = URL.createObjectURL(file);   
-
-					newImage.style.width = "70%";
-					newImage.style.height = "70%";
-					newImage.style.visibility = "hidden";
-					newImage.style.objectFit = "contain";
-
-					var imgContainer = document.getElementById('image-show');
-					imgContainer.appendChild(newImage);
-				};
-			</script>
-			<script src="/static/assets/js/str_jquery.min.js"></script>
+				$.ajax({
+					type:"POST",
+					url: "/upload",
+					processData: false,
+					contentType: false,
+					data: formData,
+					success: function(rtn){
+						console.log("rnt: ", rnt)
+					},
+					err: function(err){
+						console.log("err: ", err)
+					}
+				})
+				}
+			</script>		
 			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
 			<script src="/static/assets/js/str_browser.min.js"></script>
 			<script src="/static/assets/js/str_breakpoints.min.js"></script>

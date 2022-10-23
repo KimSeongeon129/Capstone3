@@ -12,12 +12,15 @@ def main():
     app.register_blueprint(list.bp)
     app.register_blueprint(statistics.bp)
     app.register_blueprint(db1011.bp)
+
 @app.before_request # 요청이 오기 직전에 db 연결
 def before_request():
     get_db()
+
 @app.teardown_request # 요청이 끝난 직후에 db 연결 해제
 def teardown_request(exception):
     close_db()
+    
 if __name__ =="__main__" :
     main()
     app.run(host='0.0.0.0',port=5000,debug=True)
