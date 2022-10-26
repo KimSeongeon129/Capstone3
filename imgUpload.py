@@ -51,10 +51,8 @@ def upload():
     url=s3_get_image_url(s3, img.filename)#url 저장
     #db에 url 저장하는 코드
 
-    if ret: 
-        return "<script type='text/javascript'>alert('업로드 성공.');document.location.href='/user_main';</script>"
-    else:
-        return render_template("user_main.html")
+
+    return url
 
     
 
