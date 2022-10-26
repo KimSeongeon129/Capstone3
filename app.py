@@ -11,12 +11,9 @@ def main():
     app.register_blueprint(cameraUpload.bp)
     app.register_blueprint(list.bp)
     app.register_blueprint(statistics.bp)
-<<<<<<< HEAD
    
-=======
-    app.register_blueprint(db1011.bp)
+    
 
->>>>>>> f972a29e4cc85ec5d94b0b91ffa49b5363f100e7
 @app.before_request # 요청이 오기 직전에 db 연결
 def before_request():
     get_db()
