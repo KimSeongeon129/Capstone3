@@ -17,15 +17,15 @@
 					<div class="container">
 
 						<!-- Logo -->
-							<h1 id="logo"><a href="user_main.html">프로그램 이름</a></h1>
+						<h1 id="logo"><a href="/user_main">프로그램 이름</a></h1>
 						<!-- Nav -->
 							<nav id="nav">
 								<ul>
-									<li><a class="icon solid fa-home" href="user_main.html"><span>Home</span></a></li>
-									<li><a class="icon fa-chart-bar" href="/templates/imgUpload.html"><span>이미지 업로드</span></a></li>
-									<li><a class="icon solid fa-cog" href="/templates/cameraUpload.html"><span>실시간 검사</span></a></li>
-									<li><a class="icon solid fa-retweet" href="/templates/list.html"><span>내역조회</span></a></li>
-									<li><a class="icon solid fa-retweet" href="/templates/statistics.html"><span>통계</span></a></li>
+									<li><a class="icon solid fa-home" href="/user_main"><span>Home</span></a></li>
+									<li><a class="icon fa-chart-bar" href="/imgUpload"><span>이미지 업로드</span></a></li>
+									<li><a class="icon solid fa-cog" href="/cameraUpload"><span>실시간 검사</span></a></li>
+									<li><a class="icon solid fa-retweet" href="/list"><span>내역조회</span></a></li>
+									<li><a class="icon solid fa-retweet" href="/statistics"><span>통계</span></a></li>
 									<li><a class="icon solid fa-sitemap" href=" "><span>로그아웃</span></a></li>
 								</ul>
 							</nav>
@@ -98,8 +98,10 @@
 					processData: false,
 					contentType: false,
 					data: formData,
-					success: function(rtn){
-						console.log("rnt: ", rnt)
+					success: function(data){
+						console.log("data: ", data)
+						alert('업로드 성공.');
+						window.location.href="./imgUpload_result"
 					},
 					err: function(err){
 						console.log("err: ", err)
