@@ -34,15 +34,15 @@
 					<div class="container">
 
 						<!-- Logo -->
-							<h1 id="logo"><a href="/user_main">프로그램 이름</a></h1>
+							<h1 id="logo"><a href="user_main.html">프로그램 이름</a></h1>
 						<!-- Nav -->
 							<nav id="nav">
 								<ul>
-									<li><a class="icon solid fa-home" href="/user_main"><span>Home</span></a></li>
-									<li><a class="icon fa-chart-bar" href="/imgUpload"><span>이미지 업로드</span></a></li>
-									<li><a class="icon solid fa-cog" href="cameraUpload"><span>실시간 검사</span></a></li>
-									<li><a class="icon solid fa-retweet" href="/list"><span>내역조회</span></a></li>
-									<li><a class="icon solid fa-retweet" href="/statistics"><span>통계</span></a></li>
+									<li><a class="icon solid fa-home" href="user_main.html"><span>Home</span></a></li>
+									<li><a class="icon fa-chart-bar" href="/templates/imgUpload.html"><span>이미지 업로드</span></a></li>
+									<li><a class="icon solid fa-cog" href="/templates/cameraUpload.html"><span>실시간 검사</span></a></li>
+									<li><a class="icon solid fa-retweet" href="/templates/list.html"><span>내역조회</span></a></li>
+									<li><a class="icon solid fa-retweet" href="/templates/statistics.html"><span>통계</span></a></li>
 									<li><a class="icon solid fa-sitemap" href=" "><span>로그아웃</span></a></li>
 								</ul>
 							</nav>
@@ -54,15 +54,18 @@
 				<section id="main">
 					<div class="container">					
 	         <div class="con1">
-             <div class="one"style="width:770px; height:700px; border:1px solid red;">
-               카메라 연동할 부분
-            </div>
+             <div class="camera"style="width:770px; height:700px; border:1px solid red;">
+               카메라 연동할 부분<br><br>
+               <!--핸드폰으로 확인 가능-->
+                <input type="file" accept="image/*" capture="camera" id="camera">
+				<img id="frame">
+             </div>
           </div>
           <div class="con2">
-            <div class="two"style="width:380px; height:350px; border:1px solid green; ">
+            <div class="pre_img"style="width:380px; height:350px; border:1px solid green; ">
              이전 결과 이미지
             </div>
-            <div class="three"style="width:380px; height:350px; border:1px solid green;">
+            <div class="pre_result"style="width:380px; height:350px; border:1px solid green;">
               이전 결과 조회
             </div>
           </div>
@@ -72,6 +75,14 @@
 			<!-- Footer -->
 
 		<!-- Scripts -->
+            <script>
+                var  camera = document.getElementById('camera');
+                var frame = document.getElementById('frame');
+                camera.addEventListener('change', function(e){
+                    var file = e.target.files[0];
+                    frame.src = URL.createObjectURL(file);
+                });
+            </script>
 			<script src="/static/assets/js/str_jquery.min.js"></script>
 			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
 			<script src="/static/assets/js/str_browser.min.js"></script>
