@@ -1,5 +1,5 @@
 from flask import Flask
-from db1011 import get_db,close_db,init_db
+from db1011 import init_db,get_db,close_db
 import login,admin_login,user_main,imgUpload,cameraUpload,list,statistics
 app=Flask(__name__)
 def main():
@@ -24,4 +24,4 @@ def teardown_request(exception):
     
 if __name__ =="__main__" :
     main()
-    app.run(host='0.0.0.0',port=5000,debug=True)
+    app.run(port=5000,debug=True)

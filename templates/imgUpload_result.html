@@ -7,6 +7,17 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 		<link rel="stylesheet" href="/static/assets/css/str_main.css" />
 	</head>
+  <style>
+  .imgResult {
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap; 
+    justify-content:space-between;
+    align-content: center; 
+    align-items: stretch;
+  
+  }
+  </style>
 	<body class="homepage is-preload">
 		<div id="page-wrapper">
 
@@ -33,12 +44,19 @@
 
 			<!-- Main -->
 				<section id="main">
-					<div class="container">
-						이미지 결과 조회	
+					<div class="container">					
+						<div class="imgResult">
+							<div class="img"style="width:750px; height:550px; border:1px solid red; ">
+							<img src="https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/main_img.jpg">
+							이미지 결과 사진
+							</div>
+							<div class="result"style="width:380px; height:350px; border:1px solid green;">
+							 검사 결과 
+							 {{data.date}} {{data.part_name}}
+							</div>
+						</div>
 					</div>
 				</section>
-
-			<!-- Footer -->
 
 		<!-- Scripts -->
 			<script src="/static/assets/js/str_jquery.min.js"></script>
