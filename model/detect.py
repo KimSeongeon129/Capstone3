@@ -13,6 +13,7 @@ def detect(model, source, stride, device, half, iou=0.45, conf=0.25, imgsz=640, 
            save_conf=True, project='runs/detect', name='exp', exist_ok=True):
     webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
         ('rtsp://', 'rtmp://', 'http://', 'https://'))
+    result_list = []
 
     imgsz = check_img_size(imgsz, s=stride)  # check img_size
 
@@ -87,7 +88,6 @@ def detect(model, source, stride, device, half, iou=0.45, conf=0.25, imgsz=640, 
                     n = (det[:, -1] == c).sum()  # detections per class
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
 
-                result_list = []
                 # results to list
                 for *xyxy, conf, cls in reversed(det):
                     c1, c2 = (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3]))

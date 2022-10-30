@@ -60,7 +60,7 @@ def upload():
     device = select_device()
     half = device.type != 'cpu'  # half precision only supported on CUDA
 
-    model = attempt_load('runs/train/yolov7x-custom13/weights/best.pt', map_location=device)  # load FP32 model
+    model = attempt_load('model/yolov7.pt', map_location=device)  # load FP32 model
     stride = int(model.stride.max())  # model stride
     model = TracedModel(model, device, 640)
     
