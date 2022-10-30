@@ -8,6 +8,11 @@ import os
 from werkzeug.utils import secure_filename
 import time
 
+from model.detect import detect
+from model.models.experimental import attempt_load
+from model.utils.general import set_logging
+from model.utils.torch_utils import select_device, TracedModel
+
 
 bp= Blueprint('imgUpload',__name__)
 dict_data=dict(img_url="",inspection_number="21231232",part_id="123",date="2022-10-30",part_name="모코코",part_category="모코코",part_judge="모코코",user_id="nickname")
@@ -49,9 +54,20 @@ def upload():
     img.save('static/assets/img/' + secure_filename(img.filename))
     st3=time.time()
     my_img = 'static/assets/img/' + secure_filename(img.filename)
-    terminal_command = f"python model/detect.py --weights model/yolov7.pt --conf 0.25 --img-size 640 --source {my_img}"
+
+    # 검사 모델 로드
+    set_logging()
+    device = select_device()
+    half = device.type != 'cpu'  # half precision only supported on CUDA
+
+    model = attempt_load('runs/train/yolov7x-custom13/weights/best.pt', map_location=device)  # load FP32 model
+    stride = int(model.stride.max())  # model stride
+    model = TracedModel(model, device, 640)
+    
+    # 검사 모델 실행
+    print(detect(model=model, source=my_img, stride=stride, device=device, half=half))
     print('실행')
-    os.system(terminal_command)
+
     st4=time.time()
     
     ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(img.filename),img.filename)#파일 올리기
