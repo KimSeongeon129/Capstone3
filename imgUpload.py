@@ -1,14 +1,16 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,g
 from flask import jsonify,url_for,redirect,request,Blueprint
+from db1011 import add_image,add_result
 import requests
 import json
 import boto3
 import os
 from werkzeug.utils import secure_filename
+import time
 
 
 bp= Blueprint('imgUpload',__name__)
-
+dict_data=dict(img_url="",inspection_number="21231232",part_id="123",date="2022-10-30",part_name="모코코",part_category="모코코",part_judge="모코코",user_id="nickname")
 
 def s3_connection():
     try:
@@ -29,7 +31,9 @@ s3 = s3_connection()
 
 @bp.route('/imgUpload_result')#이미지 결과페이지
 def imgUpload_result():
-    return render_template("imgUpload_result.html")
+    #데이터 보내기
+
+    return render_template("imgUpload_result.html",data=dict_data)
 
 @bp.route('/imgUpload')#이미지 결과페이지
 def imgUpload():
@@ -38,21 +42,28 @@ def imgUpload():
 
 @bp.route('/upload',methods=['POST'])#이미지 form으로 가져오기
 def upload():
-    print("이미지 불러오기 전")
+    global dict_data
+    st1=time.time()
     img=request.files['image']#파일 가져오기
+    st2=time.time()
     img.save('static/assets/img/' + secure_filename(img.filename))
-
+    st3=time.time()
     my_img = 'static/assets/img/' + secure_filename(img.filename)
     terminal_command = f"python model/detect.py --weights model/yolov7.pt --conf 0.25 --img-size 640 --source {my_img}"
+    print('실행')
     os.system(terminal_command)
+    st4=time.time()
     
     ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(img.filename),img.filename)#파일 올리기
-    print(ret)
-    url=s3_get_image_url(s3, img.filename)#url 저장
+    st5=time.time()
+    print(ret,f"{st4 - st3:.5f} sec",st5-st4)
+    object_name=img.filename
+    dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/{object_name}'#url 저장
     #db에 url 저장하는 코드
+    #add_result(g.db, 'part_id', 'date', 'part_name', 'part_category', 'part_judge', 'user_id', 'inspection_number')
+    #add_image(g.db, 'inspection_number', 'img_id', 'bbox_x1', 'bbox_x2', 'bbox_y1', 'bbox_y2', 'image')
 
-
-    return url
+    return dict_data['img_url']
 
     
 
@@ -72,11 +83,3 @@ def s3_put_object(s3, bucket, filepath, access_key):
         print(e)
         return False
     return True
-
-def s3_get_image_url(s3, filename):
-    """
-    s3 : 연결된 s3 객체(boto3 client)
-    filename : s3에 저장된 파일 명
-    """
-    location = s3.get_bucket_location(Bucket="sejong-capstone-s3-bucket")["LocationConstraint"]
-    return "https://sejong-capstone-s3-bucket.s3.{location}.amazonaws.com/{filename}.jpg"

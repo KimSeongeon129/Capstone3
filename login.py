@@ -16,14 +16,13 @@ def oauth_api():
     #카카오 코드 가져오기
     code=str(request.args.get('code'))
     url = "https://kauth.kakao.com/oauth/token"
-    payload="grant_type=authorization_code&client_id=32e62fdd5c6f676f20e8792d524c06b9&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Foauth&code="+str(code)
+    payload="grant_type=authorization_code&client_id=32e62fdd5c6f676f20e8792d524c06b9&redirect_uri=http://127.0.0.1:5000%2Foauth&code="+str(code)
     headers= {
         'Content-Type': "application/x-www-form-urlencoded",
         'Cache-control':"no-cache",
     }
     #토큰 가져오기
     response=requests.request("Post",url,data=payload,headers=headers)
-    print(response.text)
     access_token = json.loads(((response.text).encode('utf-8')))['access_token']
     #토큰의 정보 가져오기
     url="https://kapi.kakao.com/v1/user/access_token_info"
