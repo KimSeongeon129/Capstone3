@@ -18,10 +18,10 @@ def init_db():
     
     with db.cursor() as cursor: #DB가 없으면 만들어라.
     
-        sql1= "CREATE TABLE IF NOT EXISTS `user` (`user_id` VARCHAR(100) NOT NULL, `nickname` VARCHAR(100) NOT NULL,`user_admin` VARCHAR(100) , `user_line` VARCHAR(100) ,PRIMARY KEY (`user_id`))"
-        sql2= "CREATE TABLE IF NOT EXISTS `admin` (`admin_id` VARCHAR(100) NOT NULL, `admin_pw` VARCHAR(100) NOT NULL, `number` VARCHAR(100) NOT NULL, `name` VARCHAR(100) NOT NULL,PRIMARY KEY (`admin_id`))"
-        sql3= "CREATE TABLE IF NOT EXISTS `image` (`inspection_number` VARCHAR(50) NOT NULL,`bbox_x1` DOUBLE NOT NULL,`bbox_x2` DOUBLE NOT NULL,`bbox_y1` DOUBLE NOT NULL,`bbox_y2` DOUBLE NOT NULL,`image` VARCHAR(100) NOT NULL, PRIMARY KEY (`inspection_number`)) "
-        sql4= "CREATE TABLE IF NOT EXISTS `result` (`part_id` VARCHAR(45) NOT NULL, `part_name` VARCHAR(45) NOT NULL, `part_category` VARCHAR(45) NOT NULL, `part_judge` VARCHAR(45) NOT NULL, `user_id` VARCHAR(100) NOT NULL, `inspection_number` VARCHAR(50) NOT NULL, `date` TIMESTAMP DEFAULT NOW(), PRIMARY KEY (`inspection_number`), FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE cascade ON UPDATE cascade, FOREIGN KEY (`inspection_number`) REFERENCES `image` (`inspection_number`) ON DELETE cascade ON UPDATE cascade)"
+        sql1= "CREATE TABLE IF NOT EXISTS mydb.`user` (`user_id` VARCHAR(100) NOT NULL, `nickname` VARCHAR(100) NOT NULL,`user_admin` VARCHAR(100) , `user_line` VARCHAR(100) ,PRIMARY KEY (`user_id`))"
+        sql2= "CREATE TABLE IF NOT EXISTS mydb.`admin` (`admin_id` VARCHAR(100) NOT NULL, `admin_pw` VARCHAR(100) NOT NULL, `number` VARCHAR(100) NOT NULL, `name` VARCHAR(100) NOT NULL,PRIMARY KEY (`admin_id`))"
+        sql3= "CREATE TABLE IF NOT EXISTS mydb.`result` (`part_id` VARCHAR(45) NOT NULL, `part_name` VARCHAR(45) NOT NULL, `part_category` VARCHAR(45) NOT NULL, `part_judge` VARCHAR(45) NOT NULL, `user_id` VARCHAR(100) NOT NULL, `inspection_number` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY, `date` TIMESTAMP DEFAULT NOW()) "
+        sql4= "CREATE TABLE IF NOT EXISTS mydb.`image` (`inspection_number` INT(100) NOT NULL,`bbox_x1` DOUBLE NOT NULL,`bbox_x2` DOUBLE NOT NULL,`bbox_y1` DOUBLE NOT NULL,`bbox_y2` DOUBLE NOT NULL,`image` VARCHAR(100) NOT NULL, PRIMARY KEY (`inspection_number`), FOREIGN KEY (`inspection_number`) REFERENCES `result` (`inspection_number`) ON DELETE cascade ON UPDATE cascade) "
         
         cursor.execute(sql1)   
         cursor.execute(sql2)   
@@ -66,7 +66,7 @@ def find_id_user(db, user_id):
         sql= "select user_id from mydb.user where user_id=%s"
         cursor.execute(sql, user_id)
         result = cursor.fetchall()
-         #db에 id가 존재함
+        #db에 id가 존재함
         return result       
          
 #user 계정 추가
@@ -159,12 +159,26 @@ def detailed_result(db, inspection_number):
     
     return result
 
-#검사 결과 추가(저장)
-def add_result(db, part_id, part_name, part_category, part_judge, user_id, inspection_number):
+#part_id로 inspection_number 찾기
+def find_inspection_number(db, part_id):
     with db.cursor() as cursor:
-        sql = "insert into result values(%s,%s,%s,%s,%s,%s,DEFAULT)"
-        data = (part_id,  part_name, part_category, part_judge, user_id, inspection_number)
+        sql = "select inspection_number from result where part_id=%s"
+        data = (part_id)
         cursor.execute(sql, data)
+        result = cursor.fetchall()
+        result = result[0]['inspection_number']
+        
+    return result
+        
+    
+
+#검사 결과 추가(저장)
+def add_result(db, part_id, part_name, part_category, part_judge, user_id):
+    with db.cursor() as cursor:
+        sql = "insert into result (part_id,part_name,part_category,part_judge,user_id,date) values(%s,%s,%s,%s,%s, DEFAULT)"
+        data = (part_id,  part_name, part_category, part_judge, user_id)
+        cursor.execute(sql, data)
+        
         db.commit()
         
 
