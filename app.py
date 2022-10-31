@@ -13,6 +13,8 @@ def main():
     app.register_blueprint(list.bp)
     app.register_blueprint(statistics.bp)
    
+    
+
 @app.before_request # 요청이 오기 직전에 db 연결
 def before_request():
     get_db()
