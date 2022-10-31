@@ -159,11 +159,24 @@ def detailed_result(db, inspection_number):
     
     return result
 
-#검사 결과 추가(저장)
-def add_result(db, part_id, part_name, part_category, part_judge, user_id, inspection_number):
+#part_id로 inspection_number 찾기
+def find_inspection_number(db, part_id):
     with db.cursor() as cursor:
-        sql = "insert into result values(%s,%s,%s,%s,%s,%s,DEFAULT)"
-        data = (part_id,  part_name, part_category, part_judge, user_id, inspection_number)
+        sql = "select inspection_number from result where part_id=%s"
+        data = (part_id)
+        cursor.execute(sql, data)
+        result = cursor.fetchall()
+        result = result['inspection_number']
+        
+    return result
+        
+    
+
+#검사 결과 추가(저장)
+def add_result(db, part_id, part_name, part_category, part_judge, user_id):
+    with db.cursor() as cursor:
+        sql = "insert into result (part_id,part_name,part_category,part_judge,user_id,date) values(%s,%s,%s,%s,%s, DEFAULT)"
+        data = (part_id,  part_name, part_category, part_judge, user_id)
         cursor.execute(sql, data)
         db.commit()
         
