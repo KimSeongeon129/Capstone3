@@ -1,11 +1,11 @@
-from flask import Flask, render_template,g
+from flask import Flask, render_template,g,session
 from flask import jsonify,url_for,redirect,request,Blueprint
 from db1011 import add_image,add_result
 from AI import check_type
 import requests
 import json
 import boto3
-import os
+import os,random
 import sys
 from werkzeug.utils import secure_filename
 import time
@@ -21,7 +21,7 @@ from model.utils.torch_utils import select_device, TracedModel
 
 
 bp= Blueprint('imgUpload',__name__)
-dict_data=dict(img_url="",inspection_number="21231232",part_id="123",date="2022-10-30",part_name="모코코",part_category="모코코",part_judge="모코코",user_id="nickname")
+dict_data=dict(img_url="",inspection_number="21231232",part_id="123",date="",part_name="모코코",part_category="모코코",part_judge="모코코",user_id="nickname")
 
 set_logging()
 device = select_device()
@@ -62,6 +62,7 @@ def imgUpload():
 @bp.route('/upload',methods=['POST'])#이미지 form으로 가져오기
 def upload():
     global dict_data
+    start=time.time()
 
     img=request.files['image']#파일 가져오기
     img.save('static/assets/img/' + secure_filename(img.filename))
@@ -74,13 +75,23 @@ def upload():
     ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(img.filename),img.filename)#파일 올리기
     object_name=img.filename
     dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/{object_name}'#url 저장
-    dic1=dic_list[0]
-    dict_data['part_category']=dic1['label']
-    dict_data['part_name']=check_type(dict_data['part_category'])
-    print(dict_data)
+    dict_data['part_id']=random.randint(0,9223372036854775807)#램덤 숫자 일련번호 
+    #아이디 세션에 있는거 넣기
+    dict_data['user_id']=session['username']
+    if not dic_list:
+        dict_data['part_judge']='양품'
+    else:
+        dic1=dic_list[0]
+        dict_data['part_category']=dic1['label']
+        dict_data['part_name']=check_type(dict_data['part_category'])
+        dict_data['part_judge']='불량품'
     
+    dict_data['date']=str(time.strftime('%y-%m-%d %H:%M:%S'))
+    print(dict_data)
+    end=time.time()
+    print(end-start)
     #db에 url 저장하는 코드
-    #add_result(g.db, 'part_id', 'date', 'part_name', 'part_category', 'part_judge', 'user_id', 'inspection_number')
+    #add_result(g.db, dict_data['part_id'], dict_data['part_name'], dict_data['part_category'], dict_data['part_judge'], dict_data['user_id'], dict_data['inspection_number'])
     #add_image(g.db, 'inspection_number', 'img_id', 'bbox_x1', 'bbox_x2', 'bbox_y1', 'bbox_y2', 'image')
 
     return dict_data['img_url']

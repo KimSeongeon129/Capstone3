@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,session
 from flask import jsonify,url_for,redirect,request,Blueprint,g
 from db1011 import find_id_user,find_id_admin, add_user
 import requests
@@ -46,11 +46,12 @@ def oauth_api():
     # db에 아이디가 존재하면
     
     if (find_id) :
+        session['username']=id
         return redirect("/user_main")
     else : #db에 아이디가 존재 하지 않는 경우
         #db에 저장
         add_user(g.db, id, name)
-        
+        session['username']=id
         return redirect("/user_main")
 
 #네이버 로그인
@@ -82,7 +83,9 @@ def naver_login():
     # db에 아이디가 존재하면
     if (find_id) :
         return redirect("/user_main")
+        session['username']=id
     else : #db에 아이디가 존재 하지 않는 경우
         #db에 저장
         add_user(g.db, id, name)
+        session['username']=id
         return redirect("/user_main")
