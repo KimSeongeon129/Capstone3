@@ -26,13 +26,9 @@ dict_data=dict(img_url="",inspection_number="21231232",part_id="123",date="2022-
 set_logging()
 device = select_device()
 half = device.type != 'cpu'  # half precision only supported on CUDA
-print('실행')
 
-print('model')
 model = attempt_load('model/yolov7.pt', map_location=device)  # load FP32 model
-print('stride')
 stride = int(model.stride.max())  # model stride
-print('model2')
 model = TracedModel(model, device, 640)
 
 def s3_connection():
@@ -66,29 +62,16 @@ def imgUpload():
 @bp.route('/upload',methods=['POST'])#이미지 form으로 가져오기
 def upload():
     global dict_data
-    print('실행')
 
-    st1=time.time()
     img=request.files['image']#파일 가져오기
-    st2=time.time()
     img.save('static/assets/img/' + secure_filename(img.filename))
-    st3=time.time()
     my_img = 'static/assets/img/' + secure_filename(img.filename)
-    print('실행')
 
 
-    # 검사 모델 로드
-    dic_list=detect(model=model, source=my_img, stride=stride, device=device, half=half)
-    
     # 검사 모델 실행
-    print(dic_list)
-    print('실행')
+    dic_list=detect(model=model, source=my_img, stride=stride, device=device, half=half)
 
-    st4=time.time()
-    
     ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(img.filename),img.filename)#파일 올리기
-    st5=time.time()
-    print(ret,f"{st4 - st3:.5f} sec",st5-st4)
     object_name=img.filename
     dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/{object_name}'#url 저장
     dic1=dic_list[0]
