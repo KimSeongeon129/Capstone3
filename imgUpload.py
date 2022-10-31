@@ -76,8 +76,8 @@ def upload():
     object_name=img.filename
     dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/{object_name}'#url 저장
     #db에 url 저장하는 코드
-    #add_result(g.db, 'part_id', 'date', 'part_name', 'part_category', 'part_judge', 'user_id', 'inspection_number')
-    #add_image(g.db, 'inspection_number', 'img_id', 'bbox_x1', 'bbox_x2', 'bbox_y1', 'bbox_y2', 'image')
+    add_result(g.db, 'part_id',  'part_name', 'part_category', 'part_judge', 'user_id', 'inspection_number')
+    add_image(g.db, 'inspection_number', 'img_id', 'bbox_x1', 'bbox_x2', 'bbox_y1', 'bbox_y2', 'image')
 
     return dict_data['img_url']
 
