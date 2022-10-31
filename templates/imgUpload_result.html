@@ -59,6 +59,20 @@
 				</section>
 
 		<!-- Scripts -->
+			<script>
+				var file = "" //다른 서버주소/.jpg
+				var reader = new FileReader();
+				reader.readAsDataURL(file); //파일을 읽는 메서드 
+
+				reader.onload = function(){
+					var photoFrame = document.createElement("div");
+					photoFrame.style = 'background : url(${reader.result}); background-size : cover';
+					photoFrame.className = "photoFrame";
+					document.getElementById("img").appendChild(photoFrame);
+					e.target.value = "";
+				}
+
+			</script>
 			<script src="/static/assets/js/str_jquery.min.js"></script>
 			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
 			<script src="/static/assets/js/str_browser.min.js"></script>
