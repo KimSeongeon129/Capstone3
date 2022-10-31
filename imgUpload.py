@@ -9,6 +9,10 @@ import os
 import sys
 from werkzeug.utils import secure_filename
 import time
+import codecs
+
+local_path = codecs.decode(os.getcwd().replace('\\','\\\\'), 'unicode_escape')
+sys.path.append(local_path + '\\model')
 
 from model.detect import detect
 from model.models.experimental import attempt_load
@@ -18,7 +22,6 @@ from model.utils.torch_utils import select_device, TracedModel
 
 bp= Blueprint('imgUpload',__name__)
 dict_data=dict(img_url="",inspection_number="21231232",part_id="123",date="2022-10-30",part_name="모코코",part_category="모코코",part_judge="모코코",user_id="nickname")
-sys.path.append("C:\\Users\\min06\\Capstone3\\model")
 
 def s3_connection():
     try:
