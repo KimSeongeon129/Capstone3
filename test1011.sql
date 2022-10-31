@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS myDB.`image` (
   `bbox_y2` DOUBLE NOT NULL,
   `image`  VARCHAR(100),
   PRIMARY KEY (`inspection_number`),
-  FOREIGN KEY (`inspection_number`) REFERENCES `image` (`inspection_number`) ON DELETE cascade ON UPDATE cascade)
+  FOREIGN KEY (`inspection_number`) REFERENCES `result` (`inspection_number`) ON DELETE cascade ON UPDATE cascade)
 ENGINE = InnoDB;
 
 
