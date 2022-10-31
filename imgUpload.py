@@ -1,6 +1,6 @@
 from flask import Flask, render_template,g,session
 from flask import jsonify,url_for,redirect,request,Blueprint
-from db1011 import add_image,add_result
+from db1011 import add_image,add_result,find_inspection_number
 from AI import check_type
 import requests
 import json
@@ -21,7 +21,7 @@ from model.utils.torch_utils import select_device, TracedModel
 
 
 bp= Blueprint('imgUpload',__name__)
-dict_data=dict(img_url="",inspection_number="21231232",part_id="123",date="",part_name="모코코",part_category="모코코",part_judge="모코코",user_id="nickname")
+dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname")
 
 def s3_connection():
     try:
@@ -72,11 +72,12 @@ def upload():
     
     # 검사 모델 실행
     dic_list=detect(model=model, source=my_img, stride=stride, device=device, half=half)
+    print(dic_list)
 
     ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(img.filename),img.filename)#파일 올리기
     object_name=img.filename
     dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/{object_name}'#url 저장
-    dict_data['part_id']=random.randint(0,9223372036854775807)#램덤 숫자 일련번호 
+    dict_data['part_id']=str(random.randint(0,9223372036854775807))#램덤 숫자 일련번호 
     #아이디 세션에 있는거 넣기
     dict_data['user_id']=session['username']
     if not dic_list:
@@ -92,8 +93,9 @@ def upload():
     end=time.time()
     print(end-start)
     #db에 url 저장하는 코드
-    #add_result(g.db, dict_data['part_id'], dict_data['part_name'], dict_data['part_category'], dict_data['part_judge'], dict_data['user_id'], dict_data['inspection_number'])
-    #add_image(g.db, 'inspection_number', 'img_id', 'bbox_x1', 'bbox_x2', 'bbox_y1', 'bbox_y2', 'image')
+    add_result(g.db, dict_data['part_id'], dict_data['part_name'], dict_data['part_category'], dict_data['part_judge'], dict_data['user_id'])
+    dict_data['inspection_number']=find_inspection_number(g.db, dict_data['part_id'])
+    add_image(g.db, int(dict_data['inspection_number']), '1','2', '3', '4', object_name)#url가져올때 f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/이거 붙여야함
 
     return dict_data['img_url']
 
