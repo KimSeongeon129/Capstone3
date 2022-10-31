@@ -23,6 +23,18 @@ from model.utils.torch_utils import select_device, TracedModel
 bp= Blueprint('imgUpload',__name__)
 dict_data=dict(img_url="",inspection_number="21231232",part_id="123",date="2022-10-30",part_name="모코코",part_category="모코코",part_judge="모코코",user_id="nickname")
 
+set_logging()
+device = select_device()
+half = device.type != 'cpu'  # half precision only supported on CUDA
+print('실행')
+
+print('model')
+model = attempt_load('model/yolov7.pt', map_location=device)  # load FP32 model
+print('stride')
+stride = int(model.stride.max())  # model stride
+print('model2')
+model = TracedModel(model, device, 640)
+
 def s3_connection():
     try:
         s3 = boto3.client(
@@ -66,17 +78,6 @@ def upload():
 
 
     # 검사 모델 로드
-    set_logging()
-    device = select_device()
-    half = device.type != 'cpu'  # half precision only supported on CUDA
-    print('실행')
-
-    print('model')
-    model = attempt_load('model/yolov7.pt', map_location=device)  # load FP32 model
-    print('stride')
-    stride = int(model.stride.max())  # model stride
-    print('model2')
-    model = TracedModel(model, device, 640)
     dic_list=detect(model=model, source=my_img, stride=stride, device=device, half=half)
     
     # 검사 모델 실행
