@@ -1,13 +1,16 @@
 import time
+import sys
 from pathlib import Path
 
 import torch
 import torch.backends.cudnn as cudnn
 from numpy import random
 
-from utils.datasets import LoadStreams, LoadImages
-from utils.general import check_img_size, non_max_suppression, apply_classifier, scale_coords
-from utils.torch_utils import load_classifier, time_synchronized
+from model.utils.datasets import LoadStreams, LoadImages
+from model.utils.general import check_img_size, non_max_suppression, apply_classifier, scale_coords
+from model.utils.torch_utils import load_classifier, time_synchronized
+
+sys.path.append("C:\\Users\\min06\\Capstone3\\model")
 
 def detect(model, source, stride, device, half, iou=0.45, conf=0.25, imgsz=640, classes=None, agnostic_nms=True, save_txt=True, augment=True, 
            save_conf=True, project='runs/detect', name='exp', exist_ok=True):
