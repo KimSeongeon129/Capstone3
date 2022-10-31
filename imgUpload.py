@@ -1,12 +1,18 @@
 from flask import Flask, render_template,g
 from flask import jsonify,url_for,redirect,request,Blueprint
 from db1011 import add_image,add_result
+from AI import check_type
 import requests
 import json
 import boto3
 import os
+import sys
 from werkzeug.utils import secure_filename
 import time
+import codecs
+
+local_path = codecs.decode(os.getcwd().replace('\\','\\\\'), 'unicode_escape')
+sys.path.append(local_path + '\\model')
 
 from model.detect import detect
 from model.models.experimental import attempt_load
@@ -16,6 +22,14 @@ from model.utils.torch_utils import select_device, TracedModel
 
 bp= Blueprint('imgUpload',__name__)
 dict_data=dict(img_url="",inspection_number="21231232",part_id="123",date="2022-10-30",part_name="모코코",part_category="모코코",part_judge="모코코",user_id="nickname")
+
+set_logging()
+device = select_device()
+half = device.type != 'cpu'  # half precision only supported on CUDA
+
+model = attempt_load('model/yolov7.pt', map_location=device)  # load FP32 model
+stride = int(model.stride.max())  # model stride
+model = TracedModel(model, device, 640)
 
 def s3_connection():
     try:
@@ -48,33 +62,23 @@ def imgUpload():
 @bp.route('/upload',methods=['POST'])#이미지 form으로 가져오기
 def upload():
     global dict_data
-    st1=time.time()
+
     img=request.files['image']#파일 가져오기
-    st2=time.time()
     img.save('static/assets/img/' + secure_filename(img.filename))
-    st3=time.time()
     my_img = 'static/assets/img/' + secure_filename(img.filename)
 
-    # 검사 모델 로드
-    set_logging()
-    device = select_device()
-    half = device.type != 'cpu'  # half precision only supported on CUDA
 
-    model = attempt_load('model/yolov7.pt', map_location=device)  # load FP32 model
-    stride = int(model.stride.max())  # model stride
-    model = TracedModel(model, device, 640)
-    
     # 검사 모델 실행
-    print(detect(model=model, source=my_img, stride=stride, device=device, half=half))
-    print('실행')
+    dic_list=detect(model=model, source=my_img, stride=stride, device=device, half=half)
 
-    st4=time.time()
-    
     ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(img.filename),img.filename)#파일 올리기
-    st5=time.time()
-    print(ret,f"{st4 - st3:.5f} sec",st5-st4)
     object_name=img.filename
     dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/{object_name}'#url 저장
+    dic1=dic_list[0]
+    dict_data['part_category']=dic1['label']
+    dict_data['part_name']=check_type(dict_data['part_category'])
+    print(dict_data)
+    
     #db에 url 저장하는 코드
     #add_result(g.db, 'part_id', 'date', 'part_name', 'part_category', 'part_judge', 'user_id', 'inspection_number')
     #add_image(g.db, 'inspection_number', 'img_id', 'bbox_x1', 'bbox_x2', 'bbox_y1', 'bbox_y2', 'image')

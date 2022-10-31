@@ -20,8 +20,8 @@ def init_db():
     
         sql1= "CREATE TABLE IF NOT EXISTS `user` (`user_id` VARCHAR(100) NOT NULL, `nickname` VARCHAR(100) NOT NULL,`user_admin` VARCHAR(100) , `user_line` VARCHAR(100) ,PRIMARY KEY (`user_id`))"
         sql2= "CREATE TABLE IF NOT EXISTS `admin` (`admin_id` VARCHAR(100) NOT NULL, `admin_pw` VARCHAR(100) NOT NULL, `number` VARCHAR(100) NOT NULL, `name` VARCHAR(100) NOT NULL,PRIMARY KEY (`admin_id`))"
-        sql3= "CREATE TABLE IF NOT EXISTS `image` (`inspection_number` VARCHAR(50) NOT NULL,`img_id` VARCHAR(45) NOT NULL,`bbox_x1` DOUBLE NOT NULL,`bbox_x2` DOUBLE NOT NULL,`bbox_y1` DOUBLE NOT NULL,`bbox_y2` DOUBLE NOT NULL,`image` MEDIUMBLOB NOT NULL,PRIMARY KEY (`inspection_number`)) "
-        sql4= "CREATE TABLE IF NOT EXISTS `result` (`part_id` VARCHAR(45) NOT NULL, `date` DATETIME(6) NOT NULL, `part_name` VARCHAR(45) NOT NULL, `part_category` VARCHAR(45) NOT NULL, `part_judge` VARCHAR(45) NOT NULL, `user_id` VARCHAR(100) NOT NULL, `inspection_number` VARCHAR(50) NOT NULL, PRIMARY KEY (`inspection_number`), FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE cascade ON UPDATE cascade, FOREIGN KEY (`inspection_number`) REFERENCES `image` (`inspection_number`) ON DELETE cascade ON UPDATE cascade)"
+        sql3= "CREATE TABLE IF NOT EXISTS `image` (`inspection_number` VARCHAR(50) NOT NULL,`bbox_x1` DOUBLE NOT NULL,`bbox_x2` DOUBLE NOT NULL,`bbox_y1` DOUBLE NOT NULL,`bbox_y2` DOUBLE NOT NULL,`image` VARCHAR(100) NOT NULL, PRIMARY KEY (`inspection_number`)) "
+        sql4= "CREATE TABLE IF NOT EXISTS `result` (`part_id` VARCHAR(45) NOT NULL, `part_name` VARCHAR(45) NOT NULL, `part_category` VARCHAR(45) NOT NULL, `part_judge` VARCHAR(45) NOT NULL, `user_id` VARCHAR(100) NOT NULL, `inspection_number` VARCHAR(50) NOT NULL, `date` TIMESTAMP DEFAULT NOW(), PRIMARY KEY (`inspection_number`), FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE cascade ON UPDATE cascade, FOREIGN KEY (`inspection_number`) REFERENCES `image` (`inspection_number`) ON DELETE cascade ON UPDATE cascade)"
         
         cursor.execute(sql1)   
         cursor.execute(sql2)   
@@ -160,20 +160,20 @@ def detailed_result(db, inspection_number):
     return result
 
 #검사 결과 추가(저장)
-def add_result(db, part_id, date, part_name, part_category, part_judge, user_id, inspection_number):
+def add_result(db, part_id, part_name, part_category, part_judge, user_id, inspection_number):
     with db.cursor() as cursor:
-        sql = "insert into result values(%s,%s,%s,%s,%s,%s,%s)"
-        data = (part_id, date, part_name, part_category, part_judge, user_id, inspection_number)
+        sql = "insert into result values(%s,%s,%s,%s,%s,%s,DEFAULT)"
+        data = (part_id,  part_name, part_category, part_judge, user_id, inspection_number)
         cursor.execute(sql, data)
         db.commit()
         
 
 
  #검사 이미지 추가
-def add_image(db, inspection_number, img_id, bbox_x1, bbox_x2, bbox_y1, bbox_y2, image):
+def add_image(db, inspection_number, bbox_x1, bbox_x2, bbox_y1, bbox_y2, image):
     with db.cursor() as cursor:
-        sql = "insert into image values(%s,%s,%s,%s,%s,%s,%s)"
-        data = (inspection_number, img_id, bbox_x1, bbox_x2, bbox_y1, bbox_y2, image)
+        sql = "insert into image values(%s,%s,%s,%s,%s,%s)"
+        data = (inspection_number, bbox_x1, bbox_x2, bbox_y1, bbox_y2, image)
         cursor.execute(sql, data)
         db.commit()
         
