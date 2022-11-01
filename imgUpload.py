@@ -21,7 +21,7 @@ from model.utils.torch_utils import select_device, TracedModel
 
 
 bp= Blueprint('imgUpload',__name__)
-dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname")
+dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1="",x2="",y1="",y2="")
 
 def s3_connection():
     try:
@@ -87,6 +87,10 @@ def upload():
         dict_data['part_category']=dic1['label']
         dict_data['part_name']=check_type(dict_data['part_category'])
         dict_data['part_judge']='불량품'
+        dict_data['x1']=dic1['c1'][0]
+        dict_data['x2']=dic1['c1'][1]
+        dict_data['y1']=dic1['c2'][0]
+        dict_data['y2']=dic1['c2'][1]
     
     dict_data['date']=str(time.strftime('%y-%m-%d %H:%M:%S'))
     print(dict_data)
@@ -95,7 +99,7 @@ def upload():
     #db에 url 저장하는 코드
     add_result(g.db, dict_data['part_id'], dict_data['part_name'], dict_data['part_category'], dict_data['part_judge'], dict_data['user_id'])
     dict_data['inspection_number']=find_inspection_number(g.db, dict_data['part_id'])
-    add_image(g.db, int(dict_data['inspection_number']), '1','2', '3', '4', object_name)#url가져올때 f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/이거 붙여야함
+    add_image(g.db, int(dict_data['inspection_number']), dict_data['x1'],dict_data['x2'],dict_data['y1'], dict_data['y2'], object_name)#url가져올때 f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/이거 붙여야함
 
     return dict_data['img_url']
 
