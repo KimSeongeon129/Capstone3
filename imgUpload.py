@@ -87,10 +87,10 @@ def upload():
         dict_data['part_category']=dic1['label']
         dict_data['part_name']=check_type(dict_data['part_category'])
         dict_data['part_judge']='불량품'
-        dict_data['x1']=dic1['c1'][0]
-        dict_data['x2']=dic1['c1'][1]
-        dict_data['y1']=dic1['c2'][0]
-        dict_data['y2']=dic1['c2'][1]
+        dict_data['x1']=int(dic1['c1'][0])
+        dict_data['x2']=int(dic1['c1'][0])
+        dict_data['y1']=int(dic1['c1'][0])
+        dict_data['y2']=int(dic1['c1'][0])
     
     dict_data['date']=str(time.strftime('%y-%m-%d %H:%M:%S'))
     print(dict_data)
