@@ -15,8 +15,23 @@
     justify-content:space-between;
     align-content: center; 
     align-items: stretch;
-  
   }
+  .img{
+	width:1000px; 
+	height:250px;
+	margin: 10px;
+  }
+  .result {
+	width:1000px; 
+	height:250px;
+	margin: 10px;
+  }
+  .imgsrc{ 
+    width:100%;
+    height:100%;
+    object-fit:contain;
+  }
+	  
   table{ border-collapse : collapse; }  /*이중선 제거*/
  th,td{
       width: 100px;
@@ -58,7 +73,7 @@
 					<div class="container">					
 						<div class="imgResult">
 							<div class="img"style="width:1000px; height:550px; border:1px solid red; ">
-							<img src="https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/main_img.jpg">
+							<img class="imgsrc" src="https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/main_img.jpg">
 							이미지 결과 사진
 							</div>
 							<div class="result"style="width:1000px; height:250px; border:1px solid green;">
@@ -97,21 +112,6 @@
 				</section>
 
 		<!-- Scripts -->
-			<script>
-				var file = "" ;//다른 서버주소/.jpg
-				console.log(file);
-				var reader = new FileReader();
-				reader.readAsDataURL(file); //파일을 읽는 메서드 
-
-				reader.onload = function(){
-					var photoFrame = document.createElement("div");
-					photoFrame.style = 'background : url(${reader.result}); background-size : cover';
-					photoFrame.className = "photoFrame";
-					document.getElementById("img").appendChild(photoFrame);
-					e.target.value = "";
-				}
-
-			</script>
 			<script src="/static/assets/js/str_jquery.min.js"></script>
 			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
 			<script src="/static/assets/js/str_browser.min.js"></script>
