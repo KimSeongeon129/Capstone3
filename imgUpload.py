@@ -20,8 +20,9 @@ from model.utils.general import set_logging
 from model.utils.torch_utils import select_device, TracedModel
 
 
+
 bp= Blueprint('imgUpload',__name__)
-dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1="",x2="",y1="",y2="")
+dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1=0,x2=0,y1=0,y2=0)
 
 def s3_connection():
     try:
@@ -44,7 +45,7 @@ s3 = s3_connection()
 def imgUpload_result():
     #데이터 보내기
 
-    return render_template("imgUpload_result.html",data=dict_data)
+    return render_template("imgUpload_result.html")
 
 @bp.route('/imgUpload')#이미지 결과페이지
 def imgUpload():
@@ -68,7 +69,7 @@ def upload():
     model = attempt_load('model/yolov7.pt', map_location=device)  # load FP32 model
     stride = int(model.stride.max())  # model stride
     model = TracedModel(model, device, 640)
-    
+        
     
     # 검사 모델 실행
     dic_list=detect(model=model, source=my_img, stride=stride, device=device, half=half)
@@ -94,14 +95,14 @@ def upload():
     
     dict_data['date']=str(time.strftime('%y-%m-%d %H:%M:%S'))
     print(dict_data)
-    end=time.time()
-    print(end-start)
     #db에 url 저장하는 코드
     add_result(g.db, dict_data['part_id'], dict_data['part_name'], dict_data['part_category'], dict_data['part_judge'], dict_data['user_id'])
     dict_data['inspection_number']=find_inspection_number(g.db, dict_data['part_id'])
-    add_image(g.db, int(dict_data['inspection_number']), dict_data['x1'],dict_data['x2'],dict_data['y1'], dict_data['y2'], object_name)#url가져올때 f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/이거 붙여야함
-
-    return dict_data['img_url']
+    add_image(g.db, int(dict_data['inspection_number']), dict_data['x1'],dict_data['x2'],dict_data['y1'], dict_data['y2'], object_name)
+    #url가져올때 f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/이거 붙여야함
+    end=time.time()
+    print(end-start)
+    return dict_data
 
     
 
