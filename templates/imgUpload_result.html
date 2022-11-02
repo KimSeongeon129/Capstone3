@@ -15,8 +15,23 @@
     justify-content:space-between;
     align-content: center; 
     align-items: stretch;
-  
   }
+  .img{
+	width:1000px; 
+	height:550px;
+	margin: 10px;
+  }
+  .result {
+	width:1000px; 
+	height:250px;
+	margin: 10px;
+  }
+  .imgsrc{ 
+    width:100%;
+    height:100%;
+    object-fit:contain;
+  }
+	  
   table{ border-collapse : collapse; }  /*이중선 제거*/
  th,td{
       width: 100px;
@@ -57,11 +72,11 @@
 				<section id="main">
 					<div class="container">					
 						<div class="imgResult">
-							<div class="img"style="width:1000px; height:550px; border:1px solid red; ">
-							<img src="https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/main_img.jpg">
+							<div class="img"style="border:1px solid red; ">
+							<img class="imgsrc" src="https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/main_img.jpg">
 							이미지 결과 사진
 							</div>
-							<div class="result"style="width:1000px; height:250px; border:1px solid green;">
+							<div class="result"style="border:1px solid green;">
 							 검사결과
 							 <table >
 								<th scope="col">검사 번호</th>
@@ -71,12 +86,24 @@
 								<th scope="col">불량 유형</th>
 								<th scope="col">불량 여부</th>
 								<tr>
-									<td>{{data.inspection_number}}</td>
-									<td>{{data.part_id}}</td>
-									<td>{{data.date}}</td>
-									<td>{{data.part_name}}</td>
-									<td>{{data.part_category}}</td>
-									<td>{{data.part_judge}}</td>
+									<td><script>
+										document.write(sessionStorage.getItem('inspection_number'));
+									</script></td>
+									<td><script>
+										document.write(sessionStorage.getItem('part_id'));
+									</script></td>
+									<td><script>
+										document.write(sessionStorage.getItem('date'));
+									</script></td>
+									<td><script>
+										document.write(sessionStorage.getItem('part_name'));
+									</script></td>
+									<td><script>
+										document.write(sessionStorage.getItem('part_category'));
+									</script></td>
+									<td><script>
+										document.write(sessionStorage.getItem('part_judge'));
+									</script></td>
 								</tr>
 							 </table>
 							</div>
@@ -85,21 +112,6 @@
 				</section>
 
 		<!-- Scripts -->
-			<script>
-				var file = "{{data.img_url}}" ;//다른 서버주소/.jpg
-				console.log(file);
-				var reader = new FileReader();
-				reader.readAsDataURL(file); //파일을 읽는 메서드 
-
-				reader.onload = function(){
-					var photoFrame = document.createElement("div");
-					photoFrame.style = 'background : url(${reader.result}); background-size : cover';
-					photoFrame.className = "photoFrame";
-					document.getElementById("img").appendChild(photoFrame);
-					e.target.value = "";
-				}
-
-			</script>
 			<script src="/static/assets/js/str_jquery.min.js"></script>
 			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
 			<script src="/static/assets/js/str_browser.min.js"></script>
