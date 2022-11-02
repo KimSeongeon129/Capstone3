@@ -7,6 +7,7 @@ import json
 import boto3
 import os,random
 import sys
+import cv2
 from werkzeug.utils import secure_filename
 import time
 import codecs
@@ -84,14 +85,32 @@ def upload():
     if not dic_list:
         dict_data['part_judge']='양품'
     else:
+        # 불량품 세부내용 저장
         dic1=dic_list[0]
         dict_data['part_category']=dic1['label']
         dict_data['part_name']=check_type(dict_data['part_category'])
         dict_data['part_judge']='불량품'
         dict_data['x1']=int(dic1['c1'][0])
-        dict_data['x2']=int(dic1['c1'][0])
-        dict_data['y1']=int(dic1['c1'][0])
-        dict_data['y2']=int(dic1['c1'][0])
+        dict_data['x2']=int(dic1['c2'][0])
+        dict_data['y1']=int(dic1['c1'][1])
+        dict_data['y2']=int(dic1['c2'][1])
+        
+        # 불량품 bbox 그리기
+        img = cv2.imread(my_img)
+        tl = round(0.002 * (img.shape[0] + img.shape[1]) / 2) + 1  # line/font thickness
+        color = [random.randint(0, 255) for _ in range(3)]
+        
+        c1 = dic1['c1']
+        c2 = dic1['c2']
+        
+        cv2.rectangle(img, c1, c2, color, thickness=tl, lineType=cv2.LINE_AA)
+        tf = max(tl - 1, 1)  # font thickness
+        conf = dic1['conf']
+        label = dic1['label'] + f'{conf:.2f}'
+        t_size = cv2.getTextSize(label, 0, fontScale=tl / 3, thickness=tf)[0]
+        c2 = c1[0] + t_size[0], c1[1] - t_size[1] - 3
+        cv2.rectangle(img, c1, c2, color, -1, cv2.LINE_AA)  # filled
+        cv2.putText(img, label, (c1[0], c1[1] - 2), 0, tl / 3, [225, 255, 255], thickness=tf, lineType=cv2.LINE_AA)
     
     dict_data['date']=str(time.strftime('%y-%m-%d %H:%M:%S'))
     print(dict_data)
