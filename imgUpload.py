@@ -7,12 +7,13 @@ import json
 import boto3
 import os,random
 import sys
+import cv2
 from werkzeug.utils import secure_filename
 import time
 import codecs
 
 local_path = codecs.decode(os.getcwd().replace('\\','\\\\'), 'unicode_escape')
-sys.path.append(local_path + '\\model')
+sys.path.append('C:\\Users\\rlazx\\OneDrive - Sejong University\\바탕 화면\\캡스톤git' + '\\model')
 
 from model.detect import detect
 from model.models.experimental import attempt_load
@@ -84,17 +85,35 @@ def upload():
     if not dic_list:
         dict_data['part_judge']='양품'
     else:
+        # 불량품 세부내용 저장
         dic1=dic_list[0]
         dict_data['part_category']=dic1['label']
         dict_data['part_name']=check_type(dict_data['part_category'])
         dict_data['part_judge']='불량품'
         dict_data['x1']=int(dic1['c1'][0])
-        dict_data['x2']=int(dic1['c1'][1])
-        dict_data['y1']=int(dic1['c2'][0])
+        dict_data['x2']=int(dic1['c2'][0])
+        dict_data['y1']=int(dic1['c1'][1])
         dict_data['y2']=int(dic1['c2'][1])
+        
+        # 불량품 bbox 그리기
+        img = cv2.imread(my_img)
+        tl = round(0.002 * (img.shape[0] + img.shape[1]) / 2) + 1  # line/font thickness
+        color = [random.randint(0, 255) for _ in range(3)]
+        
+        c1 = dic1['c1']
+        c2 = dic1['c2']
+        
+        cv2.rectangle(img, c1, c2, color, thickness=tl, lineType=cv2.LINE_AA)
+        tf = max(tl - 1, 1)  # font thickness
+        conf = dic1['conf']
+        label = dic1['label'] + f'{conf:.2f}'
+        t_size = cv2.getTextSize(label, 0, fontScale=tl / 3, thickness=tf)[0]
+        c2 = c1[0] + t_size[0], c1[1] - t_size[1] - 3
+        cv2.rectangle(img, c1, c2, color, -1, cv2.LINE_AA)  # filled
+        cv2.putText(img, label, (c1[0], c1[1] - 2), 0, tl / 3, [225, 255, 255], thickness=tf, lineType=cv2.LINE_AA)
+        ret=s3_put_object(s3,"sejong-capstone-s3-bucket/origin/",'static/assets/img/' + secure_filename(img.filename),'result/'+img.filename)#결과 파일 올리기
     
     dict_data['date']=str(time.strftime('%y-%m-%d %H:%M:%S'))
-    ret=s3_put_object(s3,"sejong-capstone-s3-bucket/origin/",'static/assets/img/' + secure_filename(img.filename),'result/'+img.filename)#결과 파일 올리기
     #db에 url 저장하는 코드
     add_result(g.db, dict_data['part_id'], dict_data['part_name'], dict_data['part_category'], dict_data['part_judge'], dict_data['user_id'])
     dict_data['inspection_number']=find_inspection_number(g.db, dict_data['part_id'])
