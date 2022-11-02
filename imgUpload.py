@@ -75,9 +75,9 @@ def upload():
     dic_list=detect(model=model, source=my_img, stride=stride, device=device, half=half)
     print(dic_list)
 
-    ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(img.filename),img.filename)#파일 올리기
+    ret=s3_put_object(s3,"sejong-capstone-s3-bucket/origin/",'static/assets/img/' + secure_filename(img.filename),'origin/'+img.filename)#원본 파일 올리기
     object_name=img.filename
-    dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/{object_name}'#url 저장
+    dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/result/{object_name}'#url 저장
     dict_data['part_id']=str(random.randint(0,9223372036854775807))#램덤 숫자 일련번호 
     #아이디 세션에 있는거 넣기
     dict_data['user_id']=session['username']
@@ -89,17 +89,17 @@ def upload():
         dict_data['part_name']=check_type(dict_data['part_category'])
         dict_data['part_judge']='불량품'
         dict_data['x1']=int(dic1['c1'][0])
-        dict_data['x2']=int(dic1['c1'][0])
-        dict_data['y1']=int(dic1['c1'][0])
-        dict_data['y2']=int(dic1['c1'][0])
+        dict_data['x2']=int(dic1['c1'][1])
+        dict_data['y1']=int(dic1['c2'][0])
+        dict_data['y2']=int(dic1['c2'][1])
     
     dict_data['date']=str(time.strftime('%y-%m-%d %H:%M:%S'))
-    print(dict_data)
+    ret=s3_put_object(s3,"sejong-capstone-s3-bucket/origin/",'static/assets/img/' + secure_filename(img.filename),'result/'+img.filename)#결과 파일 올리기
     #db에 url 저장하는 코드
     add_result(g.db, dict_data['part_id'], dict_data['part_name'], dict_data['part_category'], dict_data['part_judge'], dict_data['user_id'])
     dict_data['inspection_number']=find_inspection_number(g.db, dict_data['part_id'])
     add_image(g.db, int(dict_data['inspection_number']), dict_data['x1'],dict_data['x2'],dict_data['y1'], dict_data['y2'], object_name)
-    #url가져올때 f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/이거 붙여야함
+    #url가져올때 f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/이거 붙여야함 origin이면 원본 result면 bbox있는 거
     end=time.time()
     print(end-start)
     return dict_data
