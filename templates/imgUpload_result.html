@@ -70,11 +70,14 @@
 
 			<!-- Main -->
 				<section id="main">
-					<div class="container">					
+					이미지 결과 사진					
 						<div class="imgResult">
 							<div class="img"style="border:1px solid red; ">
-							<img class="imgsrc" src="https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/result/main_img.jpg">
-							이미지 결과 사진
+								<script>
+									img_url = sessionStorage.getItem('img_url')
+									img_url.replaceAll('"','')
+									document.write('<img class="imgsrc" src="',img_url,'">')
+								</script>
 							</div>
 							<div class="result"style="border:1px solid green;">
 							 검사결과
