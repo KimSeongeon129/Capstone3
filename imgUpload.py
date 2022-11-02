@@ -13,7 +13,7 @@ import time
 import codecs
 
 local_path = codecs.decode(os.getcwd().replace('\\','\\\\'), 'unicode_escape')
-sys.path.append('C:\\Users\\rlazx\\OneDrive - Sejong University\\바탕 화면\\캡스톤git' + '\\model')
+sys.path.append(local_path + '\\model')
 
 from model.detect import detect
 from model.models.experimental import attempt_load
@@ -76,9 +76,9 @@ def upload():
     dic_list=detect(model=model, source=my_img, stride=stride, device=device, half=half)
     print(dic_list)
 
-    ret=s3_put_object(s3,"sejong-capstone-s3-bucket/origin/",'static/assets/img/' + secure_filename(img.filename),'origin/'+img.filename)#원본 파일 올리기
+    ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(img.filename),'origin/'+img.filename)#원본 파일 올리기
     object_name=img.filename
-    dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/result/{object_name}'#url 저장
+    dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/origin/{object_name}'#url 저장
     dict_data['part_id']=str(random.randint(0,9223372036854775807))#램덤 숫자 일련번호 
     #아이디 세션에 있는거 넣기
     dict_data['user_id']=session['username']
@@ -96,22 +96,24 @@ def upload():
         dict_data['y2']=int(dic1['c2'][1])
         
         # 불량품 bbox 그리기
-        img = cv2.imread(my_img)
-        tl = round(0.002 * (img.shape[0] + img.shape[1]) / 2) + 1  # line/font thickness
+        img_r = cv2.imread(my_img)
+        tl = round(0.002 * (img_r.shape[0] + img_r.shape[1]) / 2) + 1  # line/font thickness
         color = [random.randint(0, 255) for _ in range(3)]
         
         c1 = dic1['c1']
         c2 = dic1['c2']
         
-        cv2.rectangle(img, c1, c2, color, thickness=tl, lineType=cv2.LINE_AA)
+        cv2.rectangle(img_r, c1, c2, color, thickness=tl, lineType=cv2.LINE_AA)
         tf = max(tl - 1, 1)  # font thickness
         conf = dic1['conf']
         label = dic1['label'] + f'{conf:.2f}'
         t_size = cv2.getTextSize(label, 0, fontScale=tl / 3, thickness=tf)[0]
         c2 = c1[0] + t_size[0], c1[1] - t_size[1] - 3
-        cv2.rectangle(img, c1, c2, color, -1, cv2.LINE_AA)  # filled
-        cv2.putText(img, label, (c1[0], c1[1] - 2), 0, tl / 3, [225, 255, 255], thickness=tf, lineType=cv2.LINE_AA)
-        ret=s3_put_object(s3,"sejong-capstone-s3-bucket/origin/",'static/assets/img/' + secure_filename(img.filename),'result/'+img.filename)#결과 파일 올리기
+        cv2.rectangle(img_r, c1, c2, color, -1, cv2.LINE_AA)  # filled
+        cv2.putText(img_r, label, (c1[0], c1[1] - 2), 0, tl / 3, [225, 255, 255], thickness=tf, lineType=cv2.LINE_AA)
+        cv2.imwrite('static/assets/img/result/'+ secure_filename(img.filename),img_r)
+        ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/result/' + secure_filename(img.filename),'result/'+img.filename)#결과 파일 올리기
+        dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/result/{object_name}'#url 저장
     
     dict_data['date']=str(time.strftime('%y-%m-%d %H:%M:%S'))
     #db에 url 저장하는 코드
