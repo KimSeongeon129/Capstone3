@@ -25,6 +25,11 @@
     align-items: stretch;
   
   }
+  #videoElement {
+    width: 700px;
+    height: 525px;
+    background-color: #666;
+}
   </style>
 	<body class="homepage is-preload">
 		<div id="page-wrapper">
@@ -56,6 +61,9 @@
 	         <div class="con1">
              <div class="camera"style="width:770px; height:700px; border:1px solid red;">
                카메라 연동할 부분<br><br>
+              <video autoplay="true" id="videoElement">
+    
+              </video>
                <!--핸드폰으로 확인 가능-->
                 <input type="file" accept="image/*" capture="camera" id="camera">
 				<img id="frame">
@@ -75,6 +83,19 @@
 			<!-- Footer -->
 
 		<!-- Scripts -->
+    <script>
+      var video = document.querySelector("#videoElement");
+       
+      if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+          .then(function (stream) {
+            video.srcObject = stream;
+          })
+          .catch(function (err0r) {
+            console.log("Something went wrong!");
+          });
+      }
+      </script>      
             <script>
                 var  camera = document.getElementById('camera');
                 var frame = document.getElementById('frame');
