@@ -25,6 +25,14 @@ from model.utils.torch_utils import select_device, TracedModel
 bp= Blueprint('imgUpload',__name__)
 dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1=0,x2=0,y1=0,y2=0)
 
+ # 검사 모델 로드 ( 서비스 시 함수 밖으로 뺄 예정 )
+set_logging()
+device = select_device()
+half = device.type != 'cpu'  # half precision only supported on CUDA
+model = attempt_load('model/yolov7.pt', map_location=device)  # load FP32 model
+stride = int(model.stride.max())  # model stride
+model = TracedModel(model, device, 640)
+
 def s3_connection():
     try:
         s3 = boto3.client(
@@ -61,15 +69,6 @@ def upload():
     img=request.files['image']#파일 가져오기
     img.save('static/assets/img/' + secure_filename(img.filename))
     my_img = 'static/assets/img/' + secure_filename(img.filename)
-
-    # 검사 모델 로드 ( 서비스 시 함수 밖으로 뺄 예정 )
-    set_logging()
-    device = select_device()
-    half = device.type != 'cpu'  # half precision only supported on CUDA
-
-    model = attempt_load('model/yolov7.pt', map_location=device)  # load FP32 model
-    stride = int(model.stride.max())  # model stride
-    model = TracedModel(model, device, 640)
         
     
     # 검사 모델 실행
@@ -78,7 +77,7 @@ def upload():
 
     ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(img.filename),'origin/'+img.filename)#원본 파일 올리기
     object_name=img.filename
-    dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/origin/{object_name}'#url 저장
+    dict_data['img_url'] = f'https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/origin/{object_name}'#url 저장
     dict_data['part_id']=str(random.randint(0,9223372036854775807))#램덤 숫자 일련번호 
     #아이디 세션에 있는거 넣기
     dict_data['user_id']=session['username']
@@ -113,7 +112,7 @@ def upload():
         cv2.putText(img_r, label, (c1[0], c1[1] - 2), 0, tl / 3, [225, 255, 255], thickness=tf, lineType=cv2.LINE_AA)
         cv2.imwrite('static/assets/img/result/'+ secure_filename(img.filename),img_r)
         ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/result/' + secure_filename(img.filename),'result/'+img.filename)#결과 파일 올리기
-        dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/result/{object_name}'#url 저장
+        dict_data['img_url'] = f'https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/result/{object_name}'#url 저장
     
     dict_data['date']=str(time.strftime('%y-%m-%d %H:%M:%S'))
     #db에 url 저장하는 코드
