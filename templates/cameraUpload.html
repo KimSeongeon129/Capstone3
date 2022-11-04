@@ -30,6 +30,11 @@
     height: 525px;
     background-color: #666;
 }
+.imgsrc{ 
+    width:100%;
+    height:100%;
+    object-fit:contain;
+  }
   </style>
 	<body class="homepage is-preload">
 		<div id="page-wrapper">
@@ -64,17 +69,47 @@
               <video autoplay="true" id="videoElement">
     
               </video>
-               <!--핸드폰으로 확인 가능-->
-                <input type="file" accept="image/*" capture="camera" id="camera">
-				<img id="frame">
              </div>
           </div>
           <div class="con2">
             <div class="pre_img"style="width:380px; height:350px; border:1px solid green; ">
-             이전 결과 이미지
+             이전 이미지
+             <script>
+              img_url = sessionStorage.getItem('img_url')
+              img_url.replaceAll('"','')
+              document.write('<img class="imgsrc" src="',img_url,'">')
+            </script>
             </div>
             <div class="pre_result"style="width:380px; height:350px; border:1px solid green;">
-              이전 결과 조회
+              이전 이미지 결과
+              <table >
+								<th scope="col">검사 번호</th>
+								<th scope="col">일련 번호</th>
+								<th scope="col">날짜</th>
+								<th scope="col">부품 종류</th>
+								<th scope="col">불량 유형</th>
+								<th scope="col">불량 여부</th>
+								<tr>
+									<td><script>
+										document.write(sessionStorage.getItem('inspection_number'));
+									</script></td>
+									<td><script>
+										document.write(sessionStorage.getItem('part_id'));
+									</script></td>
+									<td><script>
+										document.write(sessionStorage.getItem('date'));
+									</script></td>
+									<td><script>
+										document.write(sessionStorage.getItem('part_name'));
+									</script></td>
+									<td><script>
+										document.write(sessionStorage.getItem('part_category'));
+									</script></td>
+									<td><script>
+										document.write(sessionStorage.getItem('part_judge'));
+									</script></td>
+								</tr>
+							 </table>
             </div>
           </div>
         </div>
