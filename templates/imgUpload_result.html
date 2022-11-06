@@ -15,16 +15,17 @@
     justify-content:space-between;
     align-content: center; 
     align-items: stretch;
+	justify-content : center;
   }
   .img{
 	width:1000px; 
 	height:550px;
-	margin: 10px;
+	margin: 7px;
   }
   .result {
 	width:1000px; 
 	height:250px;
-	margin: 10px;
+	margin: 7px;
   }
   .imgsrc{ 
     width:100%;
@@ -32,7 +33,7 @@
     object-fit:contain;
   }
 	  
-  table{ border-collapse : collapse; }  /*이중선 제거*/
+ table{ border-collapse : collapse; }  /*이중선 제거*/
  th,td{
       width: 100px;
       height: 50px;
@@ -64,23 +65,22 @@
 									<li><a class="icon solid fa-sitemap" href=" "><span>로그아웃</span></a></li>
 								</ul>
 							</nav>
-
 					</div>
 				</section>
 
 			<!-- Main -->
-				<section id="main">
-					이미지 결과 사진					
-						<div class="imgResult">
-							<div class="img"style="border:1px solid red; ">
-								<script>
-									img_url = sessionStorage.getItem('img_url')
-									img_url.replaceAll('"','')
-									console.log(img_url)
-									document.write('<img class="imgsrc" src="',img_url,'">')
-								</script>
-							</div>
-							<div class="result"style="border:1px solid green;">
+				<section id="main">					
+					<div class="imgResult">
+						<div class="img"style="border:1px solid red; ">
+							이미지 결과 사진
+							<script>
+								img_url = sessionStorage.getItem('img_url')
+								img_url.replaceAll('"','')
+								console.log(img_url)
+								document.write('<img class="imgsrc" src="',img_url,'">')
+							</script>
+						</div>
+						<div class="result"style="border:1px solid green;">
 							 검사결과
 							 <table >
 								<th scope="col">검사 번호</th>
