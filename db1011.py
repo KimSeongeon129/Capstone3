@@ -6,7 +6,7 @@ import bcrypt
 
 def init_db():
 
-    db = connect(host='127.0.0.1', user='root', password='root', db='mydb', charset='utf8',cursorclass=pymysql.cursors.DictCursor)
+    db = connect(host='127.0.0.1', user='root', password='0454sysm', db='mydb', charset='utf8',cursorclass=pymysql.cursors.DictCursor)
     cursor = db.cursor()   #커서
    
     with db.cursor() as cursor: #DB가 없으면 만들어라.
@@ -34,7 +34,7 @@ def init_db():
 
 def get_db(): #이거 개중요
     if 'db' not in g:     # 플라스크의 전역변수 g 속에 db 가 없으면
-        g.db = connect(host='127.0.0.1', user='root', password='root', db='mydb', charset="utf8mb4", cursorclass=pymysql.cursors.DictCursor)
+        g.db = connect(host='127.0.0.1', user='root', password='0454sysm', db='mydb', charset="utf8mb4", cursorclass=pymysql.cursors.DictCursor)
         # 내꺼 db에 접속.
 
 def close_db(): #db 연결 종료
@@ -129,6 +129,32 @@ def user_result(db, user_id):
         cursor.execute(sql,data)
         rows = cursor.fetchall()
     return rows
+ #       dict_list = {}
+ #       list=[]
+ #       for row in rows:
+ #           list.append(row.pop('part_id'))
+ #           list.append(row.pop('part_name'))
+ #           list.append(row.pop('part_category'))
+ #           list.append(row.pop('part_judge'))
+ #           list.append(row.pop('user_id'))
+ #           list.append(row.pop('inspection_number'))
+ #           list.append(row.pop('date'))
+            
+        #       dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1=0,x2=0,y1=0,y2=0)
+        #       i=0
+        #       while result:
+        #     dict_data[i]=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1=0,x2=0,y1=0,y2=0)
+        #     dict_data[i]['part_id']=result.get('part_id')
+        #     dict_data[i]['part_name']=result.get('part_name')
+        #     dict_data[i]['part_category']=result.get('part_category')
+        #     dict_data[i]['part_judge']=result.get('part_judge')
+        #     dict_data[i]['user_id']=result.get('user_id')
+        #     dict_data[i]['inspection_number']=result.get('inspection_number')
+        #     dict_data[i]['date']=result.get('date')
+        #     result = cursor.fetchone()
+        #     i+=1
+#        print(list)   
+    #return list
 
 def statistics(db):
     with db.cursor() as cursor:
