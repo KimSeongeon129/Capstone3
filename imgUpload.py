@@ -13,7 +13,7 @@ import time
 import codecs
 
 local_path = codecs.decode(os.getcwd().replace('\\','\\\\'), 'unicode_escape')
-sys.path.append(local_path + '\\model')
+sys.path.append('C:\\capstone_git' + '\\model')
 
 from model.detect import detect
 from model.models.experimental import attempt_load
@@ -78,7 +78,7 @@ def upload():
 
     ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(img.filename),'origin/'+img.filename)#원본 파일 올리기
     object_name=img.filename
-    dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/origin/{object_name}'#url 저장
+    dict_data['img_url'] = f'https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/origin/{object_name}'#url 저장
     dict_data['part_id']=str(random.randint(0,9223372036854775807))#램덤 숫자 일련번호 
     #아이디 세션에 있는거 넣기
     dict_data['user_id']=session['username']
@@ -113,7 +113,7 @@ def upload():
         cv2.putText(img_r, label, (c1[0], c1[1] - 2), 0, tl / 3, [225, 255, 255], thickness=tf, lineType=cv2.LINE_AA)
         cv2.imwrite('static/assets/img/result/'+ secure_filename(img.filename),img_r)
         ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/result/' + secure_filename(img.filename),'result/'+img.filename)#결과 파일 올리기
-        dict_data['img_url'] = f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/result/{object_name}'#url 저장
+        dict_data['img_url'] = f'https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/result/{object_name}'#url 저장
     
     dict_data['date']=str(time.strftime('%y-%m-%d %H:%M:%S'))
     #db에 url 저장하는 코드
