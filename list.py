@@ -9,5 +9,6 @@ bp= Blueprint('list',__name__)
 def list():    
     id=session['username']
     list = user_result(g.db,id)
+    print(list)
     return render_template("list.html", list = list)
 

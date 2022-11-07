@@ -13,7 +13,7 @@ import time
 import codecs
 
 local_path = codecs.decode(os.getcwd().replace('\\','\\\\'), 'unicode_escape')
-sys.path.append('C:\\capstone_git' + '\\model')
+sys.path.append(local_path + '\\model')
 
 from model.detect import detect
 from model.models.experimental import attempt_load
