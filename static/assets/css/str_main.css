@@ -1770,7 +1770,7 @@ input, select, textarea {
 		-webkit-appearance: none;
 		position: relative;
 		display: inline-block;
-		background: #ed786a;
+		background: #6ad1ed;
 		color: #fff !important;
 		text-transform: uppercase;
 		border-radius: 4px;
@@ -1801,7 +1801,7 @@ input, select, textarea {
 		input[type="reset"]:hover,
 		button:hover,
 		.button:hover {
-			background: #fd887a;
+			background: #6ad1ed;
 		}
 
 		input[type="button"]:active,
@@ -1809,7 +1809,7 @@ input, select, textarea {
 		input[type="reset"]:active,
 		button:active,
 		.button:active {
-			background: #ed786a;
+			background: #6ad1ed;
 		}
 
 		input[type="button"].alt,
@@ -2251,94 +2251,13 @@ input, select, textarea {
 
 	}
 
-/* Large */
-
-	@media screen and (max-width: 1280px) {
-
-		/* Basic */
-
-			body, input, textarea, select {
-				font-size: 12pt;
-			}
-
-			h2 br, h3 br, h4 br, h5 br, h6 br {
-				display: none;
-			}
-
-		/* Image */
-
-			.image.left {
-				max-width: 50%;
-			}
-
-			.image.right {
-				max-width: 50%;
-			}
-
-		/* Header */
-
-			#header > .container {
-				padding: 12em 0 5em 0;
-			}
-
-			#header h1 {
-				font-size: 2.5em;
-			}
-
-		/* Nav */
-
-			#nav > ul > li {
-				padding-right: 1.25em;
-			}
-
-		/* Features */
-
-			#features {
-				padding: 4em 0;
-			}
-
-		/* Banner */
-
-			#banner {
-				padding: 8em 0;
-			}
-
-				#banner > .container {
-					padding: 0 4em;
-				}
-
-					#banner > .container br {
-						display: none;
-					}
-
-		/* Main */
-
-			#main {
-				padding: 4em 0;
-			}
-
-		/* Footer */
-
-			#footer {
-				padding: 4em 0;
-			}
-
-		/* Copyright */
-
-			#copyright {
-				margin-top: 2em;
-				padding-top: 2em;
-			}
-
-	}
-
-/* Medium */
+/* Large & Medium */
 
 	#navPanel, #titleBar {
 		display: none;
 	}
 
-	@media screen and (max-width: 980px) {
+	@media screen and (max-width: 1280px) {
 
 		/* Basic */
 

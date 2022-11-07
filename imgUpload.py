@@ -25,6 +25,8 @@ from model.utils.torch_utils import select_device, TracedModel
 bp= Blueprint('imgUpload',__name__)
 dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1=0,x2=0,y1=0,y2=0)
 
+
+
 def s3_connection():
     try:
         s3 = boto3.client(
@@ -61,17 +63,14 @@ def upload():
     img=request.files['image']#파일 가져오기
     img.save('static/assets/img/' + secure_filename(img.filename))
     my_img = 'static/assets/img/' + secure_filename(img.filename)
-
-    # 검사 모델 로드 ( 서비스 시 함수 밖으로 뺄 예정 )
+        
+     # 검사 모델 로드 ( 서비스 시 함수 밖으로 뺄 예정 )
     set_logging()
     device = select_device()
     half = device.type != 'cpu'  # half precision only supported on CUDA
-
     model = attempt_load('model/yolov7.pt', map_location=device)  # load FP32 model
     stride = int(model.stride.max())  # model stride
     model = TracedModel(model, device, 640)
-        
-    
     # 검사 모델 실행
     dic_list=detect(model=model, source=my_img, stride=stride, device=device, half=half)
     print(dic_list)

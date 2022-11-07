@@ -28,7 +28,7 @@
 									<li><a class="icon solid fa-cog" href="/cameraUpload"><span>실시간 검사</span></a></li>
 									<li><a class="icon solid fa-retweet" href="/list"><span>내역조회</span></a></li>
 									<li><a class="icon solid fa-retweet" href="/statistics"><span>통계</span></a></li>
-									<li><a class="icon solid fa-sitemap" href=" "><span>로그아웃</span></a></li>
+									<li><a class="icon solid fa-sitemap" href="/logout"><span>로그아웃</span></a></li>
 								</ul>
 							</nav>
 
@@ -78,6 +78,8 @@
 
 				function upload() { // 이미지 업로드
 					//로딩중 이미지 출력
+					start=new Date()
+					console.log(start)
 					$.LoadingOverlay("show", {
 						background       : "rgba(0, 0, 0, 0.5)",
 						image            : "",
@@ -112,7 +114,8 @@
 						contentType: false,
 						data: formData,
 						success: function(data){
-							console.log("data: ", data)
+							end=new Date()
+							console.log(end-start)
 							alert('업로드 성공.');
 							sessionStorage.setItem('img_url',data.img_url)
 							sessionStorage.setItem('inspection_number',data.inspection_number)
