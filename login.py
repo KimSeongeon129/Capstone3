@@ -32,6 +32,7 @@ def oauth_api():
     access_token = json.loads(((response.text).encode('utf-8')))['access_token']
     #토큰의 정보 가져오기
     url="https://kapi.kakao.com/v1/user/access_token_info"
+    session['access_token']=access_token
 
     headers.update({'Authorization':"Bearer " + str(access_token)})
     response=requests.request("GET",url, headers= headers)
@@ -79,6 +80,7 @@ def naver_login():
     #토큰의 정보 가져오기
     access_token = json.loads(((response.text).encode('utf-8')))['access_token']
     response = requests.get("https://openapi.naver.com/v1/nid/me", headers={"Authorization" : f"Bearer {access_token}"},)
+    session['access_token']=access_token
 
     res = json.loads(((response.text).encode('utf-8')))['response']
     id=res['id']
@@ -95,3 +97,28 @@ def naver_login():
         add_user(g.db, id, name)
         session['username']=id
         return redirect("/user_main")
+
+
+@bp.route("/logout")
+def logout():
+    if session['username'][0]=='k':#카카오 로그인시
+        print(session['username'])
+        url = "https://kapi.kakao.com/v1/user/logout"
+        headers= {
+            'Content-Type': "application/x-www-form-urlencoded",
+            'Cache-control':"no-cache",
+        }
+        headers.update({'Authorization':"Bearer " + str(session['access_token'])})
+        response=requests.request("Post",url,headers=headers)
+        session.pop('access_token',None)
+        session.pop('username',None)
+        url="https://kauth.kakao.com/oauth/logout?client_id=32e62fdd5c6f676f20e8792d524c06b9&logout_redirect_uri="+ip_url
+        return redirect(url)
+    else:#네이버 로그인시
+        url="https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=CZ4CAklls0R3pDVGPNhs&client_secret=gLpXtGJwVL&access_token="+session['access_token']+"&service_provider=NAVER"
+        print(url)
+        session.pop('access_token',None)
+        session.pop('username',None)
+        return redirect("/")
+
+
