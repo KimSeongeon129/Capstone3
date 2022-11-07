@@ -196,7 +196,7 @@ input, select, textarea {
 	}
 
 	ul, ol, dl, table, blockquote {
-		margin-bottom: 2em;
+		margin-bottom: 15em;
 	}
 
 	br.clear {
@@ -1675,9 +1675,9 @@ input, select, textarea {
 		-webkit-appearance: none;
 		display: block;
 		border: 0;
-		background: #e8e8e8;
+		background: rgb(235, 235, 235);
 		width: 100%;
-		box-shadow: inset 2px 2px 0px 0px rgba(0, 0, 0, 0.1);
+		box-shadow: inset 2px 2px 0px 0px rgba(0, 0, 0, 0.18);
 		border-radius: 4px;
 		line-height: 1.25em;
 		padding: 0.75em 1em 0.75em 1em;
@@ -1910,7 +1910,7 @@ input, select, textarea {
 	}
 
 		#header > .container {
-			padding: 14em 0 7em 0;
+			padding: 10em 0 7em 0;
 			border-bottom: solid 2px #e5e5e5;
 			box-shadow: inset 0px -8px 0px 0px #fff, inset 0px -10px 0px 0px #e5e5e5;
 		}
@@ -2265,10 +2265,30 @@ input, select, textarea {
 				overflow-x: hidden;
 			}
 
+			body, input, textarea, select {
+				font-size: 12pt;
+			}
+
+			h2 br, h3 br, h4 br, h5 br, h6 br {
+				display: none;
+			}
+
+
 		/* Header */
 
 			#header > .container {
-				padding: 10em 0 7em 0;
+				padding: 5.5em 0 5em 0;
+			}
+
+			#header h1 {
+				font-size: 2.5em;
+			}
+
+		/* Main */
+
+			#main {
+				padding: 0 0 0 0;
+
 			}
 
 		/* Nav */
@@ -2460,6 +2480,12 @@ input, select, textarea {
 			#sidebar {
 				padding-top: 6em;
 			}
+
+		/* Main */
+
+		#main {
+			padding: 0 0 30 0;
+		}
 
 	}
 

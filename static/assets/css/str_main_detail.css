@@ -28,7 +28,8 @@ section, summary, time, mark, audio, video {
 
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
-	display: block;}
+	display: block;
+}
 
 body {
 	line-height: 1;
@@ -2263,7 +2264,7 @@ input, select, textarea {
 		/* Header */
 
 			#header > .container {
-				padding: 12em 0 5em 0;
+				padding: 6em 0 5em 0;
 			}
 
 			#header h1 {
@@ -2299,8 +2300,8 @@ input, select, textarea {
 		/* Main */
 
 			#main {
-				padding: 4em 0;
-			}
+			padding: 2em 0 15em 0;
+		}
 
 		/* Footer */
 
@@ -2333,11 +2334,11 @@ input, select, textarea {
 
 		/* Header */
 
-			#header > .container {
-				padding: 4em 0 4em 0;
-			}
+		#header > .container {
+			padding: 6em 0 5em 0;
+		}
 
 		#main {
-			padding: 2em 0 20em 0;
+			padding: 2em 0 50em 0;
 		}
 	}
