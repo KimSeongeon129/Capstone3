@@ -35,36 +35,26 @@
 				<section id="main">
 					<div class="container" style="display: flex; flex-direction: column; align-items : center;">
 						<div style="width: 85%; margin-top: 10px;">
-							<table>
-								<th scope="col">검사 번호</th>
-								<th scope="col">일련 번호</th>
-								<th scope="col">날짜</th>
-								<th scope="col">부품 종류</th>
-								<th scope="col">불량 유형</th>
-								<th scope="col">불량 여부</th>
-								<tr>
-									<td>
-										<!--https://lktprogrammer.tistory.com/127-->
-										<a href = "javascript:popup()">
-											<script>document.write(sessionStorage.getItem('inspection_number'));</script>
-										</a>
-									</td>
-									<td><script>
-										document.write(sessionStorage.getItem('part_id'));
-									</script></td>
-									<td><script>
-										document.write(sessionStorage.getItem('date'));
-									</script></td>
-									<td><script>
-										document.write(sessionStorage.getItem('part_name'));
-									</script></td>
-									<td><script>
-										document.write(sessionStorage.getItem('part_category'));
-									</script></td>
-									<td><script>
-										document.write(sessionStorage.getItem('part_judge'));
-									</script></td>
-								</tr>
+							검사결과
+							<table >
+							<tr>
+							   <th scope="col">검사 번호</th>
+							   <th scope="col">일련 번호</th>
+							   <th scope="col">날짜</th>
+							   <th scope="col">부품 종류</th>
+							   <th scope="col">불량 유형</th>
+							   <th scope="col">불량 여부</th>
+							</tr>
+							{% for item in list %}
+							<tr>
+								<td><option>{{item.inspection_number}}</option></td>
+								<td><option>{{item.part_id}}</option></td>
+								<td><option>{{item.date}}</option></td>
+								<td><option>{{item.part_name}}</option></td>
+								<td><option>{{item.part_category}}</option></td>
+								<td><option>{{item.part_judge}}</option></td>
+							</tr>
+							{% endfor %}
 							</table>
 						 </div>
 
