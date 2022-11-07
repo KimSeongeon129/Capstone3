@@ -6,7 +6,7 @@ import json
 bp= Blueprint('cameraUpload',__name__)
 
 
-@bp.route('/cameraUpload', method=['GET','POST'])#이미지 결과페이지
+@bp.route('/cameraUpload', methods=['GET','POST'])#이미지 결과페이지
 def cameraUpload():
     if request.method=='GET':
         return render_template("cameraUpload.html")
