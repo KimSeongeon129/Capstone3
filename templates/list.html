@@ -45,6 +45,12 @@
 							   <th scope="col">불량 유형</th>
 							   <th scope="col">불량 여부</th>
 							</tr>
+							{%if list == ['no']%}
+							<script>
+								alert('검색 결과가 없습니다.')
+								window.location.href="./user_main"
+							</script>
+							{%else%}
 							{% for item in list %}
 							<tr>
 								<td><option>{{item.inspection_number}}</option></td>
@@ -55,6 +61,7 @@
 								<td><option>{{item.part_judge}}</option></td>
 							</tr>
 							{% endfor %}
+							{%endif%}
 							</table>
 						 </div>
 
