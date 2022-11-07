@@ -6,7 +6,7 @@ import bcrypt
 
 def init_db():
 
-    db = connect(host='127.0.0.1', user='root', password='0454sysm', db='mydb', charset='utf8',cursorclass=pymysql.cursors.DictCursor)
+    db = connect(host='127.0.0.1', user='root', password='root', db='mydb', charset='utf8',cursorclass=pymysql.cursors.DictCursor)
     cursor = db.cursor()   #커서
    
     with db.cursor() as cursor: #DB가 없으면 만들어라.
@@ -34,7 +34,7 @@ def init_db():
 
 def get_db(): #이거 개중요
     if 'db' not in g:     # 플라스크의 전역변수 g 속에 db 가 없으면
-        g.db = connect(host='127.0.0.1', user='root', password='0454sysm', db='mydb', charset="utf8mb4", cursorclass=pymysql.cursors.DictCursor)
+        g.db = connect(host='127.0.0.1', user='root', password='root', db='mydb', charset="utf8mb4", cursorclass=pymysql.cursors.DictCursor)
         # 내꺼 db에 접속.
 
 def close_db(): #db 연결 종료
