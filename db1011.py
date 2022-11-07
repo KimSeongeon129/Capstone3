@@ -128,32 +128,7 @@ def user_result(db, user_id):
         data=(user_id)
         cursor.execute(sql,data)
         rows = cursor.fetchall()
-        dict_list = {}
-        list=[]
-        for row in rows:
-            list.append(row.pop('part_id'))
-            list.append(row.pop('part_name'))
-            list.append(row.pop('part_category'))
-            list.append(row.pop('part_judge'))
-            list.append(row.pop('user_id'))
-            list.append(row.pop('inspection_number'))
-            list.append(row.pop('date'))
-            
-        #       dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1=0,x2=0,y1=0,y2=0)
-        #       i=0
-        #       while result:
-        #     dict_data[i]=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1=0,x2=0,y1=0,y2=0)
-        #     dict_data[i]['part_id']=result.get('part_id')
-        #     dict_data[i]['part_name']=result.get('part_name')
-        #     dict_data[i]['part_category']=result.get('part_category')
-        #     dict_data[i]['part_judge']=result.get('part_judge')
-        #     dict_data[i]['user_id']=result.get('user_id')
-        #     dict_data[i]['inspection_number']=result.get('inspection_number')
-        #     dict_data[i]['date']=result.get('date')
-        #     result = cursor.fetchone()
-        #     i+=1
-        print(list)   
-    return list
+    return rows
 
 def statistics(db):
     with db.cursor() as cursor:
