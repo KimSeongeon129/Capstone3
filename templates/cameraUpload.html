@@ -9,32 +9,41 @@
 	</head>
   <style>
     .con1 {
-    display: inline-flex;
-    flex-direction: column;
-    flex-wrap: wrap; 
-    justify-content:space-between;
-    align-content: center; 
-    align-items: stretch;
-  }
-  .con2 {
-    display: inline-flex;
-    flex-direction: column;
-    flex-wrap: wrap; 
-    justify-content:space-between;
-    align-content: center; 
-    align-items: stretch;
-  
-  }
-  #videoElement {
-    width: 700px;
-    height: 525px;
-    background-color: #666;
-}
-.imgsrc{ 
-    width:100%;
-    height:100%;
-    object-fit:contain;
-  }
+        display: inline-flex;
+        flex-direction: column;
+        flex-wrap: wrap; 
+        justify-content:space-between;
+        align-content: center; 
+        align-items: stretch;
+    }
+    .bnt{
+      
+      height: 40px; 
+      width: 60%;
+      margin: 5px; 
+      text-align: center;
+      line-height: 10px;
+    }
+    .con2 {
+      display: inline-flex;
+      flex-direction: column;
+      flex-wrap: wrap; 
+      justify-content:space-between;
+      align-content: center; 
+      align-items: stretch;
+    
+    }
+    #videoElement {
+      width: 700px;
+      height: 525px;
+      background-color: #666;
+    }
+    .imgsrc{ 
+        width:100%;
+        height:100%;
+        object-fit:contain;
+    }
+    
   </style>
 	<body class="homepage is-preload">
 		<div id="page-wrapper">
@@ -63,18 +72,18 @@
 			<!-- Main -->
 				<section id="main">
 					<div class="container">					
-	          <div class="con1" style="width:700px; height:700px; border:1px solid red;">
+	          <div class="con1" style="width:650px; height:680px; border:1px solid red;">
               <div class="camera">
                 <img src="{{ url_for('cameraUpload.video_feed') }}">
               </div>
               <div style="display: inline-flex; flex-direction: row;">
-                <button type="button" class="start" id="start" style="height: auto; width: 70px; margin-right: 5px;">start</button>
-                <button type="button" class="stop" id="stop" style="height: auto; width: 70px;">stop</button>
+                <button type="button" class="bnt" id="start">start</button>
+                <button type="button" class="bnt" id="stop">stop</button>
               </div>
             </div>
           
             <div class="con2">
-              <div class="pre_img"style="width:420px; height:350px; border:1px solid green; ">
+              <div class="pre_img"style="width:470px; height:340px; border:1px solid green; ">
               이전 이미지
               <script>
                 img_url = sessionStorage.getItem('img_url')
@@ -82,7 +91,7 @@
                 document.write('<img class="imgsrc" src="',img_url,'">')
               </script>
               </div>
-              <div class="pre_result"style="width:420px; height:350px; border:1px solid green;">
+              <div class="pre_result"style="width:470px; height:340px; border:1px solid green;">
                 이전 이미지 결과
                 <table >
                   <th scope="col">검사 번호</th>
