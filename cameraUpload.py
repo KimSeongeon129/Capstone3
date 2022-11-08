@@ -1,31 +1,15 @@
 from flask import Flask, Response, render_template
 from flask import jsonify,url_for,redirect,request,Blueprint
-from imutils.video import VideoStream
 import random
-import requests
-import json
-import threading
-import argparse
-import datetime
-import imutils
-import time
 import cv2
 
-from model.detect_realtime import detect
-from model.models.experimental import attempt_load
-from model.utils.general import set_logging
-from model.utils.torch_utils import select_device, TracedModel
+from model.detect_realtime import detect_realtime
+from ai import device, model, half, stride
 
 bp= Blueprint('cameraUpload',__name__)
 
 outputFrame = None
 cap = cv2.VideoCapture(0)
-
-set_logging()
-device = select_device()
-half = device.type != 'cpu'  # half precision only supported on CUDA
-model = attempt_load('model/yolov7.pt', map_location=device)  # load FP32 model
-stride = int(model.stride.max())  # model stride
 
 names = model.module.names if hasattr(model, 'module') else model.names
 colors = [[random.randint(0, 255) for _ in range(3)] for _ in names]
@@ -46,7 +30,7 @@ def camera():
     while True:
         ret, frame = cap.read()
 		
-        outputFrame = detect(model=model, img=frame, stride=stride, device=device, half=half, names=names, colors=colors)
+        outputFrame = detect_realtime(model=model, img=frame, stride=stride, device=device, half=half, names=names, colors=colors)
         if outputFrame is None:
             continue
         (flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
