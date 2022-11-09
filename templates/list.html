@@ -6,6 +6,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 		<link rel="stylesheet" href="/static/assets/css/str_main.css" />
+		<link rel="stylesheet" href="/static/assets/css/datepicker.min.css" type="text/css" media="all">
+		<script src="/static/assets/js/jquery-3.1.1.min.js"></script>
+        <script src="/static/assets/js/datepicker.js"></script> <!-- Air datepicker js -->
+        <script src="/static/assets/js/datepicker.ko.js"></script> <!-- 달력 한글 추가를 위해 커스텀 -->
 	</head>
 	<style>
 		div.paging {
@@ -101,7 +105,7 @@
 									<option value="category" style="text-align:center;">불량유형</option>
 								</select>
 								&nbsp 
-								<input class= textform type="text" name="search_box" id = "search_box" autocomplete="off" placeholder="필터를 선택하세요." required style="width: 300px; height: 40px; text-align:center;" >
+								<input class= textform type="text" name="search_box" id = "search_box" autocomplete="off" placeholder="필터를 선택하세요." required style="width: 300px; height: 40px; text-align:center;" onclick="date(this)">
 								&nbsp 
 								<input class = submit type="submit" value= "검색" style="width: 100px; height: 40px;">
 
@@ -152,6 +156,18 @@
 					}
 					document.getElementById("search_box").placeholder = info;
    				}
+
+				   function date(obj){
+					var opt = document.getElementById("selectbox");
+					var opt_val = opt.options[opt.selectedIndex].value;
+					
+					if (opt_val=='date'){//달력모양으로 입력
+						$("#searchbox").datepicker({language: 'ko'}); 
+					} 
+					else{
+						$("#searchbox").datepicker("destroy");
+					}
+				}
 			</script>
 			<script>
 				//페이징
