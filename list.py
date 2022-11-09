@@ -27,7 +27,10 @@ def list():
         dic=[]
         c=0
         for i in list:#예시로 불량품만 뽑기
-            filterup=(i[filtering]).upper()
+            if filtering!='date':
+                filterup=(i[filtering]).upper()
+            else :
+                filterup=i[filtering]
             if data in filterup:
                 dic.append(i)
                 c=c+1

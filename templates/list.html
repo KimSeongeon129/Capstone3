@@ -6,6 +6,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 		<link rel="stylesheet" href="/static/assets/css/str_main.css" />
+		<link rel="stylesheet" href="/static/assets/css/datepicker.min.css" type="text/css" media="all">
+		<script src="/static/assets/js/jquery-3.1.1.min.js"></script>
+        <script src="/static/assets/js/datepicker.js"></script> <!-- Air datepicker js -->
+        <script src="/static/assets/js/datepicker.ko.js"></script> <!-- 달력 한글 추가를 위해 커스텀 -->
 	</head>
 	<style>
 		div.paging {
@@ -93,7 +97,7 @@
 					
 						<div>
 							<form method="post" action="" style="display: inline-flex; flex-direction: row; margin: 10px;">
-								<select id="selectbox" name="selectbox" style="width: 130px; height: 40px;" onchange="filtering()">
+								<select id="selectbox" name="selectbox" style="width: 130px; height: 40px;" onchange="filtering(this)">
 									<option value="none" style="text-align:center;">-----선택-----</option>
 									<option value="date" style="text-align:center;">검사 날짜</option>
 									<option value="part_name" style="text-align:center;">부품</option>
@@ -101,7 +105,7 @@
 									<option value="part_category" style="text-align:center;">불량유형</option>
 								</select>
 								&nbsp 
-								<input class= textform type="text" name="search_box" id = "search_box" autocomplete="off" placeholder="필터를 선택하세요." required style="width: 300px; height: 40px; text-align:center;" >
+								<input class= textform type="text" name="searchbox" id = "searchbox" autocomplete="off" placeholder="필터를 선택하세요." required style="width: 300px; height: 40px; text-align:center;">
 								&nbsp 
 								<input class = submit type="submit" value= "검색" style="width: 100px; height: 40px;">
 
@@ -133,7 +137,13 @@
 					window.open(url, name, option);
 				}
 
-				function filtering(){ //필터링
+				function filtering(obj){ //필터링
+					if ( obj.value==="date" ) {
+						$("#searchbox").datepicker({language: "ko"});
+					} else {
+						$("#searchbox").datepicker('destroy');//date이외일때도 자꾸 달력이 떠서 수정할 예정입니다!
+					}
+
 					var opt = document.getElementById("selectbox");
 					var opt_val = opt.options[opt.selectedIndex].value;
 					var info = ""
@@ -144,13 +154,13 @@
 					else if (opt_val=='part_name'){
 						info = "부품 이름을 입력하세요.";
 					} 
-					else if (opt_val=='user'){
+					else if (opt_val=='part_id'){
 						info = "부품의 일련번호를 입력하세요.";
 					}
 					else if (opt_val=='part_category'){
 						info = "부품 유형을 입력하세요.";
 					}
-					document.getElementById("search_box").placeholder = info;
+					document.getElementById("searchbox").placeholder = info;
    				}
 			</script>
 			<script>
@@ -278,7 +288,6 @@
 					$('#last_page').show();
 				}
 			</script>	
-			<script src="/static/assets/js/str_jquery.min.js"></script>
 			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
 			<script src="/static/assets/js/str_browser.min.js"></script>
 			<script src="/static/assets/js/str_breakpoints.min.js"></script>
