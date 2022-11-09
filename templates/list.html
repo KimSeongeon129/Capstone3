@@ -74,12 +74,12 @@
 							{%if list == ['no']%}
 							<script>
 								alert('검색 결과가 없습니다.')
-								window.location.href="./user_main"
+								window.location.href="./list"
 							</script>
 							{%else%}
 							{% for item in list %}
 							<tr>
-								<td><option>{{item.inspection_number}}</option></td>
+								<td><a href="/detail">{{item.inspection_number}}</a></td>
 								<td><option>{{item.part_id}}</option></td>
 								<td><option>{{item.date}}</option></td>
 								<td><option>{{item.part_name}}</option></td>
@@ -96,9 +96,9 @@
 								<select id="selectbox" name="selectbox" style="width: 130px; height: 40px;" onchange="filtering()">
 									<option value="none" style="text-align:center;">-----선택-----</option>
 									<option value="date" style="text-align:center;">검사 날짜</option>
-									<option value="parts" style="text-align:center;">부품</option>
-									<option value="user" style="text-align:center;">담당자</option>
-									<option value="category" style="text-align:center;">불량유형</option>
+									<option value="part_name" style="text-align:center;">부품</option>
+									<option value="part_id" style="text-align:center;">일련번호</option>
+									<option value="part_category" style="text-align:center;">불량유형</option>
 								</select>
 								&nbsp 
 								<input class= textform type="text" name="search_box" id = "search_box" autocomplete="off" placeholder="필터를 선택하세요." required style="width: 300px; height: 40px; text-align:center;" >
@@ -127,7 +127,7 @@
 		<!-- Scripts -->
 			<script>
 				function popup(){//상세 조회
-					var url = "detail.html";
+					var url = "/detail";
 					var name = "detail list";
 					var option = "width = 1000, height = 500, top = 100, left = 200, location = no"
 					window.open(url, name, option);
@@ -141,13 +141,13 @@
 					if (opt_val=='date'){
 						info = "날짜를 입력하세요.";
 					} 
-					else if (opt_val=='parts'){
+					else if (opt_val=='part_name'){
 						info = "부품 이름을 입력하세요.";
 					} 
 					else if (opt_val=='user'){
-						info = "담당자의 이름을 입력하세요.";
+						info = "부품의 일련번호를 입력하세요.";
 					}
-					else if (opt_val=='category'){
+					else if (opt_val=='part_category'){
 						info = "부품 유형을 입력하세요.";
 					}
 					document.getElementById("search_box").placeholder = info;
