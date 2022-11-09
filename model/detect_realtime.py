@@ -47,7 +47,7 @@ def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scale
 
 def detect_realtime(model, img, stride, device, half, names, colors, img_size=640, conf_thres=0.25, iou_thres=0.45):
     
-    haveFault = False
+    result_list = []
     
     if half:
         model.half()
@@ -83,9 +83,18 @@ def detect_realtime(model, img, stride, device, half, names, colors, img_size=64
             s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
     
         for *xyxy, conf, cls in reversed(det):
-            haveFault = True
             label = f'{names[int(cls)]} {conf:.2f}'
             plot_one_box(xyxy, img0, label=label, color=colors[int(cls)], line_thickness=3)
+
+            c1, c2 = (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3]))
+                    
+            result_dict = {}
+            result_dict['num'] = time.time()
+            result_dict['label'] = f'{names[int(cls)]}'
+            result_dict['conf'] = conf
+            result_dict['c1'] = c1
+            result_dict['c2'] = c2
+            
+            result_list.append(result_dict)
     
-    
-    return haveFault, img0
+    return img0, result_list
