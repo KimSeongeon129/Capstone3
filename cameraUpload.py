@@ -4,7 +4,7 @@ import random
 import cv2
 
 from model.detect_realtime import detect_realtime
-from ai import device, model, half, stride
+from AI import device, model, half, stride
 
 bp= Blueprint('cameraUpload',__name__)
 
@@ -26,17 +26,17 @@ def cameraUpload():
 
 def camera():
     global cap, outputFrame
-
+    c=0
     while True:
         ret, frame = cap.read()
-		
         outputFrame = detect_realtime(model=model, img=frame, stride=stride, device=device, half=half, names=names, colors=colors)
         if outputFrame is None:
             continue
         (flag, encodedImage) = cv2.imencode(".jpg", outputFrame)
         if not flag:
             continue
-        
+        c=c+1
+        print(c)
         yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + bytearray(encodedImage) + b'\r\n')
         
 @bp.route("/video_feed")
