@@ -53,7 +53,7 @@ def video_feed():
 @bp.route('/realtimeUpload',methods=['POST'])
 def realtimeUpload():
     global dict_data
-
+    
     img=request.files['file']
     new_filename = str(time.time())
     img.save('static/assets/img/' + secure_filename(new_filename))
@@ -61,9 +61,12 @@ def realtimeUpload():
     cv2_my_img = cv2.imread(my_img)
 
 
-    detect_img=detect_realtime(model=model, img=cv2_my_img, stride=stride, device=device, half=half, names=names, colors=colors)
+    haveFault, detect_img=detect_realtime(model=model, img=cv2_my_img, stride=stride, device=device, half=half, names=names, colors=colors)
     (flag, encodedImage) = cv2.imencode(".jpg", detect_img)
     
-    dict_data['code'] = base64.b64encode(encodedImage).decode('utf-8')
+    if haveFault is True:
+        dict_data['code'] = base64.b64encode(encodedImage).decode('utf-8')
+    else:
+        dict_data['code'] = None
     
     return dict_data
