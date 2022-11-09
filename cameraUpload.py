@@ -7,7 +7,7 @@ import time
 
 from werkzeug.utils import secure_filename
 from model.detect_realtime import detect_realtime
-from ai import device, model, half, stride
+from AI import device, model, half, stride
 
 bp= Blueprint('cameraUpload',__name__)
 

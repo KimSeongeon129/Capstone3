@@ -16,7 +16,7 @@ def list():
     else: #필터링 한거 보여주기
         #필터링 내용 가져오기
         filtering=request.form['selectbox']
-        data=request.form['searchbox']
+        data=request.form['search_box']
         data=data.upper()
         print(filtering)
         print(data)
