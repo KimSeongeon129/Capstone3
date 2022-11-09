@@ -26,11 +26,18 @@ def list():
         list = sorted(list, key= lambda x: x['date'], reverse=True)#최신순으로 반환
         dic=[]
         c=0
-        for i in list:#예시로 불량품만 뽑기
-            filterup=(i[filtering]).upper()
-            if data in filterup:
-                dic.append(i)
-                c=c+1
+        if filtering=='date':
+            for i in list:#예시로 불량품만 뽑기
+                filterup=str(i[filtering])
+                if data in filterup:
+                    dic.append(i)
+                    c=c+1
+        else:
+            for i in list:#예시로 불량품만 뽑기
+                filterup=i[filtering]
+                if data in filterup:
+                    dic.append(i)
+                    c=c+1
         if c==0:
             dic=['no']
         return render_template("list.html", list = dic)

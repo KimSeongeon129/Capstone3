@@ -82,16 +82,12 @@
               <div style="display: inline-flex; flex-direction: row;">
               </div>
             </div>
-          
             <div class="con2">
-              <div class="pre_img"style="width:470px; height:340px; border:1px solid green; ">
+              <div class="pre_img"style="width:700px; height:700px; border:1px solid green; ">
               이전 이미지<br>
-              <canvas id="myCanvas" width="400" height="300" style="border: 1px solid #ddd;"></canvas>
-              <script>
-                img_url = sessionStorage.getItem('img_url')
-                img_url.replaceAll('"','')
-                document.write('<img class="imgsrc" src="',img_url,'">')
-              </script>
+              <canvas id="myCanvas" width="640" height="640" style="border: 1px solid #ddd; display: none"></canvas>
+              <canvas id="resultCanvas" width="640" height="640" style="border: 1px solid #ddd;"></canvas>
+          
               </div>
               <div class="pre_result"style="width:470px; height:340px; border:1px solid green;">
                 이전 이미지 결과
@@ -167,8 +163,50 @@
       function takeSnapshot() {
         const myCanvasElement = document.getElementById('myCanvas');
         const myCTX = myCanvasElement.getContext('2d');
+        
+        const reCanvasElement = document.getElementById('resultCanvas');
+        const reCTX = reCanvasElement.getContext('2d');
+
         myCTX.drawImage(myVideoStream, 0, 0, myCanvasElement.width, myCanvasElement.height);
-        const dataURL = myCanvasElement.toDataURL();
+        const dataURL = myCanvasElement.toDataURL('image/png');
+
+        var blobBin = atob(dataURL.split(',')[1]);	// base64 데이터 디코딩
+        var array = [];
+        for (var i = 0; i < blobBin.length; i++) {
+          array.push(blobBin.charCodeAt(i));
+        }
+        var file = new Blob([new Uint8Array(array)], {type: 'image/png'});	// Blob 생성
+        var formData = new FormData();	// formData 생성
+        formData.append("file", file);
+
+        for (var key of formData.keys()) {
+          console.log(key);
+        }
+        for (var value of formData.values()) {
+          console.log(value);
+        }
+
+        $.ajax({
+          type:"POST",
+          url: "/realtimeUpload",
+          processData: false,
+          contentType: false,
+          data: formData,
+          success: function(data){
+            var image = new Image();
+            if (data.code != none){
+              image.onload = function() {
+                reCTX.drawImage(image, 0, 0, reCanvasElement.width, reCanvasElement.height);
+              };
+              image.src = "data:image/png;base64," + data.code;
+            }
+          },
+          err: function(err){
+            console.log("err: ", err)
+          }
+        })
+
+        
      }
     
       </script>      

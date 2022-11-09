@@ -16,7 +16,7 @@ local_path = codecs.decode(os.getcwd().replace('\\','\\\\'), 'unicode_escape')
 sys.path.append(local_path + '\\model')
 
 from model.detect import detect
-from AI import device, model, half, stride
+from ai import device, model, half, stride
 
 bp= Blueprint('imgUpload',__name__)
 dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1=0,x2=0,y1=0,y2=0)
@@ -55,6 +55,7 @@ def upload():
     start=time.time()
 
     img=request.files['image']#파일 가져오기
+    print(img)
     img.save('static/assets/img/' + secure_filename(img.filename))
     my_img = 'static/assets/img/' + secure_filename(img.filename)
     cv2_my_img = cv2.imread(my_img)
