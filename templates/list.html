@@ -4,6 +4,7 @@
 		<title>capstone3</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<script src="https://kit.fontawesome.com/a71aac3494.js" crossorigin="anonymous"></script>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 		<link rel="stylesheet" href="/static/assets/css/str_main.css" />
 		<link rel="stylesheet" href="/static/assets/css/datepicker.min.css" type="text/css" media="all">
@@ -105,7 +106,7 @@
 									<option value="part_category" style="text-align:center;">불량유형</option>
 								</select>
 								&nbsp 
-								<input class= textform type="text" name="searchbox" id = "searchbox" autocomplete="off" placeholder="필터를 선택하세요." required style="width: 300px; height: 40px; text-align:center;">
+								<input class= textform type="text" name="search_box" id = "search_box" autocomplete="off" placeholder="필터를 선택하세요." required style="width: 300px; height: 40px; text-align:center;">
 								&nbsp 
 								<input class = submit type="submit" value= "검색" style="width: 100px; height: 40px;">
 
@@ -139,9 +140,9 @@
 
 				function filtering(obj){ //필터링
 					if ( obj.value==="date" ) {
-						$("#searchbox").datepicker({language: "ko"});
+						$("#search_box").datepicker({language: "ko"});
 					} else {
-						$("#searchbox").datepicker('destroy');
+						$("#search_box").datepicker('destroy');//date이외일때도 자꾸 달력이 떠서 수정할 예정입니다!
 					}
 
 					var opt = document.getElementById("selectbox");
@@ -160,11 +161,12 @@
 					else if (opt_val=='part_category'){
 						info = "부품 유형을 입력하세요.";
 					}
-					document.getElementById("searchbox").placeholder = info;
+					document.getElementById("search_box").placeholder = info;
    				}
 			</script>
-			<script>
+			<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js">
 				//페이징
+				import axios from 'axios';
 				let resultData = [];
 
 				const countPerPage = 10; // 페이지당 데이터 건수
