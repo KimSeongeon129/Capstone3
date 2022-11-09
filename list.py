@@ -16,7 +16,7 @@ def list():
     else: #필터링 한거 보여주기
         #필터링 내용 가져오기
         filtering=request.form['selectbox']
-        data=request.form['search_box']
+        data=request.form['searchbox']
         data=data.upper()
         print(filtering)
         print(data)
@@ -26,14 +26,18 @@ def list():
         list = sorted(list, key= lambda x: x['date'], reverse=True)#최신순으로 반환
         dic=[]
         c=0
-        for i in list:#예시로 불량품만 뽑기
-            if filtering!='date':
-                filterup=(i[filtering]).upper()
-            else :
+        if filtering=='date':
+            for i in list:#예시로 불량품만 뽑기
+                filterup=str(i[filtering])
+                if data in filterup:
+                    dic.append(i)
+                    c=c+1
+        else:
+            for i in list:#예시로 불량품만 뽑기
                 filterup=i[filtering]
-            if data in filterup:
-                dic.append(i)
-                c=c+1
+                if data in filterup:
+                    dic.append(i)
+                    c=c+1
         if c==0:
             dic=['no']
         return render_template("list.html", list = dic)
