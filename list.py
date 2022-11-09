@@ -34,7 +34,7 @@ def list():
                     c=c+1
         else:
             for i in list:#예시로 불량품만 뽑기
-                filterup=i[filtering]
+                filterup=i[filtering].upper()
                 if data in filterup:
                     dic.append(i)
                     c=c+1

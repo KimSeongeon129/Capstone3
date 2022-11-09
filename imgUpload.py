@@ -16,7 +16,7 @@ local_path = codecs.decode(os.getcwd().replace('\\','\\\\'), 'unicode_escape')
 sys.path.append(local_path + '\\model')
 
 from model.detect import detect
-from ai import device, model, half, stride
+from AI import device, model, half, stride
 
 bp= Blueprint('imgUpload',__name__)
 dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1=0,x2=0,y1=0,y2=0)
@@ -55,7 +55,6 @@ def upload():
     start=time.time()
 
     img=request.files['image']#파일 가져오기
-    print(img)
     img.save('static/assets/img/' + secure_filename(img.filename))
     my_img = 'static/assets/img/' + secure_filename(img.filename)
     cv2_my_img = cv2.imread(my_img)
@@ -108,7 +107,7 @@ def upload():
     add_result(g.db, dict_data['part_id'], dict_data['part_name'], dict_data['part_category'], dict_data['part_judge'], dict_data['user_id'])
     dict_data['inspection_number']=find_inspection_number(g.db, dict_data['part_id'])
     add_image(g.db, int(dict_data['inspection_number']), dict_data['x1'],dict_data['x2'],dict_data['y1'], dict_data['y2'], object_name)
-    #url가져올때 f'https://"sejong-capstone-s3-bucket".s3.ap-northeast-2.amazonaws.com/이거 붙여야함 origin이면 원본 result면 bbox있는 거
+    #url가져올때 f'https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/이거 붙여야함 origin이면 원본 result면 bbox있는 거
     end=time.time()
     print(end-start)
     return dict_data
