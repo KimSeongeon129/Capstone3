@@ -141,7 +141,7 @@
 					if ( obj.value==="date" ) {
 						$("#searchbox").datepicker({language: "ko"});
 					} else {
-						$("#searchbox").datepicker('destroy');
+						$("#searchbox").datepicker('destroy');//date이외일때도 자꾸 달력이 떠서 수정할 예정입니다!
 					}
 
 					var opt = document.getElementById("selectbox");
