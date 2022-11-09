@@ -97,7 +97,7 @@
 					
 						<div>
 							<form method="post" action="" style="display: inline-flex; flex-direction: row; margin: 10px;">
-								<select id="selectbox" name="selectbox" style="width: 130px; height: 40px;" onchange="filtering()">
+								<select id="selectbox" name="selectbox" style="width: 130px; height: 40px;" onchange="filtering(this)">
 									<option value="none" style="text-align:center;">-----선택-----</option>
 									<option value="date" style="text-align:center;">검사 날짜</option>
 									<option value="part_name" style="text-align:center;">부품</option>
@@ -105,7 +105,7 @@
 									<option value="part_category" style="text-align:center;">불량유형</option>
 								</select>
 								&nbsp 
-								<input class= textform type="text" name="search_box" id = "search_box" autocomplete="off" placeholder="필터를 선택하세요." required style="width: 300px; height: 40px; text-align:center;" onclick="date(this)">
+								<input class= textform type="text" name="searchbox" id = "searchbox" autocomplete="off" placeholder="필터를 선택하세요." required style="width: 300px; height: 40px; text-align:center;">
 								&nbsp 
 								<input class = submit type="submit" value= "검색" style="width: 100px; height: 40px;">
 
@@ -137,7 +137,13 @@
 					window.open(url, name, option);
 				}
 
-				function filtering(){ //필터링
+				function filtering(obj){ //필터링
+					if ( obj.value==="date" ) {
+						$("#searchbox").datepicker({language: "ko"});
+					} else {
+						$("#searchbox").datepicker('destroy');
+					}
+
 					var opt = document.getElementById("selectbox");
 					var opt_val = opt.options[opt.selectedIndex].value;
 					var info = ""
@@ -148,26 +154,14 @@
 					else if (opt_val=='part_name'){
 						info = "부품 이름을 입력하세요.";
 					} 
-					else if (opt_val=='user'){
+					else if (opt_val=='part_id'){
 						info = "부품의 일련번호를 입력하세요.";
 					}
 					else if (opt_val=='part_category'){
 						info = "부품 유형을 입력하세요.";
 					}
-					document.getElementById("search_box").placeholder = info;
+					document.getElementById("searchbox").placeholder = info;
    				}
-
-				   function date(obj){
-					var opt = document.getElementById("selectbox");
-					var opt_val = opt.options[opt.selectedIndex].value;
-					
-					if (opt_val=='date'){//달력모양으로 입력
-						$("#searchbox").datepicker({language: 'ko'}); 
-					} 
-					else{
-						$("#searchbox").datepicker("destroy");
-					}
-				}
 			</script>
 			<script>
 				//페이징
@@ -294,7 +288,6 @@
 					$('#last_page').show();
 				}
 			</script>	
-			<script src="/static/assets/js/str_jquery.min.js"></script>
 			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
 			<script src="/static/assets/js/str_browser.min.js"></script>
 			<script src="/static/assets/js/str_breakpoints.min.js"></script>
