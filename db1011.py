@@ -187,7 +187,7 @@ def bbox(db, inspection_number):
 #상세조회
 def detailed_result(db, inspection_number):
     with db.cursor() as cursor:
-        sql = "select * from result where inspection_number=%s"
+        sql = "select * from mydb.result as A inner join mydb.image as B on A.inspection_number = B.inspection_number inner join mydb.user as C on c.user_id = A.user_id where A.inspection_number=%s"
         cursor.execute(sql, inspection_number)
         result = cursor.fetchall()
     return result
