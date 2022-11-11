@@ -22,7 +22,7 @@
 		#pagingul {
 			text-align: center;
 			display: inline-block;
-			
+
 			border-right: 0;
 			list-style: none;
 		}
@@ -39,11 +39,11 @@
 		}
 
 		#pagingul li.on {
-			background: #6ad1ed;
+			background: #fff;
 		}
 
 		#pagingul li.on a {
-			color: black;
+			color: #6ad1ed;
 		}
 
 	</style>
@@ -106,7 +106,7 @@
 						</div>
 					
 						<div>
-							<form method="post" action="" style="display: inline-flex; flex-direction: row; margin: 10px;">
+                            <form id="form" style="display: inline-flex; flex-direction: row; margin: 10px;">
 								<select id="selectbox" name="selectbox" style="width: 130px; height: 40px;" onchange="filtering(this)">
 									<option value="none" style="text-align:center;">-----선택-----</option>
 									<option value="date" style="text-align:center;">검사 날짜</option>
@@ -177,11 +177,26 @@
 						info = "부품 유형을 입력하세요.";
 					}
 					document.getElementById("search_box").placeholder = info;
-   				}
+                    
+                    //form json으로 보내기 
+                    //https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=hyoun1202&logNo=221519821163
+                    var formData = $("#form").serializeObject();
+                    $.ajax({
+                        url:'', //api
+                        type:'POST',
+                        contentType:'application/json',
+                        data:JSON.stringify(formData),
+                        success: function(data){
+                            console.log(data);
+                        },error: function(e){
+                            console.log(e.responseText);
+                        }
+                    })
+                }
 			</script>
 			
 			<script>
-				//페이징
+				//페이징 코드 교체 전
 				let totalData; //총 데이터 수
 				let dataPerPage; //한 페이지에 나타낼 글 수
 				let pageCount = 5; //페이징에 나타낼 페이지 수
