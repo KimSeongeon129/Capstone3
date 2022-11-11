@@ -4,13 +4,19 @@
 		<title>capstone3</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<script src="https://kit.fontawesome.com/a71aac3494.js" crossorigin="anonymous"></script>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 		<link rel="stylesheet" href="/static/assets/css/str_main.css" />
-		<link rel="stylesheet" href="/static/assets/css/datepicker.min.css" type="text/css" media="all">
 		<script src="/static/assets/js/jquery-3.1.1.min.js"></script>
-        <script src="/static/assets/js/datepicker.js"></script> <!-- Air datepicker js -->
-        <script src="/static/assets/js/datepicker.ko.js"></script> <!-- 달력 한글 추가를 위해 커스텀 -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+				integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+				crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	  	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+				integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+				crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
+				integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
+				crossorigin="anonymous" referrerpolicy="no-referrer" />
+	  	<link rel="stylesheet" href="/static/assets/css/jquery-ui.css">
+	  	<script src="/static/assets/js/jquery-ui.min.js"></script>
 	</head>
 	<style>
 		div.paging {
@@ -74,7 +80,7 @@
 							   <th scope="col">날짜</th>
 							   <th scope="col">부품 종류</th>
 							   <th scope="col">불량 유형</th>
-							   <th scope="col">불량 여부</th>
+							   <th scope="col">상세조회</th>
 							</tr>
 							{%if list == ['no']%}
 							<script>
@@ -89,7 +95,7 @@
 								<td><option>{{item.date}}</option></td>
 								<td><option>{{item.part_name}}</option></td>
 								<td><option>{{item.part_category}}</option></td>
-								<td><option>{{item.part_judge}}</option></td>
+								<td><option><img src="/static/assets/css/image/magnifying-glass-search.png" width="20px" height="20px"></option></td>
 							</tr>
 							{% endfor %}
 							{%endif%}
@@ -132,20 +138,20 @@
 		<!-- Scripts -->
 			<script>
 				function abc(tag){
-				let num = tag.parentNode.parentNode.querySelector('td').textContent;
-				console.log(num);
+					let num = tag.parentNode.parentNode.querySelector('td').textContent;
+					console.log(num);
 
-				fetch("http://127.0.0.1:5000"+'/detail_num/'+num, {
-					"method": "GET"
-				})
-				.then(res => res.json())
-				.then((res) => {
-					console.log('data',res['data']);
-					sessionStorage.setItem("dnum",JSON.stringify(res['data']['0']));
-					console.log(JSON.parse(sessionStorage.getItem('dnum')));
-					}
-				)
-			}
+					fetch("http://127.0.0.1:5000"+'/detail_num/'+num, {
+						"method": "GET"
+					})
+					.then(res => res.json())
+					.then((res) => {
+						console.log('data',res['data']);
+						sessionStorage.setItem("dnum",JSON.stringify(res['data']['0']));
+						console.log(JSON.parse(sessionStorage.getItem('dnum')));
+						}
+					)
+				}
 				function popup(){//상세 조회
 					var url = "/detail";
 					var name = "detail list";
@@ -188,7 +194,7 @@
 				const showPageCnt = 5; // 화면에 보일 페이지 번호 개수
 
 				$(function() {
-					const resultUrl = '';
+					const resultUrl = '/list';
 					axios.get(resultUrl)
 						.then(res => {
 							resultData = res.data;
