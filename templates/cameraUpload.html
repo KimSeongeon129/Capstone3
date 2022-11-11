@@ -194,12 +194,10 @@
           data: formData,
           success: function(data){
             var image = new Image();
-            if (data.code != none){
-              image.onload = function() {
-                reCTX.drawImage(image, 0, 0, reCanvasElement.width, reCanvasElement.height);
-              };
-              image.src = "data:image/png;base64," + data.code;
-            }
+            image.onload = function() {
+              reCTX.drawImage(image, 0, 0, reCanvasElement.width, reCanvasElement.height);
+            };
+            image.src = "data:image/png;base64," + data.code;
           },
           err: function(err){
             console.log("err: ", err)
