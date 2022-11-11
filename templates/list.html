@@ -84,12 +84,12 @@
 							{%else%}
 							{% for item in list %}
 							<tr>
-								<td><a onclick="abc(this)">{{item.inspection_number}}</a></td>
+								<td>{{item.inspection_number}}</td>
 								<td><option>{{item.part_id}}</option></td>
 								<td><option>{{item.date}}</option></td>
 								<td><option>{{item.part_name}}</option></td>
 								<td><option>{{item.part_category}}</option></td>
-								<td><option>{{item.part_judge}}</option></td>
+								<td><button onclick="abc(this)">상세조회</button></td>
 							</tr>
 							{% endfor %}
 							{%endif%}
