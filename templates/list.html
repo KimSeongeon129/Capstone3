@@ -87,28 +87,17 @@
 							</tr>
 							<tbody id="dataTableBody"></tbody>
 
-							{%if list == ['no']%}
+							{%if data == ['no']%}
 							<script>
 								alert('검색 결과가 없습니다.')
 								window.location.href="./list"
 							</script>
-							{%else%}
-							{% for item in list %}
-							<tr>
-								<td><option>{{item.inspection_number}}</option></td>
-								<td><option>{{item.part_id}}</option></td>
-								<td><option>{{item.date}}</option></td>
-								<td><option>{{item.part_name}}</option></td>
-								<td><option>{{item.part_category}}</option></td>
-								<td><option><img src="/static/assets/css/image/magnifying-glass-search.png" width="20px" height="20px" onclick="abc(this)"></a></option></td>
-							</tr>
-							{% endfor %}
 							{%endif%}
 							</table>
 						</div>
 					
 						<div>
-							<form method="post" action="/list_data" style="display: inline-flex; flex-direction: row; margin: 10px;">
+							<form method="post" id="tmpSendFrm" style="display: inline-flex; flex-direction: row; margin: 10px;">
 								<select id="selectbox" name="selectbox" style="width: 130px; height: 40px;" onchange="filtering(this)">
 									<option value="none" style="text-align:center;">-----선택-----</option>
 									<option value="date" style="text-align:center;">검사 날짜</option>
@@ -119,7 +108,7 @@
 								&nbsp 
 								<input class= textform type="text" name="search_box" id = "search_box" autocomplete="off" placeholder="필터를 선택하세요." required style="width: 300px; height: 40px; text-align:center;">
 								&nbsp 
-								<input class = submit type="submit" value= "검색" style="width: 100px; height: 40px;">
+								<button type="button" onclick="filterbutton()" style="width: 100px; height: 40px;">검색</button>
 
 							</form>
 						</div>
@@ -131,88 +120,7 @@
 
 		<!-- Scripts -->
 			<script>
-				function abc(tag){
-				let num = tag.parentNode.parentNode.querySelector('td').textContent;
-				console.log(num);
-
-				fetch("http://127.0.0.1:5000"+'/detail_num/'+num, {
-					"method": "GET"
-				})
-				.then(res => res.json())
-				.then((res) => {
-					console.log('data',res['data']);
-					sessionStorage.setItem("dnum",JSON.stringify(res['data']['0']));
-					console.log(JSON.parse(sessionStorage.getItem('dnum')));
-					window.location.href="javascript:popup()"
-					}
-				)
-			}
-			
-				function popup(){//상세 조회
-					var url = "/detail";
-					var name = "detail list";
-					var option = "width = 1000, height = 500, top = 100, left = 200, location = no"
-					window.open(url, name, option);
-				}
-
-				function filtering(obj){ //필터링
-					if ( obj.value==="date" ) {
-						$("#search_box").datepicker({language: "ko"});
-					} else {
-						$("#search_box").datepicker('destroy');
-					}
-
-					var opt = document.getElementById("selectbox");
-					var opt_val = opt.options[opt.selectedIndex].value;
-					var info = ""
-
-					if (opt_val=='date'){
-						info = "날짜를 입력하세요.";
-					} 
-					else if (opt_val=='part_name'){
-						info = "부품 이름을 입력하세요.";
-					} 
-					else if (opt_val=='part_id'){
-						info = "부품의 일련번호를 입력하세요.";
-					}
-					else if (opt_val=='part_category'){
-						info = "부품 유형을 입력하세요.";
-					}
-					document.getElementById("search_box").placeholder = info;
-					let totalData; //총 데이터 수
-					let dataPerPage; //한 페이지에 나타낼 글 수
-					let pageCount = 5; //페이징에 나타낼 페이지 수
-					let globalCurrentPage = 1; //현재 페이지
-					var globalData; //controller에서 가져온 data 전역변수
-					$(document).ready(function () {
-					
-
-					dataPerPage = 10;
-
-					var Id = 1
-
-					var param = { Id: Id };
-
-					
-						$.ajax({ // ajax로 데이터 가져오기
-							method: "POST",
-							url: "/list_data",
-							dataType: "json",
-							success: function (d) {
-							console.log(d)
-							//totalData 구하기
-							totalData = d.data.length;
-							console.log(totalData)
-							//글 목록 표시 호출 (테이블 생성)
-							displayData(1, dataPerPage,d.data);
-							globalData=d.data
-							//페이징 표시 호출
-							paging(totalData, dataPerPage, pageCount, 1);
-						}
-						});
-						
-						});
-   				}
+				
 			</script>
 			
 			<script>
@@ -318,10 +226,45 @@
 						displayData(selectedPage, dataPerPage, globalData);
 					});
 				}
+				
+				function filterbutton(){
+					// Get form
+					var form = $('#tmpSendFrm')[0];
 
+					// Create an FormData object 
+					var data = new FormData(form);
+
+					$.ajax({
+						type: "POST",
+						enctype: 'multipart/form-data',
+						url: '/list_data',	// form을 전송할 실제 파일경로
+						dataType: "json",
+						data:data,
+						processData: false,
+						contentType: false,
+						cache: false,
+						timeout: 600000,
+						success: function (data) {
+							// 전송 후 성공 시 실행 코드
+							console.log(data);
+							totalData = data.data.length;
+							console.log(totalData)
+							//글 목록 표시 호출 (테이블 생성)
+							displayData(1, dataPerPage,data.data);
+							globalData=data.data
+							//페이징 표시 호출
+							paging(totalData, dataPerPage, pageCount, 1);
+						},
+						error: function (e) {
+							// 전송 후 에러 발생 시 실행 코드
+							console.log("ERROR : ", e);
+						}
+					});
+				}
 				//현재 페이지(currentPage)와 페이지당 글 개수(dataPerPage) 반영
 				function displayData(currentPage, dataPerPage, data) {
-					let chartHtml = "";
+					let target=document.querySelector("#dataTableBody");
+					target.innerHTML = "";
 					//Number로 변환하지 않으면 아래에서 +를 할 경우 스트링 결합이 되어버림.. 
 					currentPage = Number(currentPage);
 					dataPerPage = Number(dataPerPage);
@@ -333,21 +276,70 @@
 							
 							
 							break;
-						}	
-						chartHtml +=
-							"<tr><td>" +
-							data[i].date +
-							"</td><td>" +
-							data[i].part_id+
-							"</td><td>" +
-							data[i].part_name +
-							"</td><td>" +
-							data[i].part_category +
-							"</td></tr>";
+						}
+						let cont = `
+							<tr>
+								<td>${data[i].inspection_number}</td>
+								<td>${data[i].part_id}</td>
+								<td>${data[i].date}</td>
+								<td>${data[i].part_name}</td>
+								<td>${data[i].part_category}</td>
+								<td><button onclick="abc(this)">상세조회</button></td>
+							</tr>
+						`;	
+						target.insertAdjacentHTML("beforeend", cont);
 					}
-					$("#dataTableBody").empty();
-					$("#dataTableBody").append(chartHtml);
+					
 				}
+				function abc(tag){
+				let num = tag.parentNode.parentNode.querySelector('td').textContent;
+				console.log(num);
+
+				fetch("http://127.0.0.1:5000"+'/detail_num/'+num, {
+					"method": "GET"
+				})
+				.then(res => res.json())
+				.then((res) => {
+					console.log('data',res['data']);
+					sessionStorage.setItem("dnum",JSON.stringify(res['data']['0']));
+					console.log(JSON.parse(sessionStorage.getItem('dnum')));
+					window.location.href="javascript:popup()"
+					}
+				)
+			}
+			
+				function popup(){//상세 조회
+					var url = "/detail";
+					var name = "detail list";
+					var option = "width = 1000, height = 500, top = 100, left = 200, location = no"
+					window.open(url, name, option);
+				}
+
+				function filtering(obj){ //필터링
+					if ( obj.value==="date" ) {
+						$("#search_box").datepicker({language: "ko"});
+					} else {
+						$("#search_box").datepicker('destroy');
+					}
+
+					var opt = document.getElementById("selectbox");
+					var opt_val = opt.options[opt.selectedIndex].value;
+					var info = ""
+
+					if (opt_val=='date'){
+						info = "날짜를 입력하세요.";
+					} 
+					else if (opt_val=='part_name'){
+						info = "부품 이름을 입력하세요.";
+					} 
+					else if (opt_val=='part_id'){
+						info = "부품의 일련번호를 입력하세요.";
+					}
+					else if (opt_val=='part_category'){
+						info = "부품 유형을 입력하세요.";
+					}
+					document.getElementById("search_box").placeholder = info;
+   				}
 			</script>	
 			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
 			<script src="/static/assets/js/str_browser.min.js"></script>
