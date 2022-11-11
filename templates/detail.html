@@ -30,19 +30,35 @@
 					<div class="container">
 						<table>
 							<th scope="col">검사 이미지</th>
+							<th scope="col">일련번호</th>
+							<th scope="col">부품이름</th>
+							<th scope="col">불량유형</th>
+							<th scope="col">불량여부</th>
 							<th scope="col">담당자</th>
 							<th scope="col">불량률 정확도</th>
 							<tr>
 								<td>
 									<script>
+										const data=JSON.parse(sessionStorage.getItem('dnum'));
 										img_url = sessionStorage.getItem('img_url')
-										img_url.replaceAll('"','')
 										console.log(img_url)
 										document.write('<img class="imgsrc" src="',img_url,'">')
 									</script>
 								</td>
 								<td><script>
-									document.write(sessionStorage.getItem('user_id'));
+									document.write(data['part_id']);
+								</script></td>
+								<td><script>
+									document.write(data['part_name']);
+								</script></td>
+								<td><script>
+									document.write(data['part_category']);
+								</script></td>
+								<td><script>
+									document.write(data['part_judge']);
+								</script></td>
+								<td><script>
+									document.write(data['user_id']);
 								</script></td>
 								<td><script>
 									document.write(sessionStorage.getItem(''));//정확도

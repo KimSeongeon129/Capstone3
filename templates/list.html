@@ -84,7 +84,7 @@
 							{%else%}
 							{% for item in list %}
 							<tr>
-								<td><a href="/detail">{{item.inspection_number}}</a></td>
+								<td><a href="javascript:popup()" onclick="abc(this)">{{item.inspection_number}}</a></td>
 								<td><option>{{item.part_id}}</option></td>
 								<td><option>{{item.date}}</option></td>
 								<td><option>{{item.part_name}}</option></td>
@@ -131,6 +131,21 @@
 
 		<!-- Scripts -->
 			<script>
+				function abc(tag){
+				let num = tag.parentNode.parentNode.querySelector('td').textContent;
+				console.log(num);
+
+				fetch("http://127.0.0.1:5000"+'/detail_num/'+num, {
+					"method": "GET"
+				})
+				.then(res => res.json())
+				.then((res) => {
+					console.log('data',res['data']);
+					sessionStorage.setItem("dnum",JSON.stringify(res['data']['0']));
+					console.log(JSON.parse(sessionStorage.getItem('dnum')));
+					}
+				)
+			}
 				function popup(){//상세 조회
 					var url = "/detail";
 					var name = "detail list";

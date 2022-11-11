@@ -1,6 +1,6 @@
 from flask import Flask, render_template, session, g
 from flask import jsonify,url_for,redirect,request,Blueprint
-from db1011 import user_result
+from db1011 import user_result,detailed_result
 import requests
 import json
 import operator,string
@@ -41,6 +41,15 @@ def list():
         if c==0:
             dic=['no']
         return render_template("list.html", list = dic)
+
+@bp.route('/detail_num/<num>')#세부내역조회
+def detail_num(num):
+    print(num)
+    data=detailed_result(g.db,num)
+    return jsonify(
+        result="success",
+        data=data
+        )
 
 @bp.route('/detail')#세부내역조회
 def detail():
