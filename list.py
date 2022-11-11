@@ -6,13 +6,19 @@ import json
 import operator,string
 
 bp= Blueprint('list',__name__)
-@bp.route('/list',methods=['GET','POST'])#내역조회페이지
-def list():    
+@bp.route('/list')
+def list():
+    return render_template("list.html")
+@bp.route('/list_data',methods=['GET','POST'])#내역조회페이지
+def list_data():    
     if request.method=='GET':#그냥 내역조회 했을시 전체 보여주기
         id=session['username']
         list = user_result(g.db,id)
         list = sorted(list, key= lambda x: x['date'], reverse=True)#최신순으로 반환
-        return render_template("list.html", list = list)
+        return jsonify(
+            success="성공",
+            data=list
+        )
     else: #필터링 한거 보여주기
         #필터링 내용 가져오기
         filtering=request.form['selectbox']
@@ -40,8 +46,10 @@ def list():
                     c=c+1
         if c==0:
             dic=['no']
-        return render_template("list.html", list = dic)
-
+    return jsonify(
+            success="성공",
+            data=dic
+        )
 @bp.route('/detail_num/<num>')#세부내역조회
 def detail_num(num):
     print(num)
@@ -53,5 +61,10 @@ def detail_num(num):
 
 @bp.route('/detail')#세부내역조회
 def detail():
-    return render_template("detail.html")
+    #데이터 가져오기(아마 검사번호)
+    inspection_number=1
+    #검사번호로 모든 정보 가져오기(일련번호, 부량여부, 부품 종류, 불량 종류, 담당자, 시간, 라인, 검사번호,이미지 등등)
+    dic_list="db_find_parts_img"
+    #리스트로 받은 것을 전부 보내주기
+    return render_template("detail.html",data=dic_list)
 
