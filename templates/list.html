@@ -4,13 +4,19 @@
 		<title>capstone3</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<script src="https://kit.fontawesome.com/a71aac3494.js" crossorigin="anonymous"></script>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 		<link rel="stylesheet" href="/static/assets/css/str_main.css" />
-		<link rel="stylesheet" href="/static/assets/css/datepicker.min.css" type="text/css" media="all">
 		<script src="/static/assets/js/jquery-3.1.1.min.js"></script>
-        <script src="/static/assets/js/datepicker.js"></script> <!-- Air datepicker js -->
-        <script src="/static/assets/js/datepicker.ko.js"></script> <!-- 달력 한글 추가를 위해 커스텀 -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+				integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+				crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	  	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+				integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+				crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
+				integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
+				crossorigin="anonymous" referrerpolicy="no-referrer" />
+	  	<link rel="stylesheet" href="/static/assets/css/jquery-ui.css">
+	  	<script src="/static/assets/js/jquery-ui.min.js"></script>
 	</head>
 	<style>
 		div.paging {
@@ -69,12 +75,12 @@
 							검사결과
 							<table id="result">
 							<tr>
-							   <th scope="col">검사 번호</th>
-							   <th scope="col">일련 번호</th>
-							   <th scope="col">날짜</th>
-							   <th scope="col">부품 종류</th>
-							   <th scope="col">불량 유형</th>
-							   <th scope="col">불량 여부</th>
+								<th scope="col">검사 번호</th>
+								<th scope="col">일련 번호</th>
+								<th scope="col">날짜</th>
+								<th scope="col">부품 종류</th>
+								<th scope="col">불량 유형</th>
+								<th scope="col">상세조회</th>
 							</tr>
 							{%if list == ['no']%}
 							<script>
@@ -84,12 +90,12 @@
 							{%else%}
 							{% for item in list %}
 							<tr>
-								<td>{{item.inspection_number}}</td>
+								<td><option>{{item.inspection_number}}</option></td>
 								<td><option>{{item.part_id}}</option></td>
 								<td><option>{{item.date}}</option></td>
 								<td><option>{{item.part_name}}</option></td>
 								<td><option>{{item.part_category}}</option></td>
-								<td><button onclick="abc(this)">상세조회</button></td>
+								<td><option><img src="/static/assets/css/image/magnifying-glass-search.png" width="20px" height="20px" onclick="abc(this)"></a></option></td>
 							</tr>
 							{% endfor %}
 							{%endif%}
@@ -159,7 +165,7 @@
 					if ( obj.value==="date" ) {
 						$("#search_box").datepicker({language: "ko"});
 					} else {
-						$("#search_box").datepicker('destroy');//date이외일때도 자꾸 달력이 떠서 수정할 예정입니다!
+						$("#search_box").datepicker('destroy');
 					}
 
 					var opt = document.getElementById("selectbox");
@@ -190,7 +196,7 @@
 				const showPageCnt = 5; // 화면에 보일 페이지 번호 개수
 
 				$(function() {
-					const resultUrl = '';
+					const resultUrl = '/list';
 					axios.get(resultUrl)
 						.then(res => {
 							resultData = res.data;
