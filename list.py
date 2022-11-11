@@ -53,10 +53,5 @@ def detail_num(num):
 
 @bp.route('/detail')#세부내역조회
 def detail():
-    #데이터 가져오기(아마 검사번호)
-    inspection_number=1
-    #검사번호로 모든 정보 가져오기(일련번호, 부량여부, 부품 종류, 불량 종류, 담당자, 시간, 라인, 검사번호,이미지 등등)
-    dic_list="db_find_parts_img"
-    #리스트로 받은 것을 전부 보내주기
-    return render_template("detail.html",data=dic_list)
+    return render_template("detail.html")
 
