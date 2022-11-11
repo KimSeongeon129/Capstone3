@@ -19,28 +19,31 @@
 	  	<script src="/static/assets/js/jquery-ui.min.js"></script>
 	</head>
 	<style>
-		div.paging {
-			width: 100%;
-			display: inline-flex;
-			align-items: center;
-			margin-top: 20px;
-			justify-content: center;
+		.pagingul {
+			text-align: center;
+			display: inline-block;
+			
+			border-right: 0;
+			list-style: none;
+		}
+		.pagingul li {
+			text-align: center;
+			float: left;
 		}
 
-		div.paging>i,
-		div.paging>div.pages {
-			margin: 0 10px;
+		.pagingul li a {
+			display: block;
+			font-size: 14px;
+			padding: 9px 12px;
+			box-sizing: border-box;
 		}
 
-		div.paging>i,
-		div.paging>div.pages>span {
-			margin: 0 3px;
-			cursor: pointer;
+		.pagingul li.on {
+			background: #6ad1ed;
 		}
 
-		span.active {
-			color: #6ad1ed;
-			font-weight: bold;
+		.pagingul li.on a {
+			color: black;
 		}
 
 	</style>
@@ -119,19 +122,8 @@
 							</form>
 						</div>
 
-						<div class="paging">
-							<i class="fa-solid fa-angles-left" id="first_page"></i>
-							<i class="fa-solid fa-angle-left" id="prev_page"></i>
-							<div class="pages">
-							<span class="active">1</span>
-							<span>2</span>
-							<span>3</span>
-							<span>4</span>
-							<span>5</span>
-							</div>
-							<i class="fa-solid fa-angle-right" id="next_page"></i>
-							<i class="fa-solid fa-angles-right" id="last_page"></i>
-						</div>
+						<ul id="pagingul">
+						</ul>
 					</div>
 				</section>
 
@@ -187,130 +179,126 @@
 					document.getElementById("search_box").placeholder = info;
    				}
 			</script>
-			<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js">
+			
+			<script>
 				//페이징
-				import axios from 'axios';
-				let resultData = [];
+				let totalData; //총 데이터 수
+				let dataPerPage; //한 페이지에 나타낼 글 수
+				let pageCount = 5; //페이징에 나타낼 페이지 수
+				let globalCurrentPage = 1; //현재 페이지
+				var globalData; //controller에서 가져온 data 전역변수
 
-				const countPerPage = 10; // 페이지당 데이터 건수
-				const showPageCnt = 5; // 화면에 보일 페이지 번호 개수
+				$(document).ready(function () {
 
-				$(function() {
-					const resultUrl = '/list';
-					axios.get(resultUrl)
-						.then(res => {
-							resultData = res.data;
-							// 별도의 서버에 페이지별로 요청하는 게 아니기 때문에
-							// 데이터를 한 번에 가져와서 페이지별로 화면에 출력
-							setTable(1);
-							setPaging(1);
-						})
-						.catch(err => console.error(err))
-						.then(() => {
-						});
+					dataPerPage = 5;
 
-					$(document).on('click', 'div.paging>div.pages>span', function() {
-						if (!$(this).hasClass('active')) {
-						$(this).parent().find('span.active').removeClass('active');
-						$(this).addClass('active');
+					var Id = 1
 
-						setTable(Number($(this).text()));
-						}
-					});
+					var param = { Id: Id };
 
-					$(document).on('click', 'div.paging>i', function() {
-						const totalPage = Math.floor(resultData.length / countPerPage) + (resultData.length % countPerPage == 0 ? 0 : 1);
-						const id = $(this).attr('id');
-						//console.log(id);
+					ajaxPost("/list", param, function (data) {
 
-						if (id == 'first_page') {
-							setTable(1);
-							setPaging(1);
-						} else if (id == 'prev_page') {
-							let arrPages = [];
-							$('div.paging>div.pages>span').each(function(idx, item) {
-								arrPages.push(Number($(this).text()));
-							});
-							
-							const prevPage = _.min(arrPages) - showPageCnt;
-							setTable(prevPage);
-							setPaging(prevPage);
-						} else if (id == 'next_page') {
-							let arrPages = [];
-							$('div.paging>div.pages>span').each(function(idx, item) {
-								arrPages.push(Number($(this).text()));
-							});
-							
-							const nextPage = _.max(arrPages) + 1;
-							setTable(nextPage);
-							setPaging(nextPage);
-						} else if (id == 'last_page') {
-							const lastPage = Math.floor((totalPage - 1) / showPageCnt) * showPageCnt + 1;
-							setTable(lastPage);
-							setPaging(lastPage);
-						}
+						totalData = data.length;
+						globalData = data;
+						//글 목록 표시 호출 (테이블 생성)
+						displayData(1, dataPerPage, data);
+						//페이징 표시 호출
+						paging(totalData, dataPerPage, pageCount, 1);
+
 					});
 				});
 
-				/**
-				 * 테이블에 데이터를 세팅합니다.
-				 * @param {int} pageNum - Page Number
-				 */
-				function setTable(pageNum) {
-					$('#result>tbody').empty();
+				function paging(totalData, dataPerPage, pageCount, currentPage) {
 
-					// filtering data
-					const filteredData = _.slice(resultData, (pageNum - 1) * countPerPage, pageNum * countPerPage);
-					//console.log(filteredData);
+					totalPage = Math.ceil(totalData / dataPerPage); //총 페이지 수
 
-					let sTbodyHtml = '';
-					for (let i = 0; i < filteredData.length; i++) {
-						sTbodyHtml += '<tr>';
-						sTbodyHtml += '  <td class="center">' + filteredData[i].id + '</td>';
-						sTbodyHtml += '  <td class="center">' + filteredData[i].userId + '</td>';
-						sTbodyHtml += '  <td>' + filteredData[i].title + '</td>';
-						sTbodyHtml += '  <td class="center"><input type="checkbox" ' + (filteredData[i].completed ? 'checked' : '') + ' onclick="return false" /></td>';
-						sTbodyHtml += '</tr>';
+					if (totalPage < pageCount) {
+						pageCount = totalPage;
 					}
-					$('#result>tbody').append(sTbodyHtml);
+
+					let pageGroup = Math.ceil(currentPage / pageCount); // 페이지 그룹
+					let last = pageGroup * pageCount; //화면에 보여질 마지막 페이지 번호
+
+					if (last > totalPage) {
+						last = totalPage;
+					}
+
+					let first = last - (pageCount - 1); //화면에 보여질 첫번째 페이지 번호
+					let next = last + 1;
+					let prev = first - 1;
+
+					let pageHtml = "";
+
+					if (prev > 0) {
+						pageHtml += "<li><a href='#' id='prev'> 이전 </a></li>";
+					}
+
+					//페이징 번호 표시 
+					for (var i = first; i <= last; i++) {
+						if (currentPage == i) {
+							pageHtml +=
+								"<li class='on'><a href='#' id='" + i + "'>" + i + "</a></li>";
+						} else {
+							pageHtml += "<li><a href='#' id='" + i + "'>" + i + "</a></li>";
+						}
+					}
+
+					if (last < totalPage) {
+						pageHtml += "<li><a href='#' id='next'> 다음 </a></li>";
+					}
+
+					$("#pagingul").html(pageHtml);
+					let displayCount = "";
+					displayCount = "현재 1 - " + totalPage + " 페이지 / " + totalData + "건";
+					$("#displayCount").text(displayCount);
+
+
+					//페이징 번호 클릭 이벤트 
+					$("#pagingul li a").click(function () {
+						globalData
+
+						let $id = $(this).attr("id");
+						selectedPage = $(this).text();
+
+						if ($id == "next") selectedPage = next;
+						if ($id == "prev") selectedPage = prev;
+
+						//전역변수에 선택한 페이지 번호를 담는다...
+						globalCurrentPage = selectedPage;
+						//페이징 표시 재호출
+						paging(totalData, dataPerPage, pageCount, selectedPage);
+						//글 목록 표시 재호출
+						displayData(selectedPage, dataPerPage, globalData);
+					});
 				}
 
-				/**
-				 * 페이징 정보를 세팅합니다.
-				 * @param {int} pageNum - Page Number
-				 */
-				function setPaging(pageNum) {
-					const currentPage = pageNum;
-					const totalPage = Math.floor(resultData.length / countPerPage) + (resultData.length % countPerPage == 0 ? 0 : 1);
-					//console.log(currentPage, totalPage);
+				//현재 페이지(currentPage)와 페이지당 글 개수(dataPerPage) 반영
+				function displayData(currentPage, dataPerPage, data) {
+					let chartHtml = "";
 
-					showAllIcon();
+					//Number로 변환하지 않으면 아래에서 +를 할 경우 스트링 결합이 되어버림.. 
+					currentPage = Number(currentPage);
+					dataPerPage = Number(dataPerPage);
 
-					if (currentPage <= showPageCnt) {
-						$('#first_page').hide();
-						$('#prev_page').hide();
+					for (var i = (currentPage - 1) * dataPerPage; i < (currentPage - 1) * dataPerPage + dataPerPage; i++)
+					{
+						if (data[i] == undefined)
+						{
+							break;
+						}	
+						chartHtml +=
+							"<tr><td>" +
+							data[i].Num +
+							"</td><td>" +
+							data[i].Title+
+							"</td><td>" +
+							data[i].Name +
+							"</td><td>" +
+							data[i].Date +
+							"</td></tr>";
 					}
-					if (
-						totalPage <= showPageCnt ||
-						Math.floor((currentPage - 1) / showPageCnt) * showPageCnt + showPageCnt + 1 > totalPage
-					) {
-						$('#next_page').hide();
-						$('#last_page').hide();
-					}
-
-					let start = Math.floor((currentPage - 1) / showPageCnt) * showPageCnt + 1;
-					let sPagesHtml = '';
-					for (const end = start + showPageCnt; start < end && start <= totalPage; start++) {
-						sPagesHtml += '<span class="' + (start == currentPage ? 'active' : '') + '">' + start + '</span>';
-					}
-					$('div.paging>div.pages').html(sPagesHtml);
-				}
-
-				function showAllIcon() {
-					$('#first_page').show();
-					$('#prev_page').show();
-					$('#next_page').show();
-					$('#last_page').show();
+					$("#dataTableBody").empty();
+					$("#dataTableBody").append(chartHtml);
 				}
 			</script>	
 			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
