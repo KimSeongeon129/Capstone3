@@ -85,6 +85,8 @@
 								<th scope="col">불량 유형</th>
 								<th scope="col">상세조회</th>
 							</tr>
+							<tbody id="dataTableBody"></tbody>
+
 							{%if list == ['no']%}
 							<script>
 								alert('검색 결과가 없습니다.')
@@ -106,7 +108,7 @@
 						</div>
 					
 						<div>
-							<form method="post" action="" style="display: inline-flex; flex-direction: row; margin: 10px;">
+							<form method="post" action="/list_data" style="display: inline-flex; flex-direction: row; margin: 10px;">
 								<select id="selectbox" name="selectbox" style="width: 130px; height: 40px;" onchange="filtering(this)">
 									<option value="none" style="text-align:center;">-----선택-----</option>
 									<option value="date" style="text-align:center;">검사 날짜</option>
@@ -177,6 +179,39 @@
 						info = "부품 유형을 입력하세요.";
 					}
 					document.getElementById("search_box").placeholder = info;
+					let totalData; //총 데이터 수
+					let dataPerPage; //한 페이지에 나타낼 글 수
+					let pageCount = 5; //페이징에 나타낼 페이지 수
+					let globalCurrentPage = 1; //현재 페이지
+					var globalData; //controller에서 가져온 data 전역변수
+					$(document).ready(function () {
+					
+
+					dataPerPage = 10;
+
+					var Id = 1
+
+					var param = { Id: Id };
+
+					
+						$.ajax({ // ajax로 데이터 가져오기
+							method: "POST",
+							url: "/list_data",
+							dataType: "json",
+							success: function (d) {
+							console.log(d)
+							//totalData 구하기
+							totalData = d.data.length;
+							console.log(totalData)
+							//글 목록 표시 호출 (테이블 생성)
+							displayData(1, dataPerPage,d.data);
+							globalData=d.data
+							//페이징 표시 호출
+							paging(totalData, dataPerPage, pageCount, 1);
+						}
+						});
+						
+						});
    				}
 			</script>
 			
@@ -189,28 +224,38 @@
 				var globalData; //controller에서 가져온 data 전역변수
 
 				$(document).ready(function () {
+					
 
-					dataPerPage = 5;
+					dataPerPage = 10;
 
 					var Id = 1
 
 					var param = { Id: Id };
 
-					ajaxPost("/list", param, function (data) {
-
-						totalData = data.length;
-						globalData = data;
-						//글 목록 표시 호출 (테이블 생성)
-						displayData(1, dataPerPage, data);
-						//페이징 표시 호출
-						paging(totalData, dataPerPage, pageCount, 1);
-
-					});
-				});
+					$.ajax({ // ajax로 데이터 가져오기
+							method: "GET",
+							url: "/list_data",
+							dataType: "json",
+							success: function (d) {
+							console.log(d)
+							//totalData 구하기
+							totalData = d.data.length;
+							console.log(totalData)
+							//글 목록 표시 호출 (테이블 생성)
+							displayData(1, dataPerPage,d.data);
+							globalData=d.data
+							//페이징 표시 호출
+							paging(totalData, dataPerPage, pageCount, 1);
+						}
+						});
+					
+						
+						});
 
 				function paging(totalData, dataPerPage, pageCount, currentPage) {
 
 					totalPage = Math.ceil(totalData / dataPerPage); //총 페이지 수
+					
 
 					if (totalPage < pageCount) {
 						pageCount = totalPage;
@@ -249,6 +294,7 @@
 
 					$("#pagingul").html(pageHtml);
 					let displayCount = "";
+					
 					displayCount = "현재 1 - " + totalPage + " 페이지 / " + totalData + "건";
 					$("#displayCount").text(displayCount);
 
@@ -268,6 +314,7 @@
 						//페이징 표시 재호출
 						paging(totalData, dataPerPage, pageCount, selectedPage);
 						//글 목록 표시 재호출
+						console.log("glo",globalData)
 						displayData(selectedPage, dataPerPage, globalData);
 					});
 				}
@@ -275,26 +322,27 @@
 				//현재 페이지(currentPage)와 페이지당 글 개수(dataPerPage) 반영
 				function displayData(currentPage, dataPerPage, data) {
 					let chartHtml = "";
-
 					//Number로 변환하지 않으면 아래에서 +를 할 경우 스트링 결합이 되어버림.. 
 					currentPage = Number(currentPage);
 					dataPerPage = Number(dataPerPage);
-
 					for (var i = (currentPage - 1) * dataPerPage; i < (currentPage - 1) * dataPerPage + dataPerPage; i++)
 					{
-						if (data[i] == undefined)
+						
+						if (data[i] == undefined)//이부분만 어떻게 하면 됨
 						{
+							
+							
 							break;
 						}	
 						chartHtml +=
 							"<tr><td>" +
-							data[i].Num +
+							data[i].date +
 							"</td><td>" +
-							data[i].Title+
+							data[i].part_id+
 							"</td><td>" +
-							data[i].Name +
+							data[i].part_name +
 							"</td><td>" +
-							data[i].Date +
+							data[i].part_category +
 							"</td></tr>";
 					}
 					$("#dataTableBody").empty();
