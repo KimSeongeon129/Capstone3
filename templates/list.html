@@ -357,3 +357,321 @@
 
 	</body>
 </html>
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>capstone3</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="/static/assets/css/str_main.css" />
+		<script src="/static/assets/js/jquery-3.1.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+				integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+				crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	  	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+				integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA=="
+				crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
+				integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ=="
+				crossorigin="anonymous" referrerpolicy="no-referrer" />
+	  	<link rel="stylesheet" href="/static/assets/css/jquery-ui.css">
+	  	<script src="/static/assets/js/jquery-ui.min.js"></script>
+	</head>
+	<style>
+		#pagingul {
+			text-align: center;
+			display: inline-block;
+
+			border-right: 0;
+			list-style: none;
+		}
+		#pagingul li {
+			text-align: center;
+			float: left;
+		}
+
+		#pagingul li a {
+			display: block;
+			font-size: 14px;
+			padding: 9px 12px;
+			box-sizing: border-box;
+		}
+
+		#pagingul li.on {
+			background: #fff;
+		}
+
+		#pagingul li.on a {
+			color: #6ad1ed;
+		}
+
+	</style>
+	<body class="homepage is-preload">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<section id="header">
+					<div class="container">
+
+						<!-- Logo -->
+							<h1 id="logo"><a href="/user_main">프로그램 이름</a></h1>
+						<!-- Nav -->
+							<nav id="nav">
+								<ul>
+									<li><a class="icon solid fa-home" href="/user_main"><span>Home</span></a></li>
+									<li><a class="icon fa-chart-bar" href="/imgUpload"><span>이미지 업로드</span></a></li>
+									<li><a class="icon solid fa-cog" href="cameraUpload"><span>실시간 검사</span></a></li>
+									<li><a class="icon solid fa-retweet" href="/list"><span>내역조회</span></a></li>
+									<li><a class="icon solid fa-retweet" href="/statistics"><span>통계</span></a></li>
+									<li><a class="icon solid fa-sitemap" href=" "><span>로그아웃</span></a></li>
+								</ul>
+							</nav>
+
+					</div>
+				</section>
+
+			<!-- Main -->
+				<section id="main">
+					<div class="container" style="display: flex; flex-direction: column; align-items : center;">
+						<div style="width: 85%; margin-top: 10px;">
+							검사결과
+							<table id="result">
+							<tr>
+								<th scope="col">검사 번호</th>
+								<th scope="col">일련 번호</th>
+								<th scope="col">날짜</th>
+								<th scope="col">부품 종류</th>
+								<th scope="col">불량 유형</th>
+								<th scope="col">상세조회</th>
+							</tr>
+							{%if list == ['no']%}
+							<script>
+								alert('검색 결과가 없습니다.')
+								window.location.href="./list"
+							</script>
+							{%else%}
+							{% for item in list %}
+							<tr>
+								<td><option>{{item.inspection_number}}</option></td>
+								<td><option>{{item.part_id}}</option></td>
+								<td><option>{{item.date}}</option></td>
+								<td><option>{{item.part_name}}</option></td>
+								<td><option>{{item.part_category}}</option></td>
+								<td><option><img src="/static/assets/css/image/magnifying-glass-search.png" width="20px" height="20px" onclick="abc(this)"></a></option></td>
+							</tr>
+							{% endfor %}
+							{%endif%}
+							</table>
+						</div>
+					
+						<div>
+                            <form id="form" style="display: inline-flex; flex-direction: row; margin: 10px;">
+								<select id="selectbox" name="selectbox" style="width: 130px; height: 40px;" onchange="filtering(this)">
+									<option value="none" style="text-align:center;">-----선택-----</option>
+									<option value="date" style="text-align:center;">검사 날짜</option>
+									<option value="part_name" style="text-align:center;">부품</option>
+									<option value="part_id" style="text-align:center;">일련번호</option>
+									<option value="part_category" style="text-align:center;">불량유형</option>
+								</select>
+								&nbsp 
+								<input class= textform type="text" name="search_box" id = "search_box" autocomplete="off" placeholder="필터를 선택하세요." required style="width: 300px; height: 40px; text-align:center;">
+								&nbsp 
+								<input class = submit type="submit" value= "검색" style="width: 100px; height: 40px;">
+
+							</form>
+						</div>
+
+						<ul id="pagingul">
+						</ul>
+					</div>
+				</section>
+
+		<!-- Scripts -->
+			<script>
+				function abc(tag){
+				let num = tag.parentNode.parentNode.querySelector('td').textContent;
+				console.log(num);
+
+				fetch("http://127.0.0.1:5000"+'/detail_num/'+num, {
+					"method": "GET"
+				})
+				.then(res => res.json())
+				.then((res) => {
+					console.log('data',res['data']);
+					sessionStorage.setItem("dnum",JSON.stringify(res['data']['0']));
+					console.log(JSON.parse(sessionStorage.getItem('dnum')));
+					window.location.href="javascript:popup()"
+					}
+				)
+			}
+			
+				function popup(){//상세 조회
+					var url = "/detail";
+					var name = "detail list";
+					var option = "width = 1000, height = 500, top = 100, left = 200, location = no"
+					window.open(url, name, option);
+				}
+
+				function filtering(obj){ //필터링
+					if ( obj.value==="date" ) {
+						$("#search_box").datepicker({language: "ko"});
+					} else {
+						$("#search_box").datepicker('destroy');
+					}
+
+					var opt = document.getElementById("selectbox");
+					var opt_val = opt.options[opt.selectedIndex].value;
+					var info = ""
+
+					if (opt_val=='date'){
+						info = "날짜를 입력하세요.";
+					} 
+					else if (opt_val=='part_name'){
+						info = "부품 이름을 입력하세요.";
+					} 
+					else if (opt_val=='part_id'){
+						info = "부품의 일련번호를 입력하세요.";
+					}
+					else if (opt_val=='part_category'){
+						info = "부품 유형을 입력하세요.";
+					}
+					document.getElementById("search_box").placeholder = info;
+                    
+                    //form json으로 보내기 
+                    //https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=hyoun1202&logNo=221519821163
+                    var formData = $("#form").serializeObject();
+                    $.ajax({
+                        url:'', //api
+                        type:'POST',
+                        contentType:'application/json',
+                        data:JSON.stringify(formData),
+                        success: function(data){
+                            console.log(data);
+                        },error: function(e){
+                            console.log(e.responseText);
+                        }
+                    })
+                }
+			</script>
+			
+			<script>
+				//페이징 코드 교체 전
+				let totalData; //총 데이터 수
+				let dataPerPage; //한 페이지에 나타낼 글 수
+				let pageCount = 5; //페이징에 나타낼 페이지 수
+				let globalCurrentPage = 1; //현재 페이지
+
+				$(document).ready(function () {
+
+					dataPerPage = 5;
+
+					$.ajax({
+						method: "get",
+						url: "",
+						dataType: "json",
+						success: function(data){
+						paging(totalData, dataPerPage, pageCount, 1);
+						displayData(1, dataPerPage);
+						}
+					});
+				});
+
+				function paging(totalData, dataPerPage, pageCount, currentPage) {
+
+					totalPage = Math.ceil(totalData / dataPerPage); //총 페이지 수
+
+					if (totalPage < pageCount) {
+						pageCount = totalPage;
+					}
+
+					let pageGroup = Math.ceil(currentPage / pageCount); // 페이지 그룹
+					let last = pageGroup * pageCount; //화면에 보여질 마지막 페이지 번호
+
+					if (last > totalPage) {
+						last = totalPage;
+					}
+
+					let first = last - (pageCount - 1); //화면에 보여질 첫번째 페이지 번호
+					let next = last + 1;
+					let prev = first - 1;
+
+					let pageHtml = "";
+
+					if (prev > 0) {
+						pageHtml += "<li><a href='#' id='prev'> 이전 </a></li>";
+					}
+
+					//페이징 번호 표시 
+					for (var i = first; i <= last; i++) {
+						if (currentPage == i) {
+							pageHtml +=
+								"<li class='on'><a href='#' id='" + i + "'>" + i + "</a></li>";
+						} else {
+							pageHtml += "<li><a href='#' id='" + i + "'>" + i + "</a></li>";
+						}
+					}
+
+					if (last < totalPage) {
+						pageHtml += "<li><a href='#' id='next'> 다음 </a></li>";
+					}
+
+					$("#pagingul").html(pageHtml);
+					let displayCount = "";
+					displayCount = "현재 1 - " + totalPage + " 페이지 / " + totalData + "건";
+					$("#displayCount").text(displayCount);
+
+					//페이징 번호 클릭 이벤트 
+					$("#pagingul li a").click(function () {
+						let $id = $(this).attr("id");
+						selectedPage = $(this).text();
+
+						if ($id == "next") selectedPage = next;
+						if ($id == "prev") selectedPage = prev;
+
+						//전역변수에 선택한 페이지 번호를 담는다...
+						globalCurrentPage = selectedPage;
+						//페이징 표시 재호출
+						paging(totalData, dataPerPage, pageCount, selectedPage);
+						//글 목록 표시 재호출
+						displayData(selectedPage, dataPerPage);
+					});
+				}
+
+				//현재 페이지(currentPage)와 페이지당 글 개수(dataPerPage) 반영
+				function displayData(currentPage, dataPerPage) {
+					let chartHtml = "";
+
+					//Number로 변환하지 않으면 아래에서 +를 할 경우 스트링 결합이 되어버림.. 
+					currentPage = Number(currentPage);
+					dataPerPage = Number(dataPerPage);
+
+					for (var i = (currentPage - 1) * dataPerPage; 
+					i < (currentPage - 1) * dataPerPage + dataPerPage; 
+					i++)
+					{
+						if (data[i] == undefined)
+						{
+							break;
+						}	
+						chartHtml +=
+							"<tr><td>" +
+							data[i].Num +
+							"</td><td>" +
+							data[i].Title+
+							"</td><td>" +
+							data[i].Name +
+							"</td><td>" +
+							data[i].Date +
+							"</td></tr>";
+					}
+					$("#dataTableBody").append(chartHtml);
+				}
+			</script>	
+			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
+			<script src="/static/assets/js/str_browser.min.js"></script>
+			<script src="/static/assets/js/str_breakpoints.min.js"></script>
+			<script src="/static/assets/js/str_util.js"></script>
+			<script src="/static/assets/js/str_main.js"></script>
+
+	</body>
+</html>
