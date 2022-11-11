@@ -35,7 +35,10 @@
 				<section id="main">
 					<!-- https://velog.io/@minkyeong-ko/HTMLCSSJS-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%97%85%EB%A1%9C%EB%93%9C-%ED%8C%8C%EC%9D%BC%EC%9D%B4%EB%A6%84-%EB%82%98%ED%83%80%EB%82%B4%EA%B8%B0-%ED%99%94%EB%A9%B4%EC%97%90-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EB%B3%B4%EC%97%AC%EC%A3%BC%EA%B8%B0 -->
 					<div class="container">
-						통계
+					
+					{{ div1|safe }}
+        			{{ script1|safe }}
+
 					</div>
 				</section>
 
@@ -48,6 +51,10 @@
 			<script src="/static/assets/js/str_breakpoints.min.js"></script>
 			<script src="/static/assets/js/str_util.js"></script>
 			<script src="/static/assets/js/str_main.js"></script>
-
+			<script src="https://cdn.bokeh.org/bokeh/release/bokeh-3.0.1.min.js"></script>
+			<script src="https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.0.1.min.js"></script>
+			<script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.0.1.min.js"></script>
+			<script src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.0.1.min.js"></script>
+			<script src="https://cdn.bokeh.org/bokeh/release/bokeh-mathjax-3.0.1.min.js"></script>
 	</body>
 </html>
