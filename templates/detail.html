@@ -8,13 +8,22 @@
 		<link rel="stylesheet" href="/static/assets/css/str_main_detail.css" />
 	</head>
 	<style>
+		.container{
+			display: inline-flex;
+			flex-direction: row;
+			flex-wrap: wrap; 
+			justify-content:space-between;
+			align-content: center; 
+			align-items: stretch;
+			justify-content : center;
+		}
 		.imgsrc{ 
 			width:50%;
 			height:50%;
 			object-fit:contain;
 		}
 	</style>
-	<body class="homepage is-preload" >
+	<body class="homepage is-preload">
 		<div id="page-wrapper">
 
 			<!-- Header -->
@@ -28,48 +37,48 @@
 			<!-- Main -->
 				<section id="main">
 					<div class="container">
-						<table>
-							<th scope="col">검사 이미지</th>
-							<th scope="col">일련번호</th>
-							<th scope="col">부품이름</th>
-							<th scope="col">불량유형</th>
-							<th scope="col">불량여부</th>
-							<th scope="col">담당자</th>
-							<th scope="col">불량률 정확도</th>
-							<tr>
-								<td>
-									<script>
-										const data=JSON.parse(sessionStorage.getItem('dnum'));
-										img_url = sessionStorage.getItem('img_url')
-										console.log(img_url)
-										document.write('<img class="imgsrc" src="',img_url,'">')
-									</script>
-								</td>
-								<td><script>
-									console.log(data['inspection_number'])
-									document.write(data['part_id']);
-								</script></td>
-								<td><script>
-									document.write(data['part_name']);
-								</script></td>
-								<td><script>
-									document.write(data['part_category']);
-								</script></td>
-								<td><script>
-									document.write(data['part_judge']);
-								</script></td>
-								<td><script>
-									document.write(data['user_id']);
-								</script></td>
-								<td><script>
-									document.write(sessionStorage.getItem(''));//정확도
-								</script></td>
-							</tr>
-						 </table>
+						<div class="detail_img" id="detail_img">
+							<!--<img class="imgsrc" src="/static/assets/img/main_img.jpg" width="50px" height="50px">-->
+							<script>
+								const data=JSON.parse(sessionStorage.getItem('dnum'));
+								img_url = sessionStorage.getItem('img_url')
+								console.log(img_url)
+								document.write('<img class="imgsrc" src="',img_url,'">')
+							</script>
+						</div>
+
+						<div class="detail_table" id="detail_table">
+							<table>
+								<th scope="col">일련번호</th>
+								<th scope="col">부품이름</th>
+								<th scope="col">불량유형</th>
+								<th scope="col">불량여부</th>
+								<th scope="col">담당자</th>
+								<th scope="col">불량률 정확도</th>
+								<tr>
+									<td><script>
+										document.write(data['part_id']);
+									</script></td>
+									<td><script>
+										document.write(data['part_name']);
+									</script></td>
+									<td><script>
+										document.write(data['part_category']);
+									</script></td>
+									<td><script>
+										document.write(data['part_judge']);
+									</script></td>
+									<td><script>
+										document.write(data['user_id']);
+									</script></td>
+									<td><script>
+										document.write(sessionStorage.getItem(''));//정확도
+									</script></td>
+								</tr>
+							</table>
+						</div>
 					</div>
 				</section>
-
-
 		<!-- Scripts -->
 			<script src="/static/assets/js/str_jquery.min.js"></script>
 			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
