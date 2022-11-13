@@ -1539,9 +1539,7 @@ input, select, textarea {
 			margin: 0.75em 0 0.75em 0;
 		}
 
-			ul li:first-child {
-				margin-top: 0;
-			}
+		
 
 	ol {
 		list-style: decimal;

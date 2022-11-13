@@ -19,30 +19,30 @@
 	  	<script src="/static/assets/js/jquery-ui.min.js"></script>
 	</head>
 	<style>
-		.pagingul {
+		#pagingul {
 			text-align: center;
 			display: inline-block;
 			
 			border-right: 0;
 			list-style: none;
 		}
-		.pagingul li {
+		#pagingul li {
 			text-align: center;
 			float: left;
 		}
 
-		.pagingul li a {
+		#pagingul li a {
 			display: block;
-			font-size: 14px;
-			padding: 9px 12px;
+			font-size: 20px;
+			padding: 10px 12px;
 			box-sizing: border-box;
 		}
 
-		.pagingul li.on {
+		#pagingul li.on {
 			background: #6ad1ed;
 		}
 
-		.pagingul li.on a {
+		#pagingul li.on a {
 			color: black;
 		}
 
@@ -190,8 +190,7 @@
 					//페이징 번호 표시 
 					for (var i = first; i <= last; i++) {
 						if (currentPage == i) {
-							pageHtml +=
-								"<li class='on'><a href='#' id='" + i + "'>" + i + "</a></li>";
+							pageHtml += "<li class='on'><a href='#' id='" + i + "'>" + i + "</a></li>";
 						} else {
 							pageHtml += "<li><a href='#' id='" + i + "'>" + i + "</a></li>";
 						}
