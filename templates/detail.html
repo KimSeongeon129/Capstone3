@@ -41,7 +41,13 @@
 							<!--<img class="imgsrc" src="/static/assets/img/main_img.jpg" width="50px" height="50px">-->
 							<script>
 								const data=JSON.parse(sessionStorage.getItem('dnum'));
-								img_url = sessionStorage.getItem('img_url')
+								check=data['part_judge']
+								if (check == "불량품"){
+									img_url ='https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/result/'+ data['image']
+								}
+								else{
+									img_url ='https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/origin/'+ data['image']
+								}
 								console.log(img_url)
 								document.write('<img class="imgsrc" src="',img_url,'">')
 							</script>
@@ -72,7 +78,7 @@
 										document.write(data['user_id']);
 									</script></td>
 									<td><script>
-										document.write(sessionStorage.getItem(''));//정확도
+										document.write(data['defective_rate']+"%");//정확도
 									</script></td>
 								</tr>
 							</table>
