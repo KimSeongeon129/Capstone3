@@ -1,13 +1,17 @@
 from flask import Flask
 from db1011 import init_db,get_db,close_db
-import login,admin_login,user_main,imgUpload,cameraUpload,list,statistics
+import login,admin_login,user_main,imgUpload,cameraUpload,list,statistics,admin_main,account, accountUpdate, accountDelete 
 app=Flask(__name__)
 app.secret_key="@!$qefq34@$1234wefQA#$233ASEDFs"
 def main():
     init_db()
     app.register_blueprint(login.bp)
-    app.register_blueprint(admin_login.bp)
     app.register_blueprint(user_main.bp)
+    app.register_blueprint(admin_login.bp)
+    app.register_blueprint(admin_main.bp)
+    app.register_blueprint(account.bp)  
+    app.register_blueprint(accountUpdate.bp)
+    app.register_blueprint(accountDelete.bp)    
     app.register_blueprint(imgUpload.bp)
     app.register_blueprint(cameraUpload.bp)
     app.register_blueprint(list.bp)

@@ -6,11 +6,11 @@ import json
 bp= Blueprint('account',__name__)
 
 
-@bp.route('/accountUpdate')#계정 업데이트페이지
-def accountUpload():
-    return 
+@bp.route('/account')#계정 업데이트페이지
+def account():
+    return render_template("account.html")
 
-@bp.route('/accountDelete')#계정 삭제페이지
-def accountDelete():
-    return 
+# @bp.route('/accountDelete')#계정 삭제페이지
+# def accountDelete():
+#     return 
 
