@@ -89,7 +89,7 @@
               <canvas id="resultCanvas" width="640" height="640" style="border: 1px solid #ddd;"></canvas>
           
               </div>
-              <div class="pre_result"style="width:470px; height:340px; border:1px solid green;">
+              <div class="pre_result"style="width:500px; height:340px; border:1px solid green;">
                 이전 이미지 결과
                 <table >
                   <th scope="col">검사 번호</th>
@@ -98,25 +98,7 @@
                   <th scope="col">부품 종류</th>
                   <th scope="col">불량 유형</th>
                   <th scope="col">불량 여부</th>
-                  <tr>
-                    <td><script>
-                      document.write(sessionStorage.getItem('inspection_number'));
-                    </script></td>
-                    <td><script>
-                      document.write(sessionStorage.getItem('part_id'));
-                    </script></td>
-                    <td><script>
-                      document.write(sessionStorage.getItem('date'));
-                    </script></td>
-                    <td><script>
-                      document.write(sessionStorage.getItem('part_name'));
-                    </script></td>
-                    <td><script>
-                      document.write(sessionStorage.getItem('part_category'));
-                    </script></td>
-                    <td><script>
-                      document.write(sessionStorage.getItem('part_judge'));
-                    </script></td>
+                  <tr id="camera_table">
                   </tr>
                 </table>
               </div>
@@ -161,6 +143,9 @@
       }
 
       function takeSnapshot() {
+        let target=document.querySelector("#camera_table");
+					target.innerHTML = "";
+
         const myCanvasElement = document.getElementById('myCanvas');
         const myCTX = myCanvasElement.getContext('2d');
         
@@ -198,6 +183,18 @@
               reCTX.drawImage(image, 0, 0, reCanvasElement.width, reCanvasElement.height);
             };
             image.src = "data:image/png;base64," + data.code;
+  					let cont = `
+							<tr>
+								<td>${data.inspection_number}</td>
+								<td>${data.part_id}</td>
+								<td>${data.date}</td>
+								<td>${data.part_name}</td>
+								<td>${data.part_category}</td>
+								<td>${data.part_judge}</td>
+							</tr>
+						`;	
+            target.insertAdjacentHTML("beforeend", cont);
+
           },
           err: function(err){
             console.log("err: ", err)

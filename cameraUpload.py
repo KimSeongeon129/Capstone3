@@ -21,7 +21,7 @@ cap = cv2.VideoCapture(0)
 names = model.module.names if hasattr(model, 'module') else model.names
 colors = [[random.randint(0, 255) for _ in range(3)] for _ in names]
 
-dict_data=dict(code="", img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1=0,x2=0,y1=0,y2=0)
+dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1=0,x2=0,y1=0,y2=0,defective_rate=0)
 
 def s3_connection():
     try:
@@ -94,7 +94,7 @@ def realtimeUpload():
     dict_data['code'] = base64.b64encode(encodedImage).decode('utf-8')
     
     ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(new_filename) + '.jpg','origin/'+new_filename + '.jpg')#원본 파일 올리기
-    object_name=new_filename
+    object_name=new_filename+'.jpg'
     dict_data['img_url'] = f'https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/origin/{object_name}'#url 저장
     dict_data['part_id']=str(random.randint(0,9223372036854775807))#램덤 숫자 일련번호 
     #아이디 세션에 있는거 넣기
@@ -105,6 +105,9 @@ def realtimeUpload():
     else:
         dict_data['code'] = None
         dic1=detect_list[0]
+        conf = dic1['conf']
+        conf= f'{conf:.4}'
+        dict_data['defective_rate']=float(conf)*100
         dict_data['part_category']=dic1['label']
         dict_data['part_name']=check_type(dict_data['part_category'])
         dict_data['part_judge']='불량품'
@@ -119,7 +122,7 @@ def realtimeUpload():
     
     dict_data['date']=str(time.strftime('%y-%m-%d %H:%M:%S'))
     #db에 url 저장하는 코드
-    add_result(g.db, dict_data['part_id'], dict_data['part_name'], dict_data['part_category'], dict_data['part_judge'], dict_data['user_id'])
+    add_result(g.db, dict_data['part_id'], dict_data['part_name'], dict_data['part_category'], dict_data['part_judge'], dict_data['user_id'], dict_data['defective_rate'])
     dict_data['inspection_number']=find_inspection_number(g.db, dict_data['part_id'])
     add_image(g.db, int(dict_data['inspection_number']), dict_data['x1'],dict_data['x2'],dict_data['y1'], dict_data['y2'], object_name)
     
