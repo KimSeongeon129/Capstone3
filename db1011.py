@@ -206,10 +206,10 @@ def find_inspection_number(db, part_id):
     
 
 #검사 결과 추가(저장)
-def add_result(db, part_id, part_name, part_category, part_judge, user_id):
+def add_result(db, part_id, part_name, part_category, part_judge, user_id,defective_rate):
     with db.cursor() as cursor:
-        sql = "insert into result (part_id,part_name,part_category,part_judge,user_id,date) values(%s,%s,%s,%s,%s, DEFAULT)"
-        data = (part_id,  part_name, part_category, part_judge, user_id)
+        sql = "insert into result (part_id,part_name,part_category,part_judge,user_id,defective_rate,date) values(%s,%s,%s,%s,%s,%s, DEFAULT)"
+        data = (part_id,  part_name, part_category, part_judge, user_id,defective_rate)
         cursor.execute(sql, data)
         
         db.commit()

@@ -14,6 +14,7 @@ def list_data():
     if request.method=='GET':#그냥 내역조회 했을시 전체 보여주기
         id=session['username']
         list = user_result(g.db,id)
+        print(list)
         list = sorted(list, key= lambda x: x['date'], reverse=True)#최신순으로 반환
         return jsonify(
             success="성공",
@@ -58,6 +59,7 @@ def list_data():
 def detail_num(num):
     print(num)
     data=detailed_result(g.db,num)
+    print(data)
     return jsonify(
         result="success",
         data=data

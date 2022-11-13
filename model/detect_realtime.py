@@ -84,7 +84,7 @@ def detect_realtime(model, img, stride, device, half, names, colors, img_size=64
     
         for *xyxy, conf, cls in reversed(det):
             label = f'{names[int(cls)]} {conf:.2f}'
-            plot_one_box(xyxy, img0, label=label, color=colors[int(cls)], line_thickness=3)
+            plot_one_box(xyxy, img0, label=None, color=colors[int(cls)], line_thickness=3)
 
             c1, c2 = (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3]))
                     
