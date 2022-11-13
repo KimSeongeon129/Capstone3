@@ -97,7 +97,7 @@
 
 			<!-- Main -->
 				<section id="main">
-					<form action="/accountDelete" method="post"> 
+					<form id="admin_check" method="post"> 
                         <div class="wrap">
                             <div class="accountDelete">
                                 <h2>accountDelete</h2>
@@ -106,7 +106,7 @@
                                     <input type="text" name="user_id" placeholder="ID">
                                 </div>
                                 <div class="submit">
-                                    <button type="submit" value="submit">삭제</button>
+                                    <button onclick="checking()" type="button">삭제</button>
                                 </div>
                             </div>
                         </div>
@@ -118,6 +118,54 @@
 			<!-- Footer -->
 
 		<!-- Scripts -->
+            <script>
+                function checking(){
+                    if (confirm("정말로 삭제하시겠습니까?") == true){ 
+                        var form = $('#admin_check')[0];
+                        var data = new FormData(form);
+                        console.log('data')
+
+                        $.ajax({
+                            type: "POST",
+                            enctype: 'multipart/form-data',
+                            url: '/accountDelete',	// form을 전송할 실제 파일경로
+                            dataType: "json",
+                            data:data,
+                            processData: false,
+                            contentType: false,
+                            cache: false,
+                            timeout: 600000,
+                            success: function (data) {
+                                // 전송 후 성공 시 실행 코드
+                                console.log(data);
+                                check=data.data
+                                if (check=="check_id"){
+                                    alert('아이디를 입력해주세요.');
+                                    window.location.href="./accountDelete"
+                                }
+                                else if(check=="no_id"){
+                                    alert('아이디가 틀렸습니다. 다시 입력해주세요.');
+                                    window.location.href="./accountDelete"
+                                }
+                                else{
+                                    alert('아이디를 성공적으로 삭제하였습니다');
+                                    window.location.href="./account"
+                                }
+                                
+                            },
+                            error: function (e) {
+                                // 전송 후 에러 발생 시 실행 코드
+                                console.log("ERROR : ", e);
+                            }
+                        });
+                    console.log("완료되었습니다.");
+                    }else{
+                        window.location.href="./accountDelete"
+                    console.log("취소되었습니다");
+                    }
+
+                }
+            </script>
 			<script src="/static/assets/js/str_jquery.min.js"></script>
 			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
 			<script src="/static/assets/js/str_browser.min.js"></script>
