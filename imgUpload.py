@@ -41,12 +41,17 @@ s3 = s3_connection()
 @bp.route('/imgUpload_result')#이미지 결과페이지
 def imgUpload_result():
     #데이터 보내기
-
-    return render_template("imgUpload_result.html")
+    if 'username' in session:
+        return render_template("imgUpload_result.html")
+    else :
+        return redirect('/')
 
 @bp.route('/imgUpload')#이미지 결과페이지
 def imgUpload():
-    return render_template("imgUpload.html")
+    if 'username' in session:
+        return render_template("imgUpload.html")
+    else :
+        return redirect('/')
 
 
 @bp.route('/upload',methods=['POST'])#이미지 form으로 가져오기

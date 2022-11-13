@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,session
 from flask import jsonify,url_for,redirect,request,Blueprint,g
 from db1011 import update_user, find_id_user, delete_user
 import requests
@@ -9,7 +9,10 @@ bp= Blueprint('accountDelete',__name__)
 @bp.route('/accountDelete',methods=['GET','POST'])#계정 삭제
 def accountDelete():
     if request.method =='GET' :
-        return render_template("/accountDelete.html")
+        if 'adminname' in session:
+            return render_template("accountDelete.html")
+        else :
+            return redirect('/')
     else:
         user_id=request.form['user_id']
         if not (user_id) : 

@@ -8,7 +8,10 @@ import operator,string
 bp= Blueprint('list',__name__)
 @bp.route('/list')
 def list():
-    return render_template("list.html")
+    if 'username' in session:
+        return render_template("list.html")
+    else :
+        return redirect('/')
 @bp.route('/list_data',methods=['GET','POST'])#내역조회페이지
 def list_data():    
     if request.method=='GET':#그냥 내역조회 했을시 전체 보여주기
@@ -57,9 +60,8 @@ def list_data():
         )
 @bp.route('/detail_num/<num>')#세부내역조회
 def detail_num(num):
-    print(num)
+    
     data=detailed_result(g.db,num)
-    print(data)
     return jsonify(
         result="success",
         data=data
