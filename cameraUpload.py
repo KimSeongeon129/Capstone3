@@ -10,7 +10,7 @@ import os
 from db1011 import add_image,add_result,find_inspection_number
 from werkzeug.utils import secure_filename
 from model.detect_realtime import detect_realtime
-from AI import device, model, half, stride
+from ai import device, model, half, stride
 from parts import check_type
 
 bp= Blueprint('cameraUpload',__name__)
