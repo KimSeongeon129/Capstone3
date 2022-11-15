@@ -244,10 +244,10 @@ def delete_result(db, inspection_number):
 
 
 #부품 내역 변경
-def update_result(db, part_category, part_judge,  inspection_number):
+def update_result(db, part_category, part_judge,  inspection_number, user_id):
     with db.cursor() as cursor:
-        sql = "update result set part_category=%s, part_judge=%s where inspection_number=%s"
-        data = (part_category, part_judge, inspection_number)
+        sql = "update result set part_category=%s, part_judge=%s, user_id=%s where inspection_number=%s"
+        data = (part_category, part_judge, user_id, inspection_number)
         cursor.execute(sql, data)
         db.commit()
         
