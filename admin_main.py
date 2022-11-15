@@ -9,4 +9,4 @@ def admin_main():
     if 'adminname' in session:
         return render_template("admin_main.html")
     else :
-        return redirect('/')
+        return "<script type='text/javascript'>alert('로그인 하세요.');document.location.href='/';</script>" 

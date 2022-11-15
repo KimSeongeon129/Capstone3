@@ -11,7 +11,10 @@ bp= Blueprint('accountUpdate',__name__)
 
 def accountUpdate_id():
     if request.method =='GET' :
-        return render_template("accountUpdate_id.html")
+        if 'adminname' in session:
+            return render_template("accountUpdate_id.html")
+        else:
+            return "<script type='text/javascript'>alert('로그인 하세요.');document.location.href='/';</script>" 
     else:
         user_id=request.form['user_id']
         if not (user_id) : 
@@ -34,7 +37,10 @@ def accountUpdate_id():
 
 def accountUpdate():
     if request.method =='GET' :
-        return render_template("accountUpdate.html")
+        if 'adminname' in session:
+            return render_template("accountUpdate.html")
+        else:
+            return "<script type='text/javascript'>alert('로그인 하세요.');document.location.href='/';</script>" 
     else:
         user_line=request.form['user_line']
         user_admin=request.form['user_admin']

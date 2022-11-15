@@ -44,7 +44,7 @@ def cameraUpload():
     if 'username' in session:
         return render_template("cameraUpload.html")
     else :
-        return redirect('/')
+        return "<script type='text/javascript'>alert('로그인 하세요.');document.location.href='/';</script>" 
     
 def camera():
     global cap, outputFrame
