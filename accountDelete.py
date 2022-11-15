@@ -12,7 +12,7 @@ def accountDelete():
         if 'adminname' in session:
             return render_template("accountDelete.html")
         else :
-            return redirect('/')
+            return "<script type='text/javascript'>alert('로그인 하세요.');document.location.href='/';</script>" 
     else:
         user_id=request.form['user_id']
         if not (user_id) : 

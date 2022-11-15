@@ -11,5 +11,5 @@ def account():
     if 'adminname' in session:
         return render_template("account.html")
     else :
-        return redirect('/')
+        return "<script type='text/javascript'>alert('로그인 하세요.');document.location.href='/';</script>" 
 

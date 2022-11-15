@@ -44,14 +44,14 @@ def imgUpload_result():
     if 'username' in session:
         return render_template("imgUpload_result.html")
     else :
-        return redirect('/')
+        return "<script type='text/javascript'>alert('로그인 하세요.');document.location.href='/';</script>" 
 
 @bp.route('/imgUpload')#이미지 결과페이지
 def imgUpload():
     if 'username' in session:
         return render_template("imgUpload.html")
     else :
-        return redirect('/')
+        return "<script type='text/javascript'>alert('로그인 하세요.');document.location.href='/';</script>" 
 
 
 @bp.route('/upload',methods=['POST'])#이미지 form으로 가져오기

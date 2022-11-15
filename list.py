@@ -11,7 +11,7 @@ def list():
     if 'username' in session:
         return render_template("list.html")
     else :
-        return redirect('/')
+        return "<script type='text/javascript'>alert('로그인 하세요.');document.location.href='/';</script>" 
 @bp.route('/list_data',methods=['GET','POST'])#내역조회페이지
 def list_data():    
     if request.method=='GET':#그냥 내역조회 했을시 전체 보여주기
@@ -69,5 +69,8 @@ def detail_num(num):
 
 @bp.route('/detail')#세부내역조회
 def detail():
-    return render_template("detail.html")
+    if 'username' in session:
+        return render_template("detail.html")
+    else :
+        return "<script type='text/javascript'>alert('로그인 하세요.');document.location.href='/';</script>" 
 

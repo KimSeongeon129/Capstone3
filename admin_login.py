@@ -28,3 +28,11 @@ def admin_login():
                 return "<script type='text/javascript'>alert('아이디나 비밀번호가 틀립니다.');document.location.href='/admin_login';</script>"
         else : #정보가 존재하지 않으면 
             return "<script type='text/javascript'>alert('아이디나 비밀번호가 틀립니다.');document.location.href='/admin_login';</script>"
+
+
+@bp.route("/admin_logout")
+def admin_logout():
+    if 'user_id' in session:
+        session.pop('user_id',None)
+    session.pop('adminname',None)
+    return redirect("/")
