@@ -292,7 +292,7 @@
 				let num = tag.parentNode.parentNode.querySelector('td').textContent;
 				console.log(num);
 
-				fetch("http://127.0.0.1:5000"+'/detail_num/'+num, {
+				fetch("http://127.0.0.1:5000"+'/admin_detail_num/'+num, {
 					"method": "GET"
 				})
 				.then(res => res.json())
@@ -306,7 +306,7 @@
 			}
 			
 				function popup(){//상세 조회
-					var url = "/detail";
+					var url = "/admin_detail";
 					var name = "detail list";
 					var option = "width = 1000, height = 500, top = 100, left = 200, location = no"
 					window.open(url, name, option);

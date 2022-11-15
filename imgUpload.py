@@ -60,16 +60,17 @@ def upload():
     start=time.time()
 
     img=request.files['image']#파일 가져오기
-    img.save('static/assets/img/' + secure_filename(img.filename))
-    my_img = 'static/assets/img/' + secure_filename(img.filename)
+    object_name=str(time.time()).replace('.','_')+'.jpg'
+    print(object_name)
+    img.save('static/assets/img/' + secure_filename(object_name))
+    my_img = 'static/assets/img/' + secure_filename(object_name)
     cv2_my_img = cv2.imread(my_img)
 
     # 검사 모델 실행
     dic_list=detect(model=model, img=cv2_my_img, stride=stride, device=device, half=half)
     print(dic_list)
 
-    ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(img.filename),'origin/'+img.filename)#원본 파일 올리기
-    object_name=img.filename
+    ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/' + secure_filename(object_name),'origin/'+object_name)#원본 파일 올리기
     dict_data['img_url'] = f'https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/origin/{object_name}'#url 저장
     dict_data['part_id']=str(random.randint(0,9223372036854775807))#램덤 숫자 일련번호 
     #아이디 세션에 있는거 넣기
@@ -102,8 +103,8 @@ def upload():
         conf= f'{conf:.4}'
         dict_data['defective_rate']=float(conf)*100
         print(dict_data['defective_rate'])
-        cv2.imwrite('static/assets/img/result/'+ secure_filename(img.filename),img_r)
-        ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/result/' + secure_filename(img.filename),'result/'+img.filename)#결과 파일 올리기
+        cv2.imwrite('static/assets/img/result/'+ secure_filename(object_name),img_r)
+        ret=s3_put_object(s3,"sejong-capstone-s3-bucket",'static/assets/img/result/' + secure_filename(object_name),'result/'+object_name)#결과 파일 올리기
         dict_data['img_url'] = f'https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/result/{object_name}'#url 저장
     
     dict_data['date']=str(time.strftime('%y-%m-%d %H:%M:%S'))
