@@ -56,3 +56,18 @@ def admin_list_data():
             success="성공",
             data=dic
         )
+@bp.route('/admin_detail_num/<num>')#세부내역조회
+def admin_detail_num(num):
+    
+    data=detailed_result(g.db,num)
+    return jsonify(
+        result="success",
+        data=data
+        )
+
+@bp.route('/admin_detail')#세부내역조회
+def admin_detail():
+    if 'adminname' in session:
+        return render_template("detail.html")
+    else :
+        return "<script type='text/javascript'>alert('로그인 하세요.');document.location.href='/';</script>" 
