@@ -120,6 +120,12 @@ def add_admin(db, admin_id, admin_pw,number,name):
             db.commit()
 
 
+def result(db):
+    with db.cursor() as cursor:
+        sql = "select * from result"
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+    return rows
 
 #유저 내역 조회     
 def user_result(db, user_id):

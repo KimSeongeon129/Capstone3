@@ -23,7 +23,7 @@ def admin_login():
         if (find_adminid) : #정보가 존재하면
             if(get_admin_login(g.db, admin_id, admin_password)):  #true 혹은 false
                 session['adminname']=admin_id
-                return render_template('admin_main.html')   #관리자 메인 페이지 이동
+                return redirect("/admin_main")   #관리자 메인 페이지 이동
             else : 
                 return "<script type='text/javascript'>alert('아이디나 비밀번호가 틀립니다.');document.location.href='/admin_login';</script>"
         else : #정보가 존재하지 않으면 
