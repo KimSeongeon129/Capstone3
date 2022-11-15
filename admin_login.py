@@ -11,7 +11,7 @@ bp= Blueprint('admin_login',__name__)
 
 def admin_login():
     if request.method =='GET' :
-        return render_template("/")
+        return render_template("admin_login.html")
     else:
         admin_id=request.form['login_id']
         admin_password=request.form['login_pw']

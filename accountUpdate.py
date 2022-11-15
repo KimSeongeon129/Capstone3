@@ -11,13 +11,12 @@ bp= Blueprint('accountUpdate',__name__)
 
 def accountUpdate_id():
     if request.method =='GET' :
-        return render_template("/accountUpdate_id.html")
+        return render_template("accountUpdate_id.html")
     else:
         user_id=request.form['user_id']
         if not (user_id) : 
             return "<script type='text/javascript'>alert('id를 입력해주세요.');document.location.href='/accountUpdate_id';</script>" 
     
-        redirect("/admin_main")
         find_userid = find_id_user(g.db, user_id)
   
         if (find_userid) : #정보가 존재하면
@@ -35,7 +34,7 @@ def accountUpdate_id():
 
 def accountUpdate():
     if request.method =='GET' :
-        return render_template("/accountUpdate.html")
+        return render_template("accountUpdate.html")
     else:
         user_line=request.form['user_line']
         user_admin=request.form['user_admin']
@@ -43,7 +42,6 @@ def accountUpdate():
         if not (user_line and user_admin and nickname) : 
             return "<script type='text/javascript'>alert('모두 입력해주세요.');document.location.href='/accountUpdate';</script>" 
     
-        redirect("/admin_main")
 
         if (session['user_id']) : #정보가 존재하면
             update_user(g.db, nickname, user_admin, user_line, session['user_id'])
