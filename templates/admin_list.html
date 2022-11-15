@@ -282,6 +282,8 @@
 								<td>${data[i].part_name}</td>
 								<td>${data[i].part_category}</td>
 								<td><button onclick="abc(this)">상세조회</button></td>
+								<td><button onclick="abcupdate(this)">수정</button></td>
+								<td><button onclick="abcdelete(this)">삭제</button></td>
 							</tr>
 						`;	
 						target.insertAdjacentHTML("beforeend", cont);
@@ -289,21 +291,58 @@
 					
 				}
 				function abc(tag){
-				let num = tag.parentNode.parentNode.querySelector('td').textContent;
-				console.log(num);
+					let num = tag.parentNode.parentNode.querySelector('td').textContent;
+					console.log(num);
 
-				fetch("http://127.0.0.1:5000"+'/admin_detail_num/'+num, {
-					"method": "GET"
-				})
-				.then(res => res.json())
-				.then((res) => {
-					console.log('data',res['data']);
-					sessionStorage.setItem("dnum",JSON.stringify(res['data']['0']));
-					console.log(JSON.parse(sessionStorage.getItem('dnum')));
-					window.location.href="javascript:popup()"
+					fetch(hostip +'/admin_detail_num/'+num, {
+						"method": "GET"
+					})
+					.then(res => res.json())
+					.then((res) => {
+						console.log('data',res['data']);
+						sessionStorage.setItem("dnum",JSON.stringify(res['data']['0']));
+						console.log(JSON.parse(sessionStorage.getItem('dnum')));
+						window.location.href="javascript:popup()"
+						}
+					)
+				}
+
+				function abcupdate(tag){
+					let num = tag.parentNode.parentNode.querySelector('td').textContent;
+					sessionStorage.setItem("admin_part_num",num)
+					console.log("num",num);
+					window.location.href="javascript:admin_update()"
+				}
+				function admin_update(){//상세 조회
+					var url = "/admin_part_update";
+					var name = "part update";
+					var option = "width = 1000, height = 500, top = 100, left = 200, location = no"
+					window.open(url, name, option);
+				}
+				
+				function abcdelete(tag){
+					if (confirm("정말로 삭제하시겠습니까?") == true){ 
+							
+					let num = tag.parentNode.parentNode.querySelector('td').textContent;
+					console.log(num);
+					
+					fetch(hostip+'/admin_part_delete/'+num, {
+						"method": "GET"
+					})
+					.then(res => res.json())
+					.then((res) => {
+						alert("삭제 완료되었습니다")
+						window.location.href="./admin_list"//삭제
+						}
+					)
 					}
-				)
-			}
+					else{
+							alert(" 취소되었습니다")
+							window.location.href="./admin_list"
+						console.log("취소되었습니다");
+						}
+				}
+			
 			
 				function popup(){//상세 조회
 					var url = "/admin_detail";
@@ -343,6 +382,7 @@
 			<script src="/static/assets/js/str_breakpoints.min.js"></script>
 			<script src="/static/assets/js/str_util.js"></script>
 			<script src="/static/assets/js/str_main.js"></script>
+			<script src="/static/assets/js/host.js"></script>
 
 	</body>
 </html>

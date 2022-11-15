@@ -295,7 +295,7 @@
 				let num = tag.parentNode.parentNode.querySelector('td').textContent;
 				console.log(num);
 
-				fetch("http://127.0.0.1:5000"+'/detail_num/'+num, {
+				fetch(hostip+'/detail_num/'+num, {
 					"method": "GET"
 				})
 				.then(res => res.json())
@@ -346,6 +346,7 @@
 			<script src="/static/assets/js/str_breakpoints.min.js"></script>
 			<script src="/static/assets/js/str_util.js"></script>
 			<script src="/static/assets/js/str_main.js"></script>
+			<script src="/static/assets/js/host.js"></script>
 
 	</body>
 </html>

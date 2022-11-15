@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>capstone3</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+		<link rel="stylesheet" href="/static/assets/css/str_main.css" />
+	</head>
+	<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Noto Sans KR", sans-serif;
+        }
+
+        .wrap {
+            width: 100%;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .accountUpdate{
+            width: 30%;
+            height: 600px;
+            background: rgba(33, 160, 215,0.2);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        h2 {
+            color: deepskyblue;
+            font-size: 2em;
+        }
+
+        
+		.nickname {
+            margin-top: 20px;
+            width: 80%;
+        }
+
+        .nickname input {
+            width: 100%;
+            height: 50px;
+            border-radius: 30px;
+            margin-top: 10px;
+            padding: 0px 20px;
+            border: 1px solid white;
+            outline: none;
+        }
+		
+		.user_line {
+            margin-top: 20px;
+            width: 80%;
+        }
+
+        .user_line input {
+            width: 100%;
+            height: 50px;
+            border-radius: 30px;
+            margin-top: 10px;
+            padding: 0px 20px;
+            border: 1px solid white;
+            outline: none;
+        }
+		.user_admin {
+            margin-top: 20px;
+            width: 80%;
+        }
+
+        .user_admin input {
+            width: 100%;
+            height: 50px;
+            border-radius: 30px;
+            margin-top: 10px;
+            padding: 0px 20px;
+            border: 1px solid white;
+            outline: none;
+        }
+        .submit {
+        margin-top: 50px;
+        width: 80%;
+        }
+
+        .submit button {
+            width: 100%;
+            height: 50px;
+            border: 0;
+            outline: none;
+            border-radius: 40px;
+            background: linear-gradient(to left, lightskyblue, royalblue);
+            color: white;
+            font-size: 1.2em;
+            letter-spacing: 2px;
+        }
+	</style>
+
+	<body class="homepage is-preload">
+		<div id="page-wrapper">
+
+			<!-- Main -->
+				<section id="main">
+					<form id="testForm" method="post"> 
+							<div class="wrap">
+								<div class="accountUpdate">
+									<h2>accountUpdate</h2>
+									<div class="part_category">
+										<h4>뭔가뭔가</h4>
+										<input type="text" name="part_category" placeholder="part_category">
+									</div>
+									<div class="part_judge">
+										<h4>뭔가뭔가</h4>
+										<input type="text" name="part_judge" placeholder="part_judge">
+									</div>
+									<div class="user_id">
+										<h4>뭔가뭔가</h4>
+										<input type="text" name="user_id" placeholder="user_id">
+									</div>
+									<div class="submit">
+										<button type="button" onclick="part_update()">변경</button>
+									</div>
+								</div>
+							</div>
+						</form>
+				</section>
+
+			<!-- Footer -->
+
+		<!-- Scripts -->
+            <script>
+                function part_update(){
+                    let num=sessionStorage.getItem('admin_part_num');
+                    let myform = document.getElementById('testForm');
+
+					// Create an FormData object 
+					var data = new FormData(myform);
+                    data.append('num',num );
+                    console.log(myform)
+
+					$.ajax({
+						type: "POST",
+						enctype: 'multipart/form-data',
+						url: '/admin_part_update',	// form을 전송할 실제 파일경로
+						dataType: "json",
+						data:data,
+						processData: false,
+						contentType: false,
+						cache: false,
+						timeout: 600000,
+						success: function (data) {
+							// 전송 후 성공 시 실행 코드
+							console.log(data);
+                            alert("수정 완료되었습니다")
+						    window.location.href="./admin_list"
+							
+						},
+						error: function (e) {
+							// 전송 후 에러 발생 시 실행 코드
+							console.log("ERROR : ", e);
+						}
+					});
+                }
+            </script>
+			<script src="/static/assets/js/str_jquery.min.js"></script>
+			<script src="/static/assets/js/str_jquery.dropotron.min.js"></script>
+			<script src="/static/assets/js/str_browser.min.js"></script>
+			<script src="/static/assets/js/str_breakpoints.min.js"></script>
+			<script src="/static/assets/js/str_util.js"></script>
+			<script src="/static/assets/js/str_main.js"></script>
+            <script src="/static/assets/js/host.js"></script>
+
+	</body>
+</html>
