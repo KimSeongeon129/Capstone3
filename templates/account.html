@@ -4,21 +4,36 @@
         <title>capstone3</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-        <link rel="stylesheet" href="/static/assets/css/aer_main.css" />
+        <link rel="stylesheet" href="/static/assets/css/aer_main_account.css" />
         <noscript><link rel="stylesheet" href="/static/assets/css/aer_noscript.css" /></noscript>
     </head>
+    <style>
+		img {
+			width: 100px; 
+			height: 100px; 
+			display: block;
+            margin: 0 auto;
+            text-align: center;
+		}
+		.font{
+			font-size: 15px; 
+			font-weight: bold;
+			text-align: center; 
+			line-height: normal; 
+		}
+	</style>
     <body class="is-preload">
         <div id="wrapper">
             <div id="bg"></div>
             <div id="main">
                 <!-- Header -->
                 <header id="header">
-                    <h1>프로그램 이름</h1>
                     <nav>
                        <ul>
-                        <li><a href="/accountUpdate_id"><img class="account" src="/static/assets/css/image/user.png" width="80px" height="65px" alt="계정 변경">계정 변경<span class="label"></span></a></li>
-                        <li><a href="/accountDelete"><img class="admin_list" src="/static/assets/css/image/user.png" width="80px" height="65px" alt="계졍 삭제">계정 삭제<span class="label"></span></a></li>
-                        </ul>
+						<li><a href="/accountUpdate_id"><img class="icon accountUpdate" src="/static/assets/css/image/update.png" alt="계정 변경"> <div class="font">계정 변경</div></a></li> 
+                        <li></li>
+                        <li><a href="/accountDelete"><img class="icon accountDelete" src="/static/assets/css/image/remove-user.png" alt="계정 삭제"> <div class="font">계정 삭제</div></a></li> 
+                    </ul>
                     </nav>
                 </header>
               

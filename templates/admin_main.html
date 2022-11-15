@@ -9,12 +9,12 @@
 	</head>
 	<style>
 		img {
-			width: 60px; 
-			height: 60px; 
+			width: 80px; 
+			height: 80px; 
 			display: block;
 		}
 		.font{
-			font-size: 11px; 
+			font-size: 12px; 
 			font-weight: bold;
 			text-align: center; 
 			line-height: normal; 
@@ -31,17 +31,22 @@
 						<h1>프로그램 이름</h1>
 						<nav>
 							<ul>
-                                <li><a href="/account"><img class="account" src="/static/assets/css/image/user.png" alt="계정 관리"><div class="font">계정 관리</div></a></li>&nbsp
+                                <li><img class="account" src="/static/assets/css/image/user.png" alt="계정 관리" onclick="popup()"><div class="font">계정 관리</div></li> &nbsp
                                 <li><a href="/admin_list"><img class="admin_list" src="/static/assets/css/image/clipboard.png" alt="관리자 내역조회"><div class="font">관리자 내역조회</div></a></li>&nbsp
                                 <li><a href="/admin_statistics"><img class="admin_statistics" src="/static/assets/css/image/bar-chart.png" alt="관리자 통계"><div class="font">관리자 통계</div></a></li>&nbsp
                             </ul>
 						</nav>
 					</header>
-
-		
-
 			</div>
 		</div>
+		<script>
+			function popup(){
+					var url = "/account";
+					var name = "admin account";
+					var option = "width = 500, height = 400, top = 100, left = 200, location = no"
+					window.open(url, name, option);
+				}
+		</script>
 		<script>
 			window.onload = function() { document.body.classList.remove('is-preload'); }
 			window.ontouchmove = function() { return false; }
