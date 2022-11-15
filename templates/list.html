@@ -86,13 +86,6 @@
 								<th scope="col">상세조회</th>
 							</tr>
 							<tbody id="dataTableBody"></tbody>
-
-							{%if data == ['no']%}
-							<script>
-								alert('검색 결과가 없습니다.')
-								window.location.href="./list"
-							</script>
-							{%endif%}
 							</table>
 						</div>
 					
@@ -246,14 +239,20 @@
 						timeout: 600000,
 						success: function (data) {
 							// 전송 후 성공 시 실행 코드
-							console.log(data);
-							totalData = data.data.length;
-							console.log(totalData)
-							//글 목록 표시 호출 (테이블 생성)
-							displayData(1, dataPerPage,data.data);
-							globalData=data.data
-							//페이징 표시 호출
-							paging(totalData, dataPerPage, pageCount, 1);
+							console.log("data",data.data[0]);
+							if (data.data[0] !="no"){
+								totalData = data.data.length;
+								console.log(totalData)
+								//글 목록 표시 호출 (테이블 생성)
+								displayData(1, dataPerPage,data.data);
+								globalData=data.data
+								//페이징 표시 호출
+								paging(totalData, dataPerPage, pageCount, 1);}
+							else {
+								console.log("아무것도 없당")
+								alert("검색 결과가 없음");
+								window.location.href="./list";
+							}
 						},
 						error: function (e) {
 							// 전송 후 에러 발생 시 실행 코드
