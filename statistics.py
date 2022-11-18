@@ -8,7 +8,7 @@ import numpy as np
 import math
 
 from bokeh.plotting import figure, output_file, show
-from bokeh.models import ColumnDataSource, MultiChoice, CustomJS, value
+from bokeh.models import ColumnDataSource, MultiChoice, CustomJS, value, RangeTool
 from bokeh.layouts import row, column, gridplot, layout
 from bokeh.embed import components
 from bokeh.io import show
@@ -196,6 +196,42 @@ def imgUpload_result():
                 )
                 ),
         )
+        
+        #-------------------------------
+        #  시간별 시각화
+        #-------------------------------
+        
+        df_time = df.copy()
+        df_time['dates'] = pd.to_datetime(df['date']).dt.date
+        p6_index = df_time.groupby(['dates'])['part_id'].agg(['count'])['count'].index
+        p6_values = df_time.groupby(['dates'])['part_id'].agg(['count'])['count'].values
+
+        p6_index = np.array(p6_index, dtype=np.datetime64)
+        source = ColumnDataSource(data=dict(date=p6_index, count=p6_values))
+
+        p6 = figure(height=300, width=1200, tools="xpan", toolbar_location=None,
+                x_axis_type="datetime", x_axis_location="above",
+                background_fill_color="#efefef",x_range=(p6_index[1], p6_index[2]),
+                margin = (70, 0, 0, 0))
+
+        p6.line('date', 'count', source=source)
+        p6.yaxis.axis_label = '불량품 수'
+        p6.title = "시간별 불량품 수"
+        p6.title.align = 'center'
+
+        select = figure(title="Drag the middle and edges of the selection box to change the range above",
+                        height=130, width=800, y_range=p6.y_range,
+                        x_axis_type="datetime", y_axis_type=None,
+                        tools="", toolbar_location=None, background_fill_color="#efefef")
+
+        range_tool = RangeTool(x_range=p6.x_range)
+        range_tool.overlay.fill_color = "navy"
+        range_tool.overlay.fill_alpha = 0.2
+
+        select.line('date', 'count', source=source)
+        select.ygrid.grid_line_color = None
+        select.add_tools(range_tool)
+        select.toolbar.active_multi = range_tool
 
         #-------------------------------
         #  Laying out in row
@@ -225,7 +261,9 @@ def imgUpload_result():
         multi_choice.js_on_change('value', callback)
 
         plot = layout(children=[[multi_choice,p3, p4, p5],
-                                [p1, p2]], sizing_mode='fixed')
+                                [p1, p2],
+                                [p6],
+                                [select]], sizing_mode='fixed')
 
         script, div = components(plot)
 
