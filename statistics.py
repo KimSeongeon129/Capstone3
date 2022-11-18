@@ -83,8 +83,8 @@ def imgUpload_result():
         
         p2 = figure(width=700, height=600, title="불량 유형별 불량품 건수",
                 x_range=group, toolbar_location=None,  margin = (0, 0, 0, 70),
-                tooltips=[("count", "@count_count"), ("part_name, part_category", "@part_name_part_category")])
-        p2.vbar(x='part_name_part_category', top='count_count', width=1, source=group,
+                tooltips=[("count", "@count_max"), ("part_name, part_category", "@part_name_part_category")])
+        p2.vbar(x='part_name_part_category', top='count_max', width=1, source=group,
                 line_color="white", fill_color = p2_cmap)
 
         p2.y_range.start = 0
