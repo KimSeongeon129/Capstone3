@@ -12,8 +12,10 @@ from bokeh.models import ColumnDataSource, MultiChoice, CustomJS
 from bokeh.layouts import row, column, gridplot, layout
 from bokeh.embed import components
 from bokeh.io import show
-from bokeh.palettes import Spectral6
+from bokeh.palettes import PuBuGn6
 from bokeh.transform import factor_cmap
+
+from parts import duct_def, pipe_def, hull_def, cable_def, lagging_def
 
 bp= Blueprint('statistics',__name__)
 
@@ -24,7 +26,7 @@ def imgUpload_result():
         table_rows = db_cursor.fetchall()
         df = pd.DataFrame(table_rows)
 
-        PARTS = ['덕트', '선박 배관', '선체', '케이블', '보온재']
+        PARTS = sorted(['덕트', '선박 배관', '선체', '케이블', '보온재'])
 
         #-------------------------------
         #  부품별 불량품 건수
@@ -39,10 +41,10 @@ def imgUpload_result():
                         pass
 
         source = ColumnDataSource(data=dict(parts=PARTS, counts=counts))
-        p1_cmap = factor_cmap('parts', palette=Spectral6, factors=PARTS)
+        p1_cmap = factor_cmap('parts', palette=PuBuGn6, factors=PARTS)
         
         p1 = figure(x_range=PARTS, height=600, toolbar_location=None, title="부품별 불량품 건수")
-        p1.vbar(x='parts', top='counts', width=0.9, source=source, legend_field="parts",
+        p1.vbar(x='parts', top='counts', width=0.9, source=source,
                 line_color='white', fill_color=p1_cmap)
 
         p1.xgrid.grid_line_color = None
@@ -54,16 +56,32 @@ def imgUpload_result():
         #-------------------------------
         #  부품 불량 유형별 불량품 건수
         #-------------------------------
-        
-        group = df[df['part_name'] != '양품'].groupby(['part_name', 'part_category'])
-        
-        p2_cmap = factor_cmap('part_name_part_category', palette=Spectral6, factors=PARTS, end=1)
+        defect_duct = ['덕트' for defect in duct_def]
+        defect_pipe = ['선박 배관' for defect in pipe_def]
+        defect_hull = ['선체' for defect in hull_def]
+        defect_cable = ['케이블' for defect in cable_def]
+        defect_lagging = ['보온재' for defect in lagging_def]
+        part_name = defect_duct + defect_pipe + defect_hull + defect_cable + defect_lagging
 
+        defect_duct = [defect for defect in duct_def]
+        defect_pipe = [defect for defect in pipe_def]
+        defect_hull = [defect for defect in hull_def]
+        defect_cable = [defect for defect in cable_def]
+        defect_lagging = [defect for defect in lagging_def]
+        part_category = defect_duct + defect_pipe + defect_hull + defect_cable + defect_lagging
+        
+        df1 = pd.DataFrame({'part_name' : part_name,
+                   'part_category' : part_category,
+                   'count' : [1 for i in part_category]})
+        group = df1.groupby(['part_name', 'part_category'])
+        
+        p2_cmap = factor_cmap('part_name_part_category', palette=PuBuGn6, factors=PARTS, end=1)
+        
         p2 = figure(width=500, height=600, title="불량 유형별 불량품 건수",
-                x_range=[['케이블','Cable Damage']], toolbar_location=None, )
-#tooltips=[("count", "@inspection_number_count"), ("part_name, part_category", "@part_name_part_category")]
-        p2.vbar(x='part_name_part_category', top='inspection_number_count', width=1, source=group,
-                line_color="white", fill_color=p2_cmap)
+                x_range=group, toolbar_location=None, 
+                tooltips=[("count", "@count_count"), ("part_name, part_category", "@part_name_part_category")])
+        p2.vbar(x='part_name_part_category', top='count_count', width=1, source=group,
+                line_color="white", fill_color = p2_cmap)
 
         p2.y_range.start = 0
         p2.x_range.range_padding = 0.05
@@ -78,10 +96,20 @@ def imgUpload_result():
 
         multi_choice = MultiChoice(value=PARTS, options=PARTS, title='parts:')
 
-        callback = CustomJS(args=dict(source=source, p1 = p1, p2 = p2, multi_choice=multi_choice), code="""    
+        callback = CustomJS(args=dict(source=source, p1 = p1, p2 = p2, p2_index = group.describe().index, multi_choice=multi_choice), code="""    
                 var selected = multi_choice.value;
+                var p2_index_list = [];
                 p1.x_range.factors = selected;
-                p2.x_range.factors = selected;
+                
+                for(var i=0; i<selected.length; i++){
+                        for(var j=0; j<p2_index.length; j++){
+                                if(p2_index[j][0] == selected[i]){
+                                        p2_index_list.push(p2_index[j]);
+                                }
+                        }
+                }    
+                p2.x_range.factors = p2_index_list;
+
         """)
         multi_choice.js_on_change('value', callback)
 
