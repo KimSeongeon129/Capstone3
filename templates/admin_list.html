@@ -312,7 +312,7 @@
 				}
 
 				function abcupdate(tag){
-					let num = tag.parentNode.parentNode.querySelector('td').textContent;
+					let num = tag.parentNode.parentNode.parentNode.querySelector('td').textContent;
 					sessionStorage.setItem("admin_part_num",num)
 					console.log("num",num);
 					window.location.href="javascript:admin_update()"
@@ -327,7 +327,7 @@
 				function abcdelete(tag){
 					if (confirm("정말로 삭제하시겠습니까?") == true){ 
 							
-					let num = tag.parentNode.parentNode.querySelector('td').textContent;
+					let num = tag.parentNode.parentNode.parentNode.querySelector('td').textContent;
 					console.log(num);
 					
 					fetch(hostip+'/admin_part_delete/'+num, {

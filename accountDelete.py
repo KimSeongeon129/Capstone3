@@ -3,7 +3,6 @@ from flask import jsonify,url_for,redirect,request,Blueprint,g
 from db1011 import update_user, find_id_user, delete_user
 import requests
 import json
-
 bp= Blueprint('accountDelete',__name__)
 
 @bp.route('/accountDelete',methods=['GET','POST'])#계정 삭제
@@ -21,11 +20,13 @@ def accountDelete():
             )
         find_userid = find_id_user(g.db, user_id)
         if (find_userid) : #정보가 존재하면
+
             delete_user(g.db, user_id)
             return jsonify(data="success")   #관리자 메인 페이지 이동
         else : #정보가 존재하지 않으면 
             return jsonify(data="no_id")
              
+
 
 
 
