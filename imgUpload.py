@@ -11,6 +11,7 @@ import cv2
 from werkzeug.utils import secure_filename
 import time
 import codecs
+from parts import defect_dict
 
 local_path = codecs.decode(os.getcwd().replace('\\','\\\\'), 'unicode_escape')
 sys.path.append(local_path + '\\model')
@@ -80,8 +81,8 @@ def upload():
     else:
         # 불량품 세부내용 저장
         dic1=dic_list[0]
-        dict_data['part_category']=dic1['label']
-        dict_data['part_name']=check_type(dict_data['part_category'])
+        dict_data['part_category']=defect_dict[dic1['label']]['한글명']
+        dict_data['part_name']=defect_dict[dic1['label']]['부품']
         dict_data['part_judge']='불량품'
         dict_data['x1']=int(dic1['c1'][0])
         dict_data['x2']=int(dic1['c2'][0])

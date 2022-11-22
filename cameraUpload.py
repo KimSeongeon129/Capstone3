@@ -11,7 +11,7 @@ from db1011 import add_image,add_result,find_inspection_number
 from werkzeug.utils import secure_filename
 from model.detect_realtime import detect_realtime
 from AI import device, model, half, stride
-from parts import check_type
+from parts import defect_dict
 
 bp= Blueprint('cameraUpload',__name__)
 
@@ -105,8 +105,8 @@ def realtimeUpload():
         conf = dic1['conf']
         conf= f'{conf:.4}'
         dict_data['defective_rate']=float(conf)*100
-        dict_data['part_category']=dic1['label']
-        dict_data['part_name']=check_type(dict_data['part_category'])
+        dict_data['part_category']=defect_dict[dic1['label']]['한글명']
+        dict_data['part_name']=defect_dict[dic1['label']]['부품']
         dict_data['part_judge']='불량품'
         dict_data['x1']=int(dic1['c1'][0])
         dict_data['x2']=int(dic1['c2'][0])

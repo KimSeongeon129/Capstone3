@@ -14,25 +14,29 @@
 		flex-wrap: wrap; 
 		justify-content:space-between;
 		align-content: center; 
-		align-items: stretch;
 		justify-content : center;
+		display: table;
 	}
-	.img{
-		width:1000px; 
-		height:550px;
-		margin: 7px;
+	.imgResult img {
+		display: table-cell;
+		vertical-align: middle;
 	}
-	.result {
-		width:1000px; 
-		height:250px;
-		margin: 7px;
+	.imgResult ul {
+		vertical-align: middle;
+		display: table-cell;
 	}
-	.imgsrc{ 
-		width:100%;
-		height:100%;
-		object-fit:contain;
+	  
+	.imgResult li {
+		list-style : none;
+		margin-left: 50px;
 	}
-		
+
+	.imgsrc{
+		width:700px; 
+		height:450px;
+		margin-left: 300px;
+	}
+
 	table{ border-collapse : collapse; }  /*이중선 제거*/
 	th,td{
 		width: 100px;
@@ -71,49 +75,47 @@
 			<!-- Main -->
 				<section id="main">					
 					<div class="imgResult">
-						<div class="img"style="border:1px solid red; ">
-							이미지 결과 사진
 							<script>
 								img_url = sessionStorage.getItem('img_url')
 								img_url.replaceAll('"','')
 								console.log(img_url)
 								document.write('<img class="imgsrc" src="',img_url,'">')
 							</script>
-						</div>
-						<div class="result"style="border:1px solid green;">
-							 검사결과
-							 <table >
-								<th scope="col">검사 번호</th>
-								<th scope="col">일련 번호</th>
-								<th scope="col">날짜</th>
-								<th scope="col">부품 종류</th>
-								<th scope="col">불량 유형</th>
-								<th scope="col">불량 여부</th>
-							
-								<tr>
-									<td><script>
-										document.write(sessionStorage.getItem('inspection_number'));
-									</script></td>
-									<td><script>
-										document.write(sessionStorage.getItem('part_id'));
-									</script></td>
-									<td><script>
-										document.write(sessionStorage.getItem('date'));
-									</script></td>
-									<td><script>
-										document.write(sessionStorage.getItem('part_name'));
-									</script></td>
-									<td><script>
+							<ul>
+								<li>이 부품은 
+									<script>
+										var judge = sessionStorage.getItem('part_judge');
+										if (judge == '불량품'){
+											document.write('<span style="color:red;">',judge,'</span>');
+										}
+										else{
+											document.write('<span style="color:green;">',judge,'</span>');
+										}
+									</script>
+									입니다.</li>
+								<li>검사 번호 : <script>
+									document.write(sessionStorage.getItem('inspection_number'));
+								</script></li>
+								<li>일련 번호 : <script>
+									document.write(sessionStorage.getItem('part_id'));
+								</script></li>
+								<li>검사 시간 : 20<script>
+									document.write(sessionStorage.getItem('date'));
+								</script></li>
+								<li>부품 종류 : <script>
+									document.write(sessionStorage.getItem('part_name'));
+								</script></li>
+								<li>불량 유형 : <script>
+									if(judge == '불량품'){
 										document.write(sessionStorage.getItem('part_category'));
-									</script></td>
-									<td><script>
-										document.write(sessionStorage.getItem('part_judge'));
-									</script></td>
-								</tr>
-							 </table>
-							</div>
+									}
+									else {
+										document.write('<span>해당 없음</span>');
+									}
+								</script></li>
+							</ul>
 						</div>
-						<div class="bnts" style="width: 100%; text-align: center">
+						<div class="bnts" style="width: 100%; text-align: center; margin-top: 50px">
 							<button type="button" class ="bnt_upload" onclick="location.href='/imgUpload'" style="margin: auto; display: inline-block;">다른 이미지 업로드</button >
 							<button type="button" class ="bnt_list" onclick="location.href='/list'" style="margin: auto;display: inline-block;">내역 조회</button >
 						</div>

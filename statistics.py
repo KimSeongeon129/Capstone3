@@ -7,15 +7,14 @@ import pandas as pd
 import numpy as np
 import math
 
-from bokeh.plotting import figure, output_file, show
+from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource, MultiChoice, CustomJS, value, RangeTool
-from bokeh.layouts import row, column, gridplot, layout
+from bokeh.layouts import layout
 from bokeh.embed import components
-from bokeh.io import show
 from bokeh.palettes import PuBuGn6
 from bokeh.transform import factor_cmap
 
-from parts import duct_def, pipe_def, hull_def, cable_def, lagging_def
+from parts import duct_def, pipe_def, hull_def, cable_def, lagging_def, defect_dict
 
 bp= Blueprint('statistics',__name__)
 
@@ -69,13 +68,14 @@ def imgUpload_result():
         defect_cable = [defect for defect in cable_def]
         defect_lagging = [defect for defect in lagging_def]
         part_category = defect_duct + defect_pipe + defect_hull + defect_cable + defect_lagging
+        kor_part_category = [defect_dict[c]['한글명'] for c in part_category]
 
-        count = [0 for i in part_category]
+        count = [0 for i in kor_part_category]
         for p in df[df['part_name'] != '양품']['part_category'].value_counts().index:
-                count[part_category.index(p)] = df[df['part_name'] != '양품']['part_category'].value_counts()[p]
+                count[kor_part_category.index(p)] = df[df['part_name'] != '양품']['part_category'].value_counts()[p]
         
         df1 = pd.DataFrame({'part_name' : part_name,
-                   'part_category' : part_category,
+                   'part_category' : kor_part_category ,
                    'count' : count})
         group = df1.groupby(['part_name', 'part_category'])
         
@@ -94,7 +94,7 @@ def imgUpload_result():
         p2.outline_line_color = None
         
         #-------------------------------
-        #  텍스트 시각화
+        #  총 검사 수
         #-------------------------------
 
         p3 = figure(width=170, height=200,
@@ -109,31 +109,21 @@ def imgUpload_result():
         p3.title = "총 검사 수"
         p3.title.align = 'center'
         
-        p3.text(
-                x="x",
-                y="y",
-                text="text",
-                text_align="center",
-                text_font_size="30px",
-                text_font=value("Verdana"),
-                text_font_style="normal",
-                source=ColumnDataSource(
-                pd.DataFrame.from_records(
-                        [
-                        dict(
+        p3.text(x="x", y="y", text="text", text_align="center", text_font_size="30px", text_font=value("Verdana"),text_font_style="normal",
+                source=ColumnDataSource(pd.DataFrame.from_records([dict(
                                 x=100,
                                 y=50,
                                 text=f"{len(df)}",
-                                color="black",
-                        )
-                        ]
-                )
-                ),
-        )
+                                color="black",)])))
+        
+        #-------------------------------
+        #  총 불량품 수
+        #-------------------------------
         
         p4 = figure(width=170, height=200,
                 active_drag = None,
                 toolbar_location=None)
+        
         p4.xgrid.visible = False
         p4.ygrid.visible = False
         p4.xaxis.visible = False
@@ -142,27 +132,16 @@ def imgUpload_result():
         p4.title = "총 불량품 수"
         p4.title.align = 'center'
 
-        p4.text(
-                x="x",
-                y="y",
-                text="text",
-                text_align="center",
-                text_font_size="30px",
-                text_font=value("Verdana"),
-                text_font_style="normal",
-                source=ColumnDataSource(
-                pd.DataFrame.from_records(
-                        [
-                        dict(
+        p4.text(x="x", y="y", text="text", text_align="center", text_font_size="30px", text_font=value("Verdana"),text_font_style="normal",
+                source=ColumnDataSource(pd.DataFrame.from_records([dict(
                                 x=100,
                                 y=50,
                                 text=f"{len(df[df['part_name'] != '양품'])}",
-                                color="black",
-                        )
-                        ]
-                )
-                ),
-        )
+                                color="black",)])))
+        
+        #-------------------------------
+        #  불량품 수
+        #-------------------------------
         
         p5 = figure(width=170, height=200,
                 active_drag = None,
@@ -175,30 +154,15 @@ def imgUpload_result():
         p5.title = "불량품 수"
         p5.title.align = 'center'
         
-        p5.text(
-                x="x",
-                y="y",
-                text="text",
-                text_align="center",
-                text_font_size="30px",
-                text_font=value("Verdana"),
-                text_font_style="normal",
-                source=ColumnDataSource(
-                pd.DataFrame.from_records(
-                        [
-                        dict(
+        p5.text(x="x", y="y", text="text", text_align="center", text_font_size="30px", text_font=value("Verdana"),text_font_style="normal",
+                source=ColumnDataSource(pd.DataFrame.from_records([dict(
                                 x=100,
                                 y=50,
                                 text=f"{len(df[df['part_name'] != '양품'])}",
-                                color="black",
-                        )
-                        ]
-                )
-                ),
-        )
+                                color="black",)])))
         
         #-------------------------------
-        #  시간별 시각화
+        #  시간별 불량품 수
         #-------------------------------
         
         df_time = df.copy()
@@ -219,8 +183,8 @@ def imgUpload_result():
         p6.title = "시간별 불량품 수"
         p6.title.align = 'center'
 
-        select = figure(title="Drag the middle and edges of the selection box to change the range above",
-                        height=130, width=800, y_range=p6.y_range,
+        select = figure(title="선택 박스를 드래그하여 확대할 시간대를 설정하세요",
+                        height=130, width=1200, y_range=p6.y_range,
                         x_axis_type="datetime", y_axis_type=None,
                         tools="", toolbar_location=None, background_fill_color="#efefef")
 
@@ -234,7 +198,7 @@ def imgUpload_result():
         select.toolbar.active_multi = range_tool
 
         #-------------------------------
-        #  Laying out in row
+        #  레이아웃
         #-------------------------------
 
         multi_choice = MultiChoice(value=PARTS, options=PARTS, title='parts:',width=600, height=200)
