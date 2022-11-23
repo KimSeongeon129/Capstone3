@@ -17,6 +17,8 @@ local_path = codecs.decode(os.getcwd().replace('\\','\\\\'), 'unicode_escape')
 sys.path.append(local_path + '\\model')
 
 from model.detect import detect
+from model.hubconf import custom
+import numpy as np
 from AI import device, model, half, stride
 
 bp= Blueprint('imgUpload',__name__)
@@ -67,6 +69,14 @@ def upload():
     my_img = 'static/assets/img/' + secure_filename(object_name)
     cv2_my_img = cv2.imread(my_img)
 
+    hub_model = custom(path_or_model='model/yolov7.pt')
+    imgs = [np.zeros((640, 480, 3))]
+
+    results = model(imgs)  # batched inference
+    
+    results.print()
+    results.show()
+    
     # 검사 모델 실행
     dic_list=detect(model=model, img=cv2_my_img, stride=stride, device=device, half=half)
     print(dic_list)
@@ -81,7 +91,7 @@ def upload():
     else:
         # 불량품 세부내용 저장
         dic1=dic_list[0]
-        dict_data['part_category']=defect_dict[dic1['label']]['한글명']
+        dict_data['part_category']=dic1['label']
         dict_data['part_name']=defect_dict[dic1['label']]['부품']
         dict_data['part_judge']='불량품'
         dict_data['x1']=int(dic1['c1'][0])

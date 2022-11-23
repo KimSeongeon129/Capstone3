@@ -105,9 +105,10 @@
 								<li>부품 종류 : <script>
 									document.write(sessionStorage.getItem('part_name'));
 								</script></li>
+								<script src="/static/assets/js/host.js"></script>
 								<li>불량 유형 : <script>
 									if(judge == '불량품'){
-										document.write(sessionStorage.getItem('part_category'));
+										document.write(eng2kor(sessionStorage.getItem('part_category')));
 									}
 									else {
 										document.write('<span>해당 없음</span>');
@@ -129,7 +130,6 @@
 			<script src="/static/assets/js/str_breakpoints.min.js"></script>
 			<script src="/static/assets/js/str_util.js"></script>
 			<script src="/static/assets/js/str_main.js"></script>
-			<script src="/static/assets/js/host.js"></script>
 
 	</body>
 </html>
