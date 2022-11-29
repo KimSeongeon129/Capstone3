@@ -17,7 +17,6 @@ local_path = codecs.decode(os.getcwd().replace('\\','\\\\'), 'unicode_escape')
 sys.path.append(local_path + '\\model')
 
 from model.detect import detect
-from model.hubconf import custom
 import numpy as np
 from AI import device, model, half, stride
 
@@ -68,14 +67,6 @@ def upload():
     img.save('static/assets/img/' + secure_filename(object_name))
     my_img = 'static/assets/img/' + secure_filename(object_name)
     cv2_my_img = cv2.imread(my_img)
-
-    hub_model = custom(path_or_model='model/yolov7.pt')
-    imgs = [np.zeros((640, 480, 3))]
-
-    results = model(imgs)  # batched inference
-    
-    results.print()
-    results.show()
     
     # 검사 모델 실행
     dic_list=detect(model=model, img=cv2_my_img, stride=stride, device=device, half=half)
