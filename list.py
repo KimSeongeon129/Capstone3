@@ -6,7 +6,7 @@ import json
 import operator,string
 
 bp= Blueprint('list',__name__)
-@bp.route('/list')
+@bp.route('/list',methods=['GET','POST'])
 def list():
     if 'username' in session:
         return render_template("list.html")
@@ -17,7 +17,6 @@ def list_data():
     if request.method=='GET':#그냥 내역조회 했을시 전체 보여주기
         id=session['username']
         list = user_result(g.db,id)
-        print(list)
         list = sorted(list, key= lambda x: x['date'], reverse=True)#최신순으로 반환
         return jsonify(
             success="성공",
@@ -28,8 +27,6 @@ def list_data():
         filtering=request.form['selectbox']
         data=request.form['search_box']
         data=data.upper()
-        print(filtering)
-        print(data)
         id=session['username']
         #필터링 내용으로 db에서 데이터 가져오기
         list = user_result(g.db,id)
@@ -54,6 +51,7 @@ def list_data():
                     c=c+1
         if c==0:
             dic=['no']
+        print(dic)
         return jsonify(
             success="성공",
             data=dic

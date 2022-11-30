@@ -180,6 +180,15 @@ def search_result(db, inspection_number):
     
     return result
 
+def search_image(db, inspection_number):
+    with db.cursor() as cursor:
+        sql = "select * from image where inspection_number=%s"
+        data=(inspection_number)
+        cursor.execute(sql,data)
+        result = cursor.fetchall()
+    
+    return result
+
 #bbox 좌표, 이미지 가져오기
 def bbox(db, inspection_number):
     with db.cursor() as cursor:

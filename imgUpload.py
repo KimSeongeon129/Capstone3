@@ -17,26 +17,11 @@ local_path = codecs.decode(os.getcwd().replace('\\','\\\\'), 'unicode_escape')
 sys.path.append(local_path + '\\model')
 
 from model.detect import detect
-from AI import device, model, half, stride
+from AI import device, model, half, stride,s3
 
 bp= Blueprint('imgUpload',__name__)
 dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1=0,x2=0,y1=0,y2=0,defective_rate=0)
 
-def s3_connection():
-    try:
-        s3 = boto3.client(
-            service_name="s3",
-            region_name="ap-northeast-2", # 자신이 설정한 bucket region
-            aws_access_key_id='AKIASXRG4M6ELFHA4UOG',
-            aws_secret_access_key='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',
-        )
-    except Exception as e:
-        print(e)
-    else:
-        print("s3 bucket connected!")
-        return s3
-
-s3 = s3_connection()
 
 
 @bp.route('/imgUpload_result')#이미지 결과페이지

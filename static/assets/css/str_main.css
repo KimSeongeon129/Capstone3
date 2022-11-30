@@ -196,7 +196,7 @@ input, select, textarea {
 	}
 
 	ul, ol, dl, table, blockquote {
-		margin-bottom: 15em;
+		margin-bottom: 1em;
 	}
 
 	br.clear {

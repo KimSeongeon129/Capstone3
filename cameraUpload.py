@@ -10,7 +10,7 @@ import os
 from db1011 import add_image,add_result,find_inspection_number
 from werkzeug.utils import secure_filename
 from model.detect_realtime import detect_realtime
-from AI import device, model, half, stride
+from AI import device, model, half, stride,s3
 from parts import defect_dict
 
 bp= Blueprint('cameraUpload',__name__)
@@ -23,21 +23,6 @@ colors = [[random.randint(0, 255) for _ in range(3)] for _ in names]
 
 dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1=0,x2=0,y1=0,y2=0,defective_rate=0)
 
-def s3_connection():
-    try:
-        s3 = boto3.client(
-            service_name="s3",
-            region_name="ap-northeast-2", # 자신이 설정한 bucket region
-            aws_access_key_id='AKIASXRG4M6ELFHA4UOG',
-            aws_secret_access_key='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',
-        )
-    except Exception as e:
-        print(e)
-    else:
-        print("s3 bucket connected!")
-        return s3
-
-s3 = s3_connection()
 
 @bp.route('/cameraUpload')#이미지 결과페이지
 def cameraUpload():
