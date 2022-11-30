@@ -18,6 +18,8 @@ sys.path.append(local_path + '\\model')
 
 from model.detect import detect
 from AI import device, model, half, stride,s3
+import numpy as np
+from AI import device, model, half, stride
 
 bp= Blueprint('imgUpload',__name__)
 dict_data=dict(img_url="",inspection_number=123,part_id="123",date="",part_name="양품",part_category="이상없음",part_judge="모코코",user_id="nickname",x1=0,x2=0,y1=0,y2=0,defective_rate=0)
@@ -51,7 +53,7 @@ def upload():
     img.save('static/assets/img/' + secure_filename(object_name))
     my_img = 'static/assets/img/' + secure_filename(object_name)
     cv2_my_img = cv2.imread(my_img)
-
+    
     # 검사 모델 실행
     dic_list=detect(model=model, img=cv2_my_img, stride=stride, device=device, half=half)
     print(dic_list)
@@ -66,7 +68,7 @@ def upload():
     else:
         # 불량품 세부내용 저장
         dic1=dic_list[0]
-        dict_data['part_category']=defect_dict[dic1['label']]['한글명']
+        dict_data['part_category']=dic1['label']
         dict_data['part_name']=defect_dict[dic1['label']]['부품']
         dict_data['part_judge']='불량품'
         dict_data['x1']=int(dic1['c1'][0])
