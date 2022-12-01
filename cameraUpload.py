@@ -90,7 +90,7 @@ def realtimeUpload():
         conf = dic1['conf']
         conf= f'{conf:.4}'
         dict_data['defective_rate']=float(conf)*100
-        dict_data['part_category']=dic1['label']
+        dict_data['part_category']=defect_dict[dic1['label']]['한글명']
         dict_data['part_name']=defect_dict[dic1['label']]['부품']
         dict_data['part_judge']='불량품'
         dict_data['x1']=int(dic1['c1'][0])

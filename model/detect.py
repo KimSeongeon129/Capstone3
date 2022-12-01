@@ -11,6 +11,7 @@ import numpy as np
 from model.utils.datasets import LoadStreams, LoadImages
 from model.utils.general import check_img_size, non_max_suppression, apply_classifier, scale_coords
 from model.utils.torch_utils import load_classifier, time_synchronized
+import AI
 
 def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleFill=False, scaleup=True, stride=32):
     # Resize and pad image while meeting stride-multiple constraints

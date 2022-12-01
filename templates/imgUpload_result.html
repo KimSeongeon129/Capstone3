@@ -108,7 +108,7 @@
 								<script src="/static/assets/js/host.js"></script>
 								<li>불량 유형 : <script>
 									if(judge == '불량품'){
-										document.write(eng2kor(sessionStorage.getItem('part_category')));
+										document.write(sessionStorage.getItem('part_category'));
 									}
 									else {
 										document.write('<span>해당 없음</span>');

@@ -64,10 +64,11 @@ def upload():
     dict_data['user_id']=session['username']
     if not dic_list:
         dict_data['part_judge']='양품'
+        dict_data['part_name']='양품'
     else:
         # 불량품 세부내용 저장
         dic1=dic_list[0]
-        dict_data['part_category']=dic1['label']
+        dict_data['part_category']=defect_dict[dic1['label']]['한글명']
         dict_data['part_name']=defect_dict[dic1['label']]['부품']
         dict_data['part_judge']='불량품'
         dict_data['x1']=int(dic1['c1'][0])
@@ -102,6 +103,7 @@ def upload():
     #url가져올때 f'https://sejong-capstone-s3-bucket.s3.ap-northeast-2.amazonaws.com/이거 붙여야함 origin이면 원본 result면 bbox있는 거
     end=time.time()
     print(end-start)
+    print(dict_data)
     return dict_data
 
     
