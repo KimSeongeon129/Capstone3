@@ -286,7 +286,10 @@
 				console.log(num);
 
 				fetch(hostip+'/detail_num/'+num, {
-					"method": "GET"
+						headers: {
+						Accept: "application / json",
+							},
+						method: "GET",
 				})
 				.then(res => res.json())
 				.then((res) => {
