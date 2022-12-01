@@ -23,9 +23,8 @@ def admin_part_update():
         num=request.form['num']
         part_category=request.form['part_category']
         part_judge=request.form['part_judge']
-        user_id=request.form['user_id']
         print(num)
-        data=update_result(g.db,part_category,part_judge,num,user_id)
+        data=update_result(g.db,part_category,part_judge,num)
         return jsonify(
             result="success",
             data=data

@@ -68,11 +68,10 @@ def statistics():
         defect_lagging = [defect for defect in lagging_def]
         part_category = defect_duct + defect_pipe + defect_hull + defect_cable + defect_lagging
         kor_part_category = [defect_dict[c]['한글명'] for c in part_category]
-        print(df[df['part_name'] != '양품']['part_category'].value_counts()['설치 불량'])
         count = [0 for i in kor_part_category]
         for p in df[df['part_name'] != '양품']['part_category'].value_counts().index:
                 count[kor_part_category.index(p)] = df[df['part_name'] != '양품']['part_category'].value_counts()[p]
-        
+        print(df[df['part_name'] != '양품']['part_category'].value_counts())
         df1 = pd.DataFrame({'part_name' : part_name,
                    'part_category' : kor_part_category ,
                    'count' : count})

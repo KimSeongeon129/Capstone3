@@ -65,6 +65,11 @@ def upload():
     if not dic_list:
         dict_data['part_judge']='양품'
         dict_data['part_name']='양품'
+        dict_data['part_category']='이상없음'
+        dict_data['x1']=0
+        dict_data['x2']=0
+        dict_data['y1']=0
+        dict_data['y2']=0
     else:
         # 불량품 세부내용 저장
         dic1=dic_list[0]
