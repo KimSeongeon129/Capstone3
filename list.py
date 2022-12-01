@@ -61,9 +61,9 @@ def detail_num(num):
     
     data=detailed_result(g.db,num)
     return jsonify(
-        result="success",
-        data=data
-        )
+        {"result":"success",
+        "data":data
+        })
 
 @bp.route('/detail')#세부내역조회
 def detail():
